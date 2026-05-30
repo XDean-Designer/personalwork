@@ -42,7 +42,7 @@ npx serve .
 
 `https://你的GitHub用户名.github.io/仓库名/`
 
-例如：`https://octocat.github.io/xueding-portfolio/`
+本站地址：**https://xdean-designer.github.io/personalwork/**
 
 ### 后续更新
 
