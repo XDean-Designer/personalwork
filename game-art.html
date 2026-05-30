@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>游戏原画作品集 | 薛鼎</title>
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="bg-noise"></div>
+
+  <div class="page">
+    <nav class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="index.html">← Xue Ding</a>
+        <div class="nav-links">
+          <a href="index.html">首页</a>
+          <a href="visual-design.html">视觉设计</a>
+        </div>
+      </div>
+    </nav>
+
+    <header class="container page-hero">
+      <div class="section-label">CONCEPT ART · FULL GALLERY</div>
+      <h1 class="title-with-icon">
+        <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 20l8-8 4 4 8-12"/><path d="M14 6l4 4"/></svg>
+        游戏原画作品集
+      </h1>
+      <p>共 50+ 张作品，支持分类筛选与关键词搜索，点击可放大预览。</p>
+    </header>
+
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <div class="toolbar">
+          <button class="btn filter-btn active" data-filter="all">全部</button>
+          <button class="btn filter-btn" data-filter="角色类">角色类</button>
+          <button class="btn filter-btn" data-filter="场景类">场景类</button>
+          <button class="btn filter-btn" data-filter="写实">写实</button>
+          <button class="btn filter-btn" data-filter="半写实">半写实</button>
+          <button class="btn filter-btn" data-filter="卡通">卡通</button>
+          <input id="searchInput" class="search" type="text" placeholder="搜索：科幻 / 国风 / 角色…" />
+        </div>
+        <div id="gallery" class="gallery"></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">© 2026 薛鼎 · Game Concept Art</div>
+    </footer>
+  </div>
+
+  <div id="modal" class="modal">
+    <span id="modalClose" class="modal-close">×</span>
+    <img id="modalImg" src="" alt="作品预览" />
+  </div>
+
+  <script src="js/works-data.js"></script>
+  <script src="js/site.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      panIndex = 0;
+      renderGameGallery("gallery", { all: true });
+    });
+  </script>
+</body>
+</html>
