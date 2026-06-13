@@ -567,6 +567,13 @@ h1, h2, h3, .section-title, .brand {
   display: block;
 }
 
+.tool-icon img {
+  width: 28px;
+  height: 28px;
+  display: block;
+  object-fit: contain;
+}
+
 .tool-name {
   font-size: 0.84rem;
   color: var(--text-secondary);
