@@ -137,4 +137,61 @@ function renderVisualGallery(containerId) {
 
 document.addEventListener("DOMContentLoaded", () => {
   initModal();
+  initDataStream();
 });
+
+function initDataStream() {
+  const canvas = document.querySelector(".hero-data-stream");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const wrap = canvas.parentElement;
+
+  const CHARS = "01アイウエオ0110ABCDEFabcdef01100101";
+  const FONT_SIZE = 13;
+  const COL_W = 16;
+  let cols = [];
+  let raf;
+
+  function resize() {
+    canvas.width = wrap.offsetWidth;
+    canvas.height = wrap.offsetHeight;
+    const count = Math.max(1, Math.floor(canvas.width / COL_W));
+    cols = Array.from({ length: count }, (_, i) => ({
+      x: i * COL_W + COL_W / 2,
+      y: Math.random() * canvas.height,
+      speed: 0.6 + Math.random() * 1.4,
+      len: 6 + Math.floor(Math.random() * 10),
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = `${FONT_SIZE}px "Courier New", monospace`;
+    ctx.textAlign = "center";
+
+    for (const col of cols) {
+      for (let j = 0; j < col.len; j++) {
+        const y = col.y - j * FONT_SIZE;
+        if (y < -FONT_SIZE || y > canvas.height + FONT_SIZE) continue;
+        const t = 1 - j / col.len;
+        if (j === 0) {
+          ctx.fillStyle = `rgba(255, 200, 100, ${t * 0.9})`;
+        } else {
+          ctx.fillStyle = `rgba(255, 138, 34, ${t * 0.55})`;
+        }
+        ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], col.x, y);
+      }
+      col.y += col.speed;
+      if (col.y - col.len * FONT_SIZE > canvas.height) {
+        col.y = -FONT_SIZE * 2;
+        col.speed = 0.6 + Math.random() * 1.4;
+        col.len = 6 + Math.floor(Math.random() * 10);
+      }
+    }
+    raf = requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener("resize", () => { cancelAnimationFrame(raf); resize(); draw(); });
+  draw();
+}

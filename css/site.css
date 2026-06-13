@@ -406,35 +406,40 @@ h1, h2, h3, .section-title, .brand {
 .hero-wrap {
   position: relative;
   padding-top: 0;
+  isolation: isolate;
 }
 
-/* ── hero 全宽背景图（不受 container 宽度限制，消除宽屏黑边） ── */
+/* ── hero 全宽背景图（靠左对齐，右侧+底部渐变淡出） ── */
 .hero-wrap::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   background:
-    linear-gradient(90deg,
+    linear-gradient(to left,
       var(--bg) 0%,
-      rgba(15, 17, 21, 0.82) 18%,
-      rgba(15, 17, 21, 0.26) 50%,
-      rgba(15, 17, 21, 0.14) 72%,
-      var(--bg) 100%
+      rgba(15, 17, 21, 0.94) 16%,
+      rgba(15, 17, 21, 0.58) 36%,
+      rgba(15, 17, 21, 0.1) 58%,
+      transparent 72%
     ),
-    linear-gradient(180deg,
-      rgba(15, 17, 21, 0.9) 0%,
-      rgba(15, 17, 21, 0.2) 32%,
-      rgba(15, 17, 21, 0.2) 68%,
-      rgba(15, 17, 21, 0.9) 100%
+    linear-gradient(to top,
+      var(--bg) 0%,
+      rgba(15, 17, 21, 0.82) 9%,
+      transparent 30%
     ),
-    url("../游戏原画/角色类/写实-科幻 修理机器人.jpg") 68% center / cover no-repeat;
-  filter: grayscale(0.42) contrast(1.08) brightness(0.52);
+    linear-gradient(to bottom,
+      var(--bg) 0%,
+      rgba(15, 17, 21, 0.55) 5%,
+      transparent 18%
+    ),
+    url("../游戏原画/角色类/写实-科幻 修理机器人.jpg") left center / cover no-repeat;
+  filter: grayscale(0.38) contrast(1.1) brightness(0.5);
   pointer-events: none;
 }
 .hero {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   padding: 100px 0 56px;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
@@ -1103,6 +1108,36 @@ footer {
   .ai-steps { grid-template-columns: 1fr 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .search { margin-left: 0; width: 100%; }
+}
+
+/* ── hero 扫描线（CRT 风格，掩盖图片模糊并增强科技感） ── */
+.hero-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.09) 2px,
+    rgba(0, 0, 0, 0.09) 3px
+  );
+  pointer-events: none;
+  animation: scanlineScroll 8s linear infinite;
+}
+@keyframes scanlineScroll {
+  from { background-position: 0 0; }
+  to   { background-position: 0 3px; }
+}
+
+/* ── hero 数据流 canvas ── */
+.hero-data-stream {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0.13;
+  pointer-events: none;
+  mix-blend-mode: screen;
 }
 
 /* ── 宽屏适配：1440px – 1920px ── */
