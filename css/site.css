@@ -93,7 +93,6 @@ h1, h2, h3, .section-title, .brand {
   overflow: hidden;
   z-index: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, #1b1e24 0%, var(--bg) 100%);
 }
 .hero-fx-base {
   position: absolute;
