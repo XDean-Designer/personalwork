@@ -407,6 +407,31 @@ h1, h2, h3, .section-title, .brand {
   position: relative;
   padding-top: 0;
 }
+
+/* ── hero 全宽背景图（不受 container 宽度限制，消除宽屏黑边） ── */
+.hero-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(90deg,
+      var(--bg) 0%,
+      rgba(15, 17, 21, 0.82) 18%,
+      rgba(15, 17, 21, 0.26) 50%,
+      rgba(15, 17, 21, 0.14) 72%,
+      var(--bg) 100%
+    ),
+    linear-gradient(180deg,
+      rgba(15, 17, 21, 0.9) 0%,
+      rgba(15, 17, 21, 0.2) 32%,
+      rgba(15, 17, 21, 0.2) 68%,
+      rgba(15, 17, 21, 0.9) 100%
+    ),
+    url("../游戏原画/角色类/写实-科幻 修理机器人.jpg") 68% center / cover no-repeat;
+  filter: grayscale(0.42) contrast(1.08) brightness(0.52);
+  pointer-events: none;
+}
 .hero {
   position: relative;
   z-index: 1;
@@ -430,19 +455,8 @@ h1, h2, h3, .section-title, .brand {
   inset: -40% -55% -20% -15%;
   z-index: -2;
   background:
-    linear-gradient(90deg, var(--bg) 0%, rgba(15, 17, 21, 0.92) 18%, rgba(15, 17, 21, 0.35) 48%, rgba(15, 17, 21, 0.55) 72%, var(--bg) 100%),
-    linear-gradient(180deg, rgba(15, 17, 21, 0.88) 0%, rgba(15, 17, 21, 0.25) 38%, rgba(15, 17, 21, 0.2) 62%, rgba(15, 17, 21, 0.9) 100%),
-    url("../游戏原画/角色类/写实-科幻 修理机器人.jpg") 72% center / cover no-repeat;
-  filter: grayscale(0.45) contrast(1.08) brightness(0.55);
-  opacity: 0.9;
-  mask-image:
-    linear-gradient(90deg, black 0%, black 58%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, black 14%, black 82%, transparent 100%);
-  mask-composite: intersect;
-  -webkit-mask-image:
-    linear-gradient(90deg, black 0%, black 58%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, black 14%, black 82%, transparent 100%);
-  -webkit-mask-composite: source-in;
+    linear-gradient(90deg, var(--bg) 0%, rgba(15, 17, 21, 0.88) 16%, rgba(15, 17, 21, 0.3) 46%, transparent 68%),
+    linear-gradient(180deg, rgba(15, 17, 21, 0.72) 0%, transparent 32%, transparent 72%, rgba(15, 17, 21, 0.72) 100%);
   pointer-events: none;
 }
 
@@ -1059,10 +1073,8 @@ footer {
   .hero-copy::before {
     inset: -25% -35% -8% -10%;
     background:
-      linear-gradient(90deg, var(--bg) 0%, rgba(15, 17, 21, 0.9) 22%, rgba(15, 17, 21, 0.4) 52%, var(--bg) 100%),
-      linear-gradient(180deg, rgba(15, 17, 21, 0.85) 0%, transparent 40%, rgba(15, 17, 21, 0.85) 100%),
-      url("../游戏原画/角色类/写实-科幻 修理机器人.jpg") 75% center / cover no-repeat;
-    opacity: 0.75;
+      linear-gradient(90deg, var(--bg) 0%, rgba(15, 17, 21, 0.88) 20%, rgba(15, 17, 21, 0.3) 50%, transparent 72%),
+      linear-gradient(180deg, rgba(15, 17, 21, 0.7) 0%, transparent 38%, rgba(15, 17, 21, 0.7) 100%);
   }
   .hero-copy::after {
     left: -20%;
@@ -1091,4 +1103,36 @@ footer {
   .ai-steps { grid-template-columns: 1fr 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .search { margin-left: 0; width: 100%; }
+}
+
+/* ── 宽屏适配：1440px – 1920px ── */
+@media (min-width: 1440px) {
+  .container { width: min(1360px, 92vw); }
+  .hero { gap: 48px; }
+  .showcase-grid.visual-preview {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .showcase-grid.game-preview {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .timeline-list { gap: 20px; }
+  .tool-stack-list { gap: 18px; }
+}
+
+/* ── 超宽屏适配：1920px+ ── */
+@media (min-width: 1920px) {
+  .container { width: min(1560px, 90vw); }
+  .hero { gap: 64px; }
+  .showcase-grid.visual-preview {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 22px;
+  }
+  .showcase-grid.game-preview {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 22px;
+  }
+  .hero h1,
+  .hero-art-title { font-size: clamp(3.6rem, 2.8rem + 2vw, 5.6rem); }
 }
