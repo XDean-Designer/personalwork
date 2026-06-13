@@ -415,22 +415,25 @@ h1, h2, h3, .section-title, .brand {
   inset: 0;
   z-index: 0;
   background:
+    /* 右侧向左渐变：更大范围、更柔和 */
     linear-gradient(to left,
       var(--bg) 0%,
-      rgba(15, 17, 21, 0.94) 16%,
-      rgba(15, 17, 21, 0.58) 36%,
-      rgba(15, 17, 21, 0.1) 58%,
-      transparent 72%
+      rgba(15, 17, 21, 0.97) 5%,
+      rgba(15, 17, 21, 0.78) 25%,
+      rgba(15, 17, 21, 0.42) 48%,
+      rgba(15, 17, 21, 0.08) 68%,
+      transparent 83%
     ),
+    /* 底部淡出：缩小至 14%，消除大段空白 */
     linear-gradient(to top,
       var(--bg) 0%,
-      rgba(15, 17, 21, 0.82) 9%,
-      transparent 30%
+      rgba(15, 17, 21, 0.65) 5%,
+      transparent 14%
     ),
+    /* 顶部极细淡入 */
     linear-gradient(to bottom,
       var(--bg) 0%,
-      rgba(15, 17, 21, 0.55) 5%,
-      transparent 18%
+      transparent 8%
     ),
     url("../游戏原画/角色类/写实-科幻 修理机器人.jpg") left center / cover no-repeat;
   filter: grayscale(0.38) contrast(1.1) brightness(0.5);
@@ -1107,6 +1110,14 @@ footer {
   .ai-steps { grid-template-columns: 1fr 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .search { margin-left: 0; width: 100%; }
+  .hero-wrap::before {
+    background:
+      linear-gradient(to bottom, var(--bg) 0%, transparent 10%),
+      linear-gradient(to top, var(--bg) 0%, transparent 12%),
+      linear-gradient(to right, transparent 40%, rgba(15,17,21,0.6) 70%, var(--bg) 100%),
+      url("../游戏原画/角色类/写实-科幻 修理机器人.jpg") left center / cover no-repeat;
+    filter: grayscale(0.38) contrast(1.1) brightness(0.45);
+  }
 }
 
 /* ── hero 扫描线（CRT 风格，掩盖图片模糊并增强科技感） ── */
