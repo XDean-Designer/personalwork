@@ -276,6 +276,9 @@ h1, h2, h3, .section-title, .brand {
   gap: 12px;
 }
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-family: Orbitron, sans-serif;
   font-size: 0.95rem;
   letter-spacing: 0.12em;
@@ -283,6 +286,33 @@ h1, h2, h3, .section-title, .brand {
   color: var(--accent);
   text-shadow: var(--glow);
   text-decoration: none;
+}
+
+.brand-avatar {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 1.5px solid rgba(255, 138, 34, 0.78);
+  box-shadow:
+    0 0 0 2px rgba(255, 138, 34, 0.08),
+    0 0 16px rgba(255, 138, 34, 0.28);
+  animation: avatarGlow 3.8s ease-in-out infinite;
+}
+
+@keyframes avatarGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 2px rgba(255, 138, 34, 0.08),
+      0 0 12px rgba(255, 138, 34, 0.22);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px rgba(255, 138, 34, 0.14),
+      0 0 20px rgba(255, 138, 34, 0.4);
+  }
 }
 .nav-links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
@@ -495,6 +525,61 @@ h1, h2, h3, .section-title, .brand {
   height: 1px;
   background: var(--accent);
   box-shadow: 0 0 10px rgba(255, 138, 34, 0.5);
+}
+
+.ai-badge-icon {
+  position: relative;
+  width: 34px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background:
+    linear-gradient(120deg, rgba(255, 138, 34, 0.24), rgba(162, 89, 255, 0.22), rgba(26, 188, 254, 0.18)),
+    rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 0 16px rgba(255, 138, 34, 0.18),
+    inset 0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+.ai-badge-icon::before {
+  content: "";
+  position: absolute;
+  inset: -60% -120%;
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.72) 50%, transparent 65%);
+  transform: translateX(-45%);
+  animation: aiBadgeFlow 4.2s ease-in-out infinite;
+}
+
+.ai-badge-icon span {
+  position: relative;
+  z-index: 1;
+  font-family: Orbitron, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-shadow:
+    0 0 8px rgba(255, 138, 34, 0.52),
+    0 0 10px rgba(26, 188, 254, 0.36);
+}
+
+@keyframes aiBadgeFlow {
+  0%, 22% {
+    transform: translateX(-55%);
+    opacity: 0;
+  }
+  48%, 58% {
+    opacity: 0.78;
+  }
+  86%, 100% {
+    transform: translateX(55%);
+    opacity: 0;
+  }
 }
 
 .hero p {
@@ -735,24 +820,25 @@ h1, h2, h3, .section-title, .brand {
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
-/* 首页：互联网视觉 4 张预览 — 正方形四宫格 */
+/* 首页：互联网视觉 4 张预览 — 竖版 iPhone 比例，一行 4 个 */
 .showcase-grid.visual-preview {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 
 .showcase-grid.visual-preview .showcase-card {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 9 / 19.5;
   max-height: none;
 }
 
 .showcase-grid.visual-preview .showcase-media {
   inset: 0;
+  overflow: hidden;
 }
 
 .showcase-grid.visual-preview .showcase-media img {
   object-fit: cover;
-  object-position: top center;
+  object-position: center top;
   background: var(--bg-2);
 }
 
