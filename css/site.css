@@ -406,6 +406,7 @@ h1, h2, h3, .section-title, .brand {
   position: relative;
   padding-top: 0;
   isolation: isolate;
+  overflow: hidden;
 }
 
 /* ── hero 全宽背景图（靠左对齐，右侧+底部渐变淡出） ── */
@@ -459,14 +460,16 @@ h1, h2, h3, .section-title, .brand {
 .hero-copy::before {
   content: "";
   position: absolute;
-  inset: -30% -15% -20% -20%;
+  top: -100vh;
+  bottom: -100vh;
+  left: -100vw;
+  right: 0;
   z-index: -2;
-  background: radial-gradient(
-    ellipse 80% 75% at 38% 52%,
-    rgba(11, 13, 17, 0.85) 0%,
-    rgba(11, 13, 17, 0.58) 32%,
-    rgba(11, 13, 17, 0.18) 62%,
-    transparent 82%
+  background: linear-gradient(to right,
+    rgba(11, 13, 17, 0.9) 0%,
+    rgba(11, 13, 17, 0.75) 52%,
+    rgba(11, 13, 17, 0.28) 80%,
+    transparent 100%
   );
   pointer-events: none;
 }
@@ -1082,12 +1085,15 @@ footer {
     padding: 20px 0 28px;
   }
   .hero-copy::before {
-    inset: -20% -15% -15% -15%;
-    background: radial-gradient(
-      ellipse 90% 80% at 50% 48%,
-      rgba(11, 13, 17, 0.8) 0%,
-      rgba(11, 13, 17, 0.45) 42%,
-      transparent 75%
+    top: -100vh;
+    bottom: -100vh;
+    left: -100vw;
+    right: 0;
+    background: linear-gradient(to right,
+      rgba(11, 13, 17, 0.88) 0%,
+      rgba(11, 13, 17, 0.6) 55%,
+      rgba(11, 13, 17, 0.18) 82%,
+      transparent 100%
     );
   }
   .hero-copy::after {
