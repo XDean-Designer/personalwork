@@ -514,6 +514,66 @@ h1, h2, h3, .section-title, .brand {
   color: #fff;
 }
 
+.tool-stack {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.tool-stack-head {
+  margin-bottom: 14px;
+}
+
+.tool-stack-title {
+  margin: 4px 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tool-stack-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tool-stack-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  cursor: default;
+}
+
+.tool-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-icon svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+
+.tool-name {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
 .glass-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -922,6 +982,11 @@ footer {
     font-size: clamp(2.1rem, 9vw, 3.4rem);
   }
   .hero-title-note { margin-left: 0; }
+  .tool-stack { margin-top: 22px; }
+  .tool-stack-list { gap: 8px; }
+  .tool-stack-item { padding: 7px 10px 7px 8px; }
+  .tool-icon { width: 28px; height: 28px; }
+  .tool-icon svg { width: 24px; height: 24px; }
   .showcase-grid { grid-template-columns: 1fr; }
   .showcase-grid.visual-preview {
     grid-template-columns: repeat(2, 1fr);
