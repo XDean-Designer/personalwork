@@ -440,9 +440,27 @@ h1, h2, h3, .section-title, .brand {
   filter: grayscale(0.38) contrast(1.1) brightness(0.5);
   pointer-events: none;
 }
+
+/* ── hero 左侧深色文字衬底面板（精确贴合背景图上下边缘） ── */
+.hero-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 62%;
+  z-index: 1;
+  background: linear-gradient(to right,
+    rgba(11, 13, 17, 0.93) 0%,
+    rgba(11, 13, 17, 0.82) 42%,
+    rgba(11, 13, 17, 0.38) 76%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
 .hero {
   position: relative;
-  z-index: 3;
+  z-index: 4;
   padding: 100px 0 56px;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
@@ -1137,7 +1155,7 @@ footer {
 .hero-scanlines {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   background-image: repeating-linear-gradient(
     0deg,
     transparent 0px,
@@ -1157,7 +1175,7 @@ footer {
 .hero-data-stream {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 3;
   opacity: 0.13;
   pointer-events: none;
   mix-blend-mode: screen;
