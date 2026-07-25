@@ -138,7 +138,36 @@ function renderVisualGallery(containerId) {
 document.addEventListener("DOMContentLoaded", () => {
   initModal();
   initDataStream();
+  initNavToggle();
 });
+
+function initNavToggle() {
+  const toggle = document.querySelector(".nav-toggle");
+  const links = document.getElementById("navLinks") || document.querySelector(".nav-links");
+  if (!toggle || !links) return;
+
+  const close = () => {
+    links.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", "打开菜单");
+  };
+
+  toggle.addEventListener("click", () => {
+    const open = links.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.setAttribute("aria-label", open ? "关闭菜单" : "打开菜单");
+  });
+
+  links.querySelectorAll("a").forEach((a) => {
+    a.addEventListener("click", () => {
+      if (window.matchMedia("(max-width: 900px)").matches) close();
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) close();
+  });
+}
 
 function initDataStream() {
   const canvas = document.querySelector(".hero-data-stream");

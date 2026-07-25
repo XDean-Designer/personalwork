@@ -273,6 +273,8 @@ h1, h2, h3, .section-title, .brand {
   align-items: center;
   padding: 14px 0;
   gap: 12px;
+  position: relative;
+  flex-wrap: wrap;
 }
 .brand {
   display: inline-flex;
@@ -314,6 +316,38 @@ h1, h2, h3, .section-title, .brand {
   }
 }
 .nav-links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 12%, rgba(255, 255, 255, 0.06));
+  cursor: pointer;
+  margin-left: auto;
+}
+.nav-toggle span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: transform 0.25s, opacity 0.25s;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
 
 /* ── 按钮 + 流光边沿 ── */
 .nav-links a,
@@ -1300,7 +1334,22 @@ footer {
 .corner-deco.br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
 
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; padding-top: 80px; }
+  .nav-toggle { display: flex; }
+  .nav-links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 8px 0 4px;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a {
+    text-align: center;
+    padding: 12px 16px;
+    border-radius: 12px;
+  }
+  .hero { grid-template-columns: 1fr; padding-top: 72px; padding-bottom: 40px; }
   .hero-copy {
     padding: 20px 0 28px;
   }
@@ -1324,15 +1373,21 @@ footer {
   }
   .hero h1,
   .hero-art-title {
-    font-size: clamp(2.1rem, 9vw, 3.4rem);
+    font-size: clamp(1.85rem, 8.2vw, 3rem);
   }
-  .hero-title-note { margin-left: 0; }
+  .hero-art-line.accent {
+    font-size: 0.92em;
+  }
+  .hero-title-note { margin-left: 0; flex-wrap: wrap; }
+  .hero-wrap::after { width: 88%; }
   .tool-stack { margin-top: 22px; }
   .tool-stack-list { gap: 8px; }
   .tool-stack-item { padding: 7px 10px 7px 8px; }
   .tool-icon { width: 28px; height: 28px; }
   .tool-icon svg { width: 24px; height: 24px; }
-  .showcase-grid { grid-template-columns: 1fr; }
+  .section { padding: 48px 0; }
+  .showcase-grid,
+  .showcase-grid.game-preview { grid-template-columns: 1fr; gap: 14px; }
   .showcase-grid.visual-preview {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
@@ -1341,12 +1396,48 @@ footer {
   .timeline-item { grid-template-columns: 1fr; }
   .ai-panel { grid-template-columns: 1fr; }
   .ai-steps { grid-template-columns: 1fr 1fr; }
+  .method-flow {
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    padding-left: 6px;
+  }
   .method-arrow { display: none; }
+  .method-step {
+    position: relative;
+    margin-bottom: 14px;
+    padding-left: 20px;
+  }
+  .method-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: calc(100% - 2px);
+    width: 2px;
+    height: 16px;
+    background: linear-gradient(180deg, var(--accent), transparent);
+  }
+  .method-step-num {
+    display: inline-block;
+  }
   .method-compare { grid-template-columns: 1fr; }
-  .compare-vs { justify-self: center; }
+  .compare-vs { justify-self: center; margin: 4px 0; }
   .collab-steps { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .search { margin-left: 0; width: 100%; }
+  .toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: stretch;
+  }
+  .toolbar .btn { width: 100%; text-align: center; }
+  .toolbar .search {
+    grid-column: 1 / -1;
+    margin-left: 0;
+    width: 100%;
+    min-width: 0;
+  }
+  .gallery { grid-template-columns: 1fr; gap: 12px; }
   .hero-wrap::before {
     background:
       linear-gradient(to bottom, var(--bg) 0%, transparent 10%),
@@ -1387,34 +1478,55 @@ footer {
   mix-blend-mode: screen;
 }
 
-/* ── 宽屏适配：1440px – 1920px ── */
+/* ── 笔记本 / 准 1080P：1280–1919 ── */
+@media (min-width: 1280px) {
+  .container { width: min(1240px, 94vw); }
+  .method-flow { flex-wrap: nowrap; }
+  .method-step { flex: 1 1 0; min-width: 0; }
+  .showcase-grid.visual-preview {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .showcase-grid.game-preview {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+/* ── 宽屏：1440–1919 ── */
 @media (min-width: 1440px) {
-  .container { width: min(1360px, 92vw); }
+  .container { width: min(1400px, 94vw); }
   .hero { gap: 48px; }
   .showcase-grid.visual-preview {
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 18px;
   }
   .showcase-grid.game-preview {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .tool-stack-list { gap: 18px; }
+  .gallery { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ── 1080P 横屏及更宽：1920+（宽度优先拉满） ── */
+@media (min-width: 1920px) {
+  .container { width: min(1720px, 94vw); }
+  .hero { gap: 56px; }
+  .hero h1,
+  .hero-art-title { font-size: clamp(3.2rem, 2.4rem + 1.6vw, 5.2rem); }
+  .showcase-grid.visual-preview {
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
   }
-  .timeline-list { gap: 20px; }
-  .tool-stack-list { gap: 18px; }
-}
-
-/* ── 超宽屏适配：1920px+ ── */
-@media (min-width: 1920px) {
-  .container { width: min(1560px, 90vw); }
-  .hero { gap: 64px; }
-  .showcase-grid.visual-preview {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 22px;
-  }
   .showcase-grid.game-preview {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 22px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
-  .hero h1,
-  .hero-art-title { font-size: clamp(3.6rem, 2.8rem + 2vw, 5.6rem); }
+  .showcase-grid.visual {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .gallery { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .method-step p { font-size: 0.9rem; }
+  .section { padding: 72px 0; }
 }
