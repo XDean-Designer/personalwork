@@ -669,6 +669,51 @@ h1, h2, h3, .section-title, .brand {
   font-weight: 500;
   text-shadow: 0 1px 12px rgba(0, 0, 0, 0.3);
 }
+
+.hero-points {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+  max-width: 640px;
+}
+
+.hero-points li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 0 0 0 12px;
+  border-left: 2px solid rgba(255, 138, 34, 0.55);
+}
+
+.hero-point-num {
+  font-family: Orbitron, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  line-height: 1.6;
+  padding-top: 1px;
+}
+
+.hero-points strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.hero-points p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  max-width: none;
+  font-weight: 500;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.3);
+}
+
 .tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .tag {
   padding: 5px 12px;
