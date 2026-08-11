@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="css/site.css" />
 </head>
 <body>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
   <div class="bg-grid"></div>
+  <div class="bg-neon"></div>
   <div class="bg-glow"></div>
   <div class="bg-orb"></div>
   <div class="bg-noise"></div>
@@ -15,10 +17,6 @@
   <div class="hero-fx" aria-hidden="true">
     <div class="hero-fx-base"></div>
     <div class="hero-fx-space">
-      <div class="space-grid-tunnel"></div>
-      <div class="space-grid-ceiling"></div>
-      <div class="space-grid-wall left"></div>
-      <div class="space-grid-wall right"></div>
       <div class="space-grid-floor"></div>
       <div class="space-horizon"></div>
       <span class="space-node"></span>
@@ -32,7 +30,7 @@
   </div>
 
   <div class="page">
-    <nav class="nav">
+    <nav class="nav" id="siteNav">
       <div class="container nav-inner">
         <div class="brand">
           <img class="brand-avatar" src="assets/avatar-robot.png" alt="薛鼎头像" />
@@ -42,15 +40,16 @@
           <span></span><span></span><span></span>
         </button>
         <div class="nav-links" id="navLinks">
-          <a href="#about">关于</a>
-          <a href="#timeline">经历</a>
-          <a href="#method">工作方法</a>
-          <a href="#visual-preview">视觉设计</a>
-          <a href="#game-preview">原画</a>
-          <a href="#contact">联系</a>
+          <a href="#about" data-spy>关于</a>
+          <a href="#timeline" data-spy>经历</a>
+          <a href="#method" data-spy>工作方法</a>
+          <a href="#visual-preview" data-spy>视觉设计</a>
+          <a href="#game-preview" data-spy>原画</a>
+          <a href="#contact" data-spy>联系</a>
         </div>
       </div>
     </nav>
+    <div class="nav-backdrop" id="navBackdrop"></div>
 
     <div class="hero-wrap">
       <canvas class="hero-data-stream" aria-hidden="true"></canvas>
@@ -68,80 +67,60 @@
               <span>AI</span>
             </span>
           </div>
-          <ul class="hero-points">
-            <li>
-              <span class="hero-point-num">01</span>
-              <div>
-                <strong>身份定位</strong>
-                <p>薛鼎，17 年视觉设计经验。依托 AI 工具掌握度，成为产品经理 + 视觉设计师，能独立推动功能从 0 到 1 落地；当前项目为一款 B 端 APP。</p>
-              </div>
-            </li>
-            <li>
-              <span class="hero-point-num">02</span>
-              <div>
-                <strong>工作方法</strong>
-                <p>Cursor 搭建可跑通 H5 原型 → 评审打磨 → Figma 提升至交付品质 → AI 反向生成 PRD → 将 PRD 与原型交付开发，可直接喂给 AI，形成高效研发闭环。</p>
-              </div>
-            </li>
-            <li>
-              <span class="hero-point-num">03</span>
-              <div>
-                <strong>团队角色</strong>
-                <p>设计部门负责人：统筹设计师协作，将原型页面优化工作有序分发，并回流至原型，确保最终呈现即产品内效果。</p>
-              </div>
-            </li>
-          </ul>
-          <div class="tags">
-            <span class="tag">B 端 APP</span>
-            <span class="tag">0→1 产品落地</span>
-            <span class="tag">H5 交互原型</span>
-            <span class="tag">AI 工作流</span>
-            <span class="tag">PRD 反向生成</span>
-            <span class="tag">设计团队统筹</span>
-          </div>
-          <div class="tool-stack" aria-label="产品与设计工具栈">
-            <div class="tool-stack-head">
-              <div class="section-label">PRODUCT &amp; DESIGN STACK</div>
-              <h2 class="tool-stack-title">产品与设计工具栈</h2>
+          <p>薛鼎，17 年视觉设计经验，依托 AI 工具掌握度，成为产品经理 + 视觉设计师，能独立推动功能从 0 到 1 落地。</p>
+
+          <div class="hero-stats" aria-label="核心数据">
+            <div class="hero-stat">
+              <span class="hero-stat-num mono" data-count="17">0</span>
+              <span class="hero-stat-label">年视觉设计<br />经验积累</span>
             </div>
-            <ul class="tool-stack-list">
-              <li class="tool-stack-item">
-                <span class="tool-icon" aria-hidden="true">
-                  <svg viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 28.5C19 23.25 23.25 19 28.5 19S38 23.25 38 28.5 33.75 38 28.5 38 19 33.75 19 28.5Z" fill="#1ABCFE"/><path d="M0 47.5C0 42.25 4.25 38 9.5 38H19v9.5C19 52.75 14.75 57 9.5 57S0 52.75 0 47.5Z" fill="#0ACF83"/><path d="M19 0v19h9.5C33.75 19 38 14.75 38 9.5S33.75 0 28.5 0H19Z" fill="#FF7262"/><path d="M0 9.5C0 14.75 4.25 19 9.5 19H19V0H9.5C4.25 0 0 4.25 0 9.5Z" fill="#F24E1E"/><path d="M0 28.5C0 33.75 4.25 38 9.5 38H19V19H9.5C4.25 19 0 23.25 0 28.5Z" fill="#A259FF"/></svg>
-                </span>
-                <span class="tool-name">Figma</span>
+            <div class="hero-stat">
+              <span class="hero-stat-num mono" data-count="0">0</span>
+              <span class="hero-stat-label">到 1<br />独立功能落地</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat-num mono">B端</span>
+              <span class="hero-stat-label">当前 APP<br />产品项目</span>
+            </div>
+          </div>
+
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="#visual-preview">查看作品</a>
+            <a class="btn" href="#contact">联系我</a>
+          </div>
+        </div>
+
+        <aside class="glass-card" aria-label="当前项目与职业亮点">
+          <span class="corner-deco tl"></span>
+          <span class="corner-deco br"></span>
+          <div class="section-label">CURRENT PROJECT</div>
+          <div class="project-card">
+            <div class="project-name">
+              <strong>B 端 APP · 从 0 到 1</strong>
+              <span class="project-status">IN PROGRESS</span>
+            </div>
+            <p class="project-desc">原型驱动的产品研发闭环，当前处于评审与打磨阶段。</p>
+            <ul class="project-steps">
+              <li class="project-step done">
+                <span class="project-step-node">01</span>
+                <span>Cursor 搭建 H5 交互原型</span>
               </li>
-              <li class="tool-stack-item">
-                <span class="tool-icon" aria-hidden="true">
-                  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="42" height="42" rx="8" fill="#001E36" stroke="#31A8FF" stroke-width="2"/><text x="11" y="31" fill="#31A8FF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">Ps</text></svg>
-                </span>
-                <span class="tool-name">Photoshop</span>
+              <li class="project-step done">
+                <span class="project-step-node">02</span>
+                <span>Figma 提升交付品质</span>
               </li>
-              <li class="tool-stack-item">
-                <span class="tool-icon" aria-hidden="true">
-                  <img src="assets/logos/jimeng.svg" alt="" loading="lazy" />
-                </span>
-                <span class="tool-name">即梦</span>
+              <li class="project-step now">
+                <span class="project-step-node">03</span>
+                <span>AI 反向生成 PRD</span>
               </li>
-              <li class="tool-stack-item">
-                <span class="tool-icon" aria-hidden="true">
-                  <img src="assets/logos/cursor.svg" alt="" loading="lazy" />
-                </span>
-                <span class="tool-name">Cursor</span>
-              </li>
-              <li class="tool-stack-item">
-                <span class="tool-icon" aria-hidden="true">
-                  <img src="assets/logos/comfyui.svg" alt="" loading="lazy" />
-                </span>
-                <span class="tool-name">ComfyUI</span>
+              <li class="project-step">
+                <span class="project-step-node">04</span>
+                <span>交付开发，喂给 AI</span>
               </li>
             </ul>
           </div>
-        </div>
-        <aside class="glass-card">
-          <span class="corner-deco tl"></span>
-          <span class="corner-deco br"></span>
-          <div class="section-label">CAREER HIGHLIGHTS</div>
+
+          <div class="section-label" style="margin-top:22px;">CAREER HIGHLIGHTS</div>
           <div class="stat-grid">
             <div class="stat"><strong>B端</strong><span>当前 APP 产品项目</span></div>
             <div class="stat"><strong>0→1</strong><span>独立推动功能落地</span></div>
@@ -152,11 +131,105 @@
       </header>
     </div>
 
+    <section id="profile" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-label-wrap">
+              <span class="section-index">01</span>
+              <span class="section-label">POSITION</span>
+            </div>
+            <h2 class="section-title title-with-icon">
+              <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3v4"/><path d="M12 17v4"/><path d="M3 12h4"/><path d="M17 12h4"/><path d="M6.3 6.3l2.8 2.8"/><path d="M14.9 14.9l2.8 2.8"/><path d="M17.7 6.3l-2.8 2.8"/><path d="M9.1 14.9l-2.8 2.8"/><circle cx="12" cy="12" r="3"/></svg>
+              身份定位
+            </h2>
+            <p class="section-desc">产品 × 视觉 × AI 交付三种能力叠加，独立推动功能从 0 到 1。</p>
+          </div>
+          <div class="deco-line"></div>
+        </div>
+
+        <ul class="hero-points stagger">
+          <li>
+            <span class="hero-point-num">01</span>
+            <div>
+              <strong>身份定位</strong>
+              <p>薛鼎，17 年视觉设计经验。依托 AI 工具掌握度，成为产品经理 + 视觉设计师，能独立推动功能从 0 到 1 落地；当前项目为一款 B 端 APP。</p>
+            </div>
+          </li>
+          <li>
+            <span class="hero-point-num">02</span>
+            <div>
+              <strong>工作方法</strong>
+              <p>Cursor 搭建可跑通 H5 原型 → 评审打磨 → Figma 提升至交付品质 → AI 反向生成 PRD → 将 PRD 与原型交付开发，可直接喂给 AI，形成高效研发闭环。</p>
+            </div>
+          </li>
+          <li>
+            <span class="hero-point-num">03</span>
+            <div>
+              <strong>团队角色</strong>
+              <p>设计部门负责人：统筹设计师协作，将原型页面优化工作有序分发，并回流至原型，确保最终呈现即产品内效果。</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="tags">
+          <span class="tag">B 端 APP</span>
+          <span class="tag">0→1 产品落地</span>
+          <span class="tag">H5 交互原型</span>
+          <span class="tag">AI 工作流</span>
+          <span class="tag">PRD 反向生成</span>
+          <span class="tag">设计团队统筹</span>
+        </div>
+
+        <div class="tool-stack" aria-label="产品与设计工具栈">
+          <div class="tool-stack-head">
+            <div class="section-label">PRODUCT &amp; DESIGN STACK</div>
+            <h2 class="tool-stack-title">产品与设计工具栈</h2>
+          </div>
+          <ul class="tool-stack-list">
+            <li class="tool-stack-item">
+              <span class="tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 28.5C19 23.25 23.25 19 28.5 19S38 23.25 38 28.5 33.75 38 28.5 38 19 33.75 19 28.5Z" fill="#1ABCFE"/><path d="M0 47.5C0 42.25 4.25 38 9.5 38H19v9.5C19 52.75 14.75 57 9.5 57S0 52.75 0 47.5Z" fill="#0ACF83"/><path d="M19 0v19h9.5C33.75 19 38 14.75 38 9.5S33.75 0 28.5 0H19Z" fill="#FF7262"/><path d="M0 9.5C0 14.75 4.25 19 9.5 19H19V0H9.5C4.25 0 0 4.25 0 9.5Z" fill="#F24E1E"/><path d="M0 28.5C0 33.75 4.25 38 9.5 38H19V19H9.5C4.25 19 0 23.25 0 28.5Z" fill="#A259FF"/></svg>
+              </span>
+              <span class="tool-name">Figma</span>
+            </li>
+            <li class="tool-stack-item">
+              <span class="tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="42" height="42" rx="8" fill="#001E36" stroke="#31A8FF" stroke-width="2"/><text x="11" y="31" fill="#31A8FF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">Ps</text></svg>
+              </span>
+              <span class="tool-name">Photoshop</span>
+            </li>
+            <li class="tool-stack-item">
+              <span class="tool-icon" aria-hidden="true">
+                <img src="assets/logos/jimeng.svg" alt="" loading="lazy" />
+              </span>
+              <span class="tool-name">即梦</span>
+            </li>
+            <li class="tool-stack-item">
+              <span class="tool-icon" aria-hidden="true">
+                <img src="assets/logos/cursor.svg" alt="" loading="lazy" />
+              </span>
+              <span class="tool-name">Cursor</span>
+            </li>
+            <li class="tool-stack-item">
+              <span class="tool-icon" aria-hidden="true">
+                <img src="assets/logos/comfyui.svg" alt="" loading="lazy" />
+              </span>
+              <span class="tool-name">ComfyUI</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <section id="timeline" class="section">
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="section-label">TIMELINE</div>
+            <div class="section-label-wrap">
+              <span class="section-index">02</span>
+              <span class="section-label">TIMELINE</span>
+            </div>
             <h2 class="section-title title-with-icon">
               <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
               职业经历
@@ -164,8 +237,9 @@
           </div>
           <div class="deco-line"></div>
         </div>
-        <div class="timeline">
+        <div class="timeline stagger">
           <article class="timeline-item">
+            <span class="timeline-dot" aria-hidden="true"></span>
             <div class="timeline-year">2026 —</div>
             <div>
               <h3>产品经理 × 视觉设计师 · 设计部门负责人</h3>
@@ -173,6 +247,7 @@
             </div>
           </article>
           <article class="timeline-item">
+            <span class="timeline-dot" aria-hidden="true"></span>
             <div class="timeline-year">2022 — 25</div>
             <div>
               <h3>互联网项目游戏板块 · IP 形象设计</h3>
@@ -180,6 +255,7 @@
             </div>
           </article>
           <article class="timeline-item">
+            <span class="timeline-dot" aria-hidden="true"></span>
             <div class="timeline-year">2015 — 22</div>
             <div>
               <h3>原画组长 / 资深原画师</h3>
@@ -187,6 +263,7 @@
             </div>
           </article>
           <article class="timeline-item">
+            <span class="timeline-dot" aria-hidden="true"></span>
             <div class="timeline-year">2009 — 14</div>
             <div>
               <h3>原画师</h3>
@@ -201,7 +278,10 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="section-label">METHOD</div>
+            <div class="section-label-wrap">
+              <span class="section-index">03</span>
+              <span class="section-label">METHOD</span>
+            </div>
             <h2 class="section-title title-with-icon">
               <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3v4"/><path d="M12 17v4"/><path d="M3 12h4"/><path d="M17 12h4"/><path d="M6.3 6.3l2.8 2.8"/><path d="M14.9 14.9l2.8 2.8"/><path d="M17.7 6.3l-2.8 2.8"/><path d="M9.1 14.9l-2.8 2.8"/><circle cx="12" cy="12" r="3"/></svg>
               原型驱动的产品工作流
@@ -211,7 +291,7 @@
           <div class="deco-line"></div>
         </div>
 
-        <div class="method-flow" aria-label="工作流步骤">
+        <div class="method-flow stagger" aria-label="工作流步骤">
           <article class="method-step">
             <div class="method-step-num">01</div>
             <div class="method-step-icon" aria-hidden="true">
@@ -220,7 +300,7 @@
             <h3>Cursor 建逻辑闭环</h3>
             <p>用 Cursor 快速搭建可完整跑通的 H5 交互原型，先验证流程与逻辑，而不是先写长文档。</p>
           </article>
-          <div class="method-arrow" aria-hidden="true">→</div>
+          <div class="method-arrow" aria-hidden="true"></div>
           <article class="method-step">
             <div class="method-step-num">02</div>
             <div class="method-step-icon" aria-hidden="true">
@@ -229,7 +309,7 @@
             <h3>反复评审打磨</h3>
             <p>以可点击原型为评审对象，多方对齐交互细节，直到逻辑闭环通过评审。</p>
           </article>
-          <div class="method-arrow" aria-hidden="true">→</div>
+          <div class="method-arrow" aria-hidden="true"></div>
           <article class="method-step">
             <div class="method-step-num">03</div>
             <div class="method-step-icon" aria-hidden="true">
@@ -238,7 +318,7 @@
             <h3>Figma 提升品质</h3>
             <p>结合 Figma 将原型页面优化到产品交付标准，视觉与组件体系对齐线上品质。</p>
           </article>
-          <div class="method-arrow" aria-hidden="true">→</div>
+          <div class="method-arrow" aria-hidden="true"></div>
           <article class="method-step">
             <div class="method-step-num">04</div>
             <div class="method-step-icon" aria-hidden="true">
@@ -247,7 +327,7 @@
             <h3>AI 反向生成 PRD</h3>
             <p>用 AI 补充原型无法承载的信息（规则、边界、埋点等），反向生成结构化 PRD。</p>
           </article>
-          <div class="method-arrow" aria-hidden="true">→</div>
+          <div class="method-arrow" aria-hidden="true"></div>
           <article class="method-step method-step-highlight">
             <div class="method-step-num">05</div>
             <div class="method-step-icon" aria-hidden="true">
@@ -313,7 +393,10 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="section-label">DIGITAL DESIGN</div>
+            <div class="section-label-wrap">
+              <span class="section-index">04</span>
+              <span class="section-label">DIGITAL DESIGN</span>
+            </div>
             <h2 class="section-title title-with-icon">
               <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/></svg>
               互联网视觉设计
@@ -333,7 +416,10 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="section-label">CONCEPT ART</div>
+            <div class="section-label-wrap">
+              <span class="section-index">05</span>
+              <span class="section-label">CONCEPT ART</span>
+            </div>
             <h2 class="section-title title-with-icon">
               <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M14.5 4.5l5 5"/><path d="M5 19l3.5-.8 9.8-9.8a1.6 1.6 0 0 0 0-2.3l-.4-.4a1.6 1.6 0 0 0-2.3 0L5.8 15.5 5 19z"/><path d="M12.5 8.5l3 3"/><path d="M4 20h16"/></svg>
               游戏原画精选
@@ -353,7 +439,10 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <div class="section-label">CONTACT</div>
+            <div class="section-label-wrap">
+              <span class="section-index">06</span>
+              <span class="section-label">CONTACT</span>
+            </div>
             <h2 class="section-title title-with-icon">
               <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
               合作与联系
@@ -382,9 +471,17 @@
     </footer>
   </div>
 
-  <div id="modal" class="modal">
-    <span id="modalClose" class="modal-close">×</span>
-    <img id="modalImg" src="" alt="作品预览" />
+  <button class="to-top" id="toTop" type="button" aria-label="返回顶部">↑</button>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="作品预览">
+    <span id="modalClose" class="modal-close" role="button" aria-label="关闭">×</span>
+    <div class="modal-stage">
+      <span id="modalPrev" class="modal-nav prev" role="button" aria-label="上一张">‹</span>
+      <img id="modalImg" src="" alt="作品预览" />
+      <span id="modalNext" class="modal-nav next" role="button" aria-label="下一张">›</span>
+      <div id="modalCount" class="modal-count"></div>
+      <div id="modalCaption" class="modal-caption"></div>
+    </div>
   </div>
 
   <script src="js/works-data.js"></script>
