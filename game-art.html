@@ -3,56 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>游戏原画作品集 | 薛鼎</title>
+  <title>游戏原画 | 薛鼎</title>
   <link rel="stylesheet" href="css/site.css" />
 </head>
 <body>
+  <div class="bg-ambient" aria-hidden="true"></div>
   <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-  <div class="bg-grid"></div>
-  <div class="bg-neon"></div>
-  <div class="bg-glow"></div>
-  <div class="bg-noise"></div>
 
   <div class="page">
     <nav class="nav" id="siteNav">
       <div class="container nav-inner">
         <a class="brand" href="index.html">
-          <img class="brand-avatar" src="assets/avatar-robot.png" alt="薛鼎头像" />
-          <span>← Xue Ding</span>
+          <img class="brand-avatar" src="assets/avatar-robot.png" alt="" />
+          <span>Xue Ding</span>
         </a>
         <button class="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
         <div class="nav-links" id="navLinks">
           <a href="index.html">首页</a>
-          <a href="visual-design.html">视觉设计</a>
+          <a href="career-internet.html">互联网经历</a>
+          <a href="index.html#contact">联系</a>
         </div>
       </div>
     </nav>
     <div class="nav-backdrop" id="navBackdrop"></div>
 
     <header class="container page-hero">
-      <div class="section-label-wrap">
-        <span class="section-index">05</span>
-        <span class="section-label">CONCEPT ART · FULL GALLERY</span>
-      </div>
-      <h1 class="title-with-icon">
-        <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M14.5 4.5l5 5"/><path d="M5 19l3.5-.8 9.8-9.8a1.6 1.6 0 0 0 0-2.3l-.4-.4a1.6 1.6 0 0 0-2.3 0L5.8 15.5 5 19z"/><path d="M12.5 8.5l3 3"/><path d="M4 20h16"/></svg>
-        游戏原画作品集
-      </h1>
-      <p>共 50+ 张作品，支持分类筛选与关键词搜索，点击可放大预览。</p>
+      <a class="back-link" href="index.html">← 返回首页</a>
+      <span class="section-label">Concept Art · 2009 — 2022</span>
+      <h1>资深游戏原画 · 用画笔搭建世界</h1>
+      <p>角色与场景方法论、多类型风格定义、团队与外包质量。支持分类筛选与搜索。</p>
     </header>
 
-    <section class="section" style="padding-top:0;">
+    <section class="section" style="padding-top: 0;">
       <div class="container">
         <div class="toolbar">
-          <button class="btn filter-btn active" data-filter="all">全部</button>
-          <button class="btn filter-btn" data-filter="角色类">角色类</button>
-          <button class="btn filter-btn" data-filter="场景类">场景类</button>
-          <button class="btn filter-btn" data-filter="写实">写实</button>
-          <button class="btn filter-btn" data-filter="半写实">半写实</button>
-          <button class="btn filter-btn" data-filter="卡通">卡通</button>
-          <input id="searchInput" class="search" type="text" placeholder="搜索：科幻 / 国风 / 角色…" />
+          <button class="filter-btn active pressable" type="button" data-filter="all">全部</button>
+          <button class="filter-btn pressable" type="button" data-filter="角色类">角色类</button>
+          <button class="filter-btn pressable" type="button" data-filter="场景类">场景类</button>
+          <button class="filter-btn pressable" type="button" data-filter="写实">写实</button>
+          <button class="filter-btn pressable" type="button" data-filter="半写实">半写实</button>
+          <button class="filter-btn pressable" type="button" data-filter="卡通">卡通</button>
+          <input id="searchInput" class="search" type="search" placeholder="搜索：科幻 / 国风 / 角色…" />
           <span id="resultCount" class="result-count" aria-live="polite"></span>
         </div>
         <div id="gallery" class="gallery"></div>
@@ -64,14 +57,14 @@
     </footer>
   </div>
 
-  <button class="to-top" id="toTop" type="button" aria-label="返回顶部">↑</button>
+  <button class="to-top pressable" id="toTop" type="button" aria-label="返回顶部">↑</button>
 
   <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="作品预览">
-    <span id="modalClose" class="modal-close" role="button" aria-label="关闭">×</span>
+    <button type="button" id="modalClose" class="modal-close pressable" aria-label="关闭">×</button>
     <div class="modal-stage">
-      <span id="modalPrev" class="modal-nav prev" role="button" aria-label="上一张">‹</span>
+      <button type="button" id="modalPrev" class="modal-nav prev pressable" aria-label="上一张">‹</button>
       <img id="modalImg" src="" alt="作品预览" />
-      <span id="modalNext" class="modal-nav next" role="button" aria-label="下一张">›</span>
+      <button type="button" id="modalNext" class="modal-nav next pressable" aria-label="下一张">›</button>
       <div id="modalCount" class="modal-count"></div>
       <div id="modalCaption" class="modal-caption"></div>
     </div>
@@ -81,8 +74,7 @@
   <script src="js/site.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      panIndex = 0;
-      renderGameGallery("gallery", { all: true });
+      renderGameGallery("gallery");
     });
   </script>
 </body>

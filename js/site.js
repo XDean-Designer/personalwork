@@ -1,6 +1,6 @@
 document.documentElement.classList.add("js");
 
-/* ─────────────── 作品弹窗（支持 ←→ 切换 + 计数） ─────────────── */
+/* ─────────────── 作品弹窗 ─────────────── */
 const modalRegistry = [];
 let modalIndex = 0;
 
@@ -9,7 +9,6 @@ function openModal(src, alt) {
   if (match >= 0) {
     openModalAt(match);
   } else {
-    // 兜底：未注册的图片单独展示
     modalIndex = -1;
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("modalImg");
@@ -35,11 +34,12 @@ function openModalAt(idx) {
   modalImg.alt = item.title;
   const count = document.getElementById("modalCount");
   const caption = document.getElementById("modalCaption");
-  if (count) count.textContent = `${String(modalIndex + 1).padStart(2, "0")} / ${String(modalRegistry.length).padStart(2, "0")}`;
+  if (count) {
+    count.textContent = `${String(modalIndex + 1).padStart(2, "0")} / ${String(modalRegistry.length).padStart(2, "0")}`;
+  }
   if (caption) caption.textContent = item.title;
   modal.classList.add("open");
-  const close = document.getElementById("modalClose");
-  close?.focus({ preventScroll: true });
+  document.getElementById("modalClose")?.focus({ preventScroll: true });
 }
 
 function modalStep(dir) {
@@ -50,36 +50,24 @@ function modalStep(dir) {
 
 function initModal() {
   const modal = document.getElementById("modal");
-  const modalClose = document.getElementById("modalClose");
-  const modalPrev = document.getElementById("modalPrev");
-  const modalNext = document.getElementById("modalNext");
   if (!modal) return;
-
-  modalClose?.addEventListener("click", () => modal.classList.remove("open"));
+  document.getElementById("modalClose")?.addEventListener("click", () => modal.classList.remove("open"));
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.classList.remove("open");
   });
-  modalPrev?.addEventListener("click", (e) => { e.stopPropagation(); modalStep(-1); });
-  modalNext?.addEventListener("click", (e) => { e.stopPropagation(); modalStep(1); });
+  document.getElementById("modalPrev")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    modalStep(-1);
+  });
+  document.getElementById("modalNext")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    modalStep(1);
+  });
   document.addEventListener("keydown", (e) => {
     if (!modal.classList.contains("open")) return;
     if (e.key === "Escape") modal.classList.remove("open");
     else if (e.key === "ArrowLeft") modalStep(-1);
     else if (e.key === "ArrowRight") modalStep(1);
-  });
-  // 焦点陷阱：打开时聚焦关闭按钮
-  const focusTargets = [modalClose, modalPrev, modalNext].filter(Boolean);
-  modal.addEventListener("keydown", (e) => {
-    if (e.key !== "Tab" || focusTargets.length === 0) return;
-    const first = focusTargets[0];
-    const last = focusTargets[focusTargets.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
   });
 }
 
@@ -116,30 +104,11 @@ function updateCardIndices(container) {
   });
 }
 
-function renderFeaturedGame(containerId) {
+function renderGameGallery(containerId) {
   const el = document.getElementById(containerId);
-  if (!el) return;
+  if (!el || typeof GAME_WORKS === "undefined") return;
   panIndex = 0;
-  const featured = FEATURED_GAME.map((p) => GAME_WORKS.find((w) => w.path === p)).filter(Boolean);
-  featured.forEach((work) => el.appendChild(createShowcaseCard(work)));
-  updateCardIndices(el);
-}
-
-function renderVisualPreview(containerId) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  panIndex = 0;
-  const featured = (typeof FEATURED_VISUAL !== "undefined" ? FEATURED_VISUAL : VISUAL_WORKS.map((w) => w.path))
-    .map((p) => VISUAL_WORKS.find((w) => w.path === p))
-    .filter(Boolean);
-  featured.forEach((work) => el.appendChild(createShowcaseCard(work)));
-  updateCardIndices(el);
-}
-
-function renderGameGallery(containerId, options = {}) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  panIndex = 0;
+  modalRegistry.length = 0;
 
   let activeFilter = "all";
   const filterBtns = document.querySelectorAll(".filter-btn");
@@ -149,8 +118,8 @@ function renderGameGallery(containerId, options = {}) {
   function render() {
     const keyword = (searchInput?.value || "").trim().toLowerCase();
     el.innerHTML = "";
-    const list = GAME_WORKS;
-    const filtered = list.filter((w) => {
+    modalRegistry.length = 0;
+    const filtered = GAME_WORKS.filter((w) => {
       const byFilter = activeFilter === "all" || w.category === activeFilter || w.style === activeFilter;
       const byKeyword =
         !keyword ||
@@ -162,15 +131,14 @@ function renderGameGallery(containerId, options = {}) {
     filtered.forEach((work) => el.appendChild(createShowcaseCard(work)));
     updateCardIndices(el);
     if (resultCount) resultCount.textContent = `${String(filtered.length).padStart(2, "0")} WORKS`;
-    if (filterBtns.length) {
-      filterBtns.forEach((b) => {
-        const data = b.dataset.filter;
-        const count = data === "all"
-          ? list.length
-          : list.filter((w) => w.category === data || w.style === data).length;
-        b.dataset.count = String(count).padStart(2, "0");
-      });
-    }
+    filterBtns.forEach((b) => {
+      const data = b.dataset.filter;
+      const count =
+        data === "all"
+          ? GAME_WORKS.length
+          : GAME_WORKS.filter((w) => w.category === data || w.style === data).length;
+      b.dataset.count = String(count).padStart(2, "0");
+    });
   }
 
   filterBtns.forEach((btn) => {
@@ -185,18 +153,6 @@ function renderGameGallery(containerId, options = {}) {
   render();
 }
 
-function renderVisualGallery(containerId) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  panIndex = 0;
-  VISUAL_WORKS.forEach((work) => {
-    const card = createShowcaseCard(work, "wide");
-    el.appendChild(card);
-  });
-  updateCardIndices(el);
-}
-
-/* ─────────────── 滚动进度条 + 返回顶部 + nav 状态 ─────────────── */
 function initScrollState() {
   const progress = document.getElementById("scrollProgress");
   const toTop = document.getElementById("toTop");
@@ -211,26 +167,20 @@ function initScrollState() {
   };
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
-
-  toTop?.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
+  toTop?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 }
 
-/* ─────────────── scrollspy：当前章节高亮 ─────────────── */
 function initScrollSpy() {
   const links = document.querySelectorAll(".nav-links a[data-spy]");
   if (!links.length) return;
   const targets = [...links]
     .map((a) => document.querySelector(a.getAttribute("href")))
     .filter(Boolean);
-
   const setActive = (id) => {
     links.forEach((a) => {
       a.classList.toggle("active", a.getAttribute("href") === `#${id}`);
     });
   };
-
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -242,7 +192,6 @@ function initScrollSpy() {
   targets.forEach((t) => io.observe(t));
 }
 
-/* ─────────────── 滚动入场动画 ─────────────── */
 function initReveal() {
   const els = document.querySelectorAll(".reveal, .stagger");
   if (!els.length) return;
@@ -260,43 +209,6 @@ function initReveal() {
   els.forEach((el) => io.observe(el));
 }
 
-/* ─────────────── 数字滚动 ─────────────── */
-function initCounters() {
-  const nums = document.querySelectorAll("[data-count]");
-  if (!nums.length) return;
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animateCount(entry.target);
-          io.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.6 }
-  );
-  nums.forEach((n) => io.observe(n));
-}
-
-function animateCount(node) {
-  const target = parseInt(node.dataset.count, 10);
-  if (Number.isNaN(target) || target <= 0) return;
-  const duration = 1200;
-  const start = performance.now();
-  function tick(now) {
-    const p = Math.min(1, (now - start) / duration);
-    const eased = 1 - Math.pow(1 - p, 3);
-    node.textContent = String(Math.round(target * eased));
-    if (p < 1) requestAnimationFrame(tick);
-    else {
-      node.textContent = String(target);
-      node.classList.add("stat-flash");
-    }
-  }
-  requestAnimationFrame(tick);
-}
-
-/* ─────────────── 导航切换 + 遮罩 ─────────────── */
 function initNavToggle() {
   const toggle = document.querySelector(".nav-toggle");
   const links = document.getElementById("navLinks") || document.querySelector(".nav-links");
@@ -309,7 +221,6 @@ function initNavToggle() {
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "打开菜单");
   };
-
   const open = () => {
     links.classList.add("open");
     backdrop?.classList.add("show");
@@ -318,105 +229,52 @@ function initNavToggle() {
   };
 
   toggle.addEventListener("click", () => {
-    const isOpen = links.classList.contains("open");
-    isOpen ? close() : open();
+    links.classList.contains("open") ? close() : open();
   });
-
   backdrop?.addEventListener("click", close);
-
   links.querySelectorAll("a").forEach((a) => {
     a.addEventListener("click", () => {
       if (window.matchMedia("(max-width: 900px)").matches) close();
     });
   });
-
   window.addEventListener("resize", () => {
     if (window.innerWidth > 900) close();
   });
 }
 
-/* ─────────────── hero 数据流 canvas（离屏暂停） ─────────────── */
-function initDataStream() {
-  const canvas = document.querySelector(".hero-data-stream");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  const wrap = canvas.parentElement;
+function highlightWorkCard(id) {
+  if (!id) return;
+  document.querySelectorAll(".entry-card.is-highlight").forEach((el) => {
+    el.classList.remove("is-highlight");
+  });
+  const card = document.getElementById(id);
+  if (!card) return;
+  card.classList.add("is-highlight");
+  window.setTimeout(() => card.classList.remove("is-highlight"), 2200);
+}
 
-  const CHARS = "01アイウエオ0110ABCDEFabcdef01100101";
-  const FONT_SIZE = 13;
-  const COL_W = 16;
-  let cols = [];
-  let raf = null;
-  let running = false;
-
-  function resize() {
-    canvas.width = wrap.offsetWidth;
-    canvas.height = wrap.offsetHeight;
-    const count = Math.max(1, Math.floor(canvas.width / COL_W));
-    cols = Array.from({ length: count }, (_, i) => ({
-      x: i * COL_W + COL_W / 2,
-      y: Math.random() * canvas.height,
-      speed: 0.6 + Math.random() * 1.4,
-      len: 6 + Math.floor(Math.random() * 10),
-    }));
-  }
-
-  function draw() {
-    if (!running) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = `${FONT_SIZE}px "Courier New", monospace`;
-    ctx.textAlign = "center";
-
-    for (const col of cols) {
-      for (let j = 0; j < col.len; j++) {
-        const y = col.y - j * FONT_SIZE;
-        if (y < -FONT_SIZE || y > canvas.height + FONT_SIZE) continue;
-        const t = 1 - j / col.len;
-        if (j === 0) {
-          ctx.fillStyle = `rgba(255, 200, 100, ${t * 0.9})`;
-        } else {
-          ctx.fillStyle = `rgba(255, 138, 34, ${t * 0.55})`;
-        }
-        ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], col.x, y);
+function initWorksJump() {
+  document.querySelectorAll(".js-works-jump").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const targetId = link.getAttribute("data-highlight");
+      const works = document.getElementById("works");
+      if (works) {
+        works.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-      col.y += col.speed;
-      if (col.y - col.len * FONT_SIZE > canvas.height) {
-        col.y = -FONT_SIZE * 2;
-        col.speed = 0.6 + Math.random() * 1.4;
-        col.len = 6 + Math.floor(Math.random() * 10);
-      }
-    }
-    raf = requestAnimationFrame(draw);
-  }
+      // 等滚动启动后再高亮，避免被忽略
+      window.setTimeout(() => highlightWorkCard(targetId), 280);
+    });
+  });
 
-  function start() {
-    if (running) return;
-    running = true;
-    draw();
-  }
-  function stop() {
-    running = false;
-    if (raf) cancelAnimationFrame(raf);
-    raf = null;
-  }
-
-  resize();
-  window.addEventListener("resize", () => { stop(); resize(); start(); });
-
-  // 仅当 hero 可见时运行
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) start();
-          else stop();
-        });
-      },
-      { threshold: 0 }
-    );
-    io.observe(wrap);
-  } else {
-    start();
+  // 支持直接带 hash 进入，如 #work-game
+  const hash = location.hash.replace(/^#/, "");
+  if (hash === "work-game" || hash === "work-ai") {
+    window.setTimeout(() => {
+      document.getElementById("works")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      highlightWorkCard(hash);
+    }, 100);
   }
 }
 
@@ -425,7 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollState();
   initScrollSpy();
   initReveal();
-  initCounters();
   initNavToggle();
-  initDataStream();
+  initWorksJump();
 });

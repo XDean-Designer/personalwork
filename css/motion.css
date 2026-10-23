@@ -1,0 +1,93 @@
+/* ══════════════════════════════════════════════
+   iOS-style light skeuomorphic interactions
+══════════════════════════════════════════════ */
+
+.pressable {
+  transition:
+    transform var(--dur-fast) var(--ease-ios),
+    box-shadow var(--dur-fast) var(--ease-ios),
+    background-color var(--dur-fast) var(--ease-ios),
+    opacity var(--dur-fast) var(--ease-ios);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.pressable:active,
+.pressable.is-pressed {
+  transform: scale(var(--press-scale));
+}
+
+.lift {
+  transition:
+    transform var(--dur-mid) var(--ease-out),
+    box-shadow var(--dur-mid) var(--ease-out),
+    border-color var(--dur-mid) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+html.js .reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+html.js .stagger > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+html.js .stagger.in-view > * {
+  opacity: 1;
+  transform: none;
+}
+html.js .stagger.in-view > *:nth-child(1) { transition-delay: 0.04s; }
+html.js .stagger.in-view > *:nth-child(2) { transition-delay: 0.09s; }
+html.js .stagger.in-view > *:nth-child(3) { transition-delay: 0.14s; }
+html.js .stagger.in-view > *:nth-child(4) { transition-delay: 0.19s; }
+html.js .stagger.in-view > *:nth-child(5) { transition-delay: 0.24s; }
+html.js .stagger.in-view > *:nth-child(6) { transition-delay: 0.29s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html.js .reveal,
+  html.js .stagger > *,
+  html.js .reveal.in-view,
+  html.js .stagger.in-view > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-stage {
+    perspective: none !important;
+  }
+  .career-card,
+  .career-card:hover,
+  .career-card:focus-within,
+  .career-card.is-active,
+  .career-deck:hover .career-card:not(:hover),
+  .career-deck.has-active .career-card:not(.is-active) {
+    transform: none !important;
+    filter: none !important;
+  }
+  .flow-step:hover {
+    transform: none !important;
+  }
+}
