@@ -1,0 +1,232 @@
+/* Shell: left nav + 390×844 phone — aligned with 提成设置 */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  background: #e9e9eb;
+  display: flex;
+  align-items: flex-start;
+  font-family: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.site-nav {
+  position: fixed; left: 0; top: 0; bottom: 0; width: 200px; z-index: 200;
+  background: #1c1c1e; color: #e8e8e8;
+  display: flex; flex-direction: column; overflow-y: auto;
+}
+.site-nav .nav-brand { padding: 18px 18px 14px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 8px; }
+.site-nav .nav-brand .t { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.4; }
+.site-nav .nav-brand .s { font-size: 11px; color: #9a9a9a; margin-top: 4px; }
+.site-nav .nav-group { padding: 0 10px; margin-bottom: 6px; }
+.site-nav .nav-group.grow { margin-top: auto; }
+.site-nav .g-t { font-size: 11px; color: #9a9a9a; padding: 8px 8px 4px; }
+.site-nav .nav-item {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 9px 8px; border: none; background: transparent; color: #c8c8c8;
+  font-family: inherit; font-size: 13px; text-align: left; cursor: pointer; border-radius: 8px;
+}
+.site-nav .nav-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+.site-nav .nav-item.on { background: rgba(243,47,65,.2); color: #fff; font-weight: 600; }
+.site-nav .nav-item .idx {
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255,255,255,.12); color: #fff; font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+}
+.site-nav .nav-item.on .idx { background: #F32F41; }
+.site-nav a.nav-link.nav-item { text-decoration: none; color: #c8c8c8; }
+.site-nav a.nav-link.nav-item:hover { color: #fff; }
+.site-nav .nav-arrow { padding: 0 8px 2px; font-size: 12px; color: #6b6b6b; line-height: 1; }
+
+:root {
+  --nav-w: 200px;
+  --prd-w: 420px;
+  --prd-gap: 16px;
+  --stage-pad-y: 24px;
+  --stage-pad-x: 20px;
+}
+
+/* 真机在「导航右缘 ↔ PRD 左缘」之间居中；PRD 固定贴右 */
+.stage {
+  flex: 1; min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: var(--nav-w);
+  padding: var(--stage-pad-y) var(--stage-pad-x) 40px;
+  /* 为右侧固定 PRD 预留宽度，使 #frame 在剩余区间内居中 */
+  padding-right: calc(var(--stage-pad-x) + var(--prd-w) + var(--prd-gap));
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+@media (max-width: 760px) {
+  html:not(.view-desktop) .site-nav { display: none; }
+  html:not(.view-desktop) .stage { margin-left: 0; padding: 0; }
+  html:not(.view-desktop) .prd-pane { display: none !important; }
+}
+@media (max-width: 1100px) {
+  html.view-desktop .prd-pane { display: none !important; }
+  html.view-desktop .stage {
+    padding-right: var(--stage-pad-x);
+    justify-content: center;
+  }
+}
+
+/* ===== 右侧 PRD 同步面板（贴右收窄） ===== */
+.prd-pane {
+  position: fixed;
+  top: var(--stage-pad-y);
+  right: var(--stage-pad-x);
+  z-index: 150;
+  width: var(--prd-w);
+  height: var(--phone-h, 844px);
+  background: #fff;
+  border: 1px solid #D7D7D5;
+  border-radius: 12px;
+  box-shadow: 0 0 24px rgba(0,0,0,.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.prd-pane__bar {
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 14px;
+  background: #1c1c1e; color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.prd-pane__meta { min-width: 0; display: flex; align-items: baseline; gap: 8px; }
+.prd-pane__label {
+  flex-shrink: 0; font-size: 11px; font-weight: 700; color: #F32F41;
+  letter-spacing: .04em;
+}
+.prd-pane__title {
+  font-size: 13px; font-weight: 600; color: #f2f2f2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.prd-pane__open {
+  flex-shrink: 0; font-size: 12px; color: #fff; text-decoration: none;
+  padding: 5px 10px; border-radius: 6px; background: rgba(243,47,65,.9);
+}
+.prd-pane__open:hover { background: #F32F41; }
+.prd-pane__frame {
+  flex: 1; min-height: 0; width: 100%; border: 0; background: #fafafa;
+}
+
+#frame {
+  width: var(--phone-w, 390px);
+  height: var(--phone-h, 844px);
+  box-shadow: 0 0 40px rgba(0,0,0,.25);
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-page, #F7F7F7);
+  border: 1px solid var(--border, #D7D7D5);
+  display: flex;
+  flex-direction: column;
+}
+.phone-inner {
+  display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative;
+  background: var(--bg-page, #F7F7F7);
+}
+
+html.view-mobile, html.view-mobile body {
+  height: 100%; width: 100%; overflow: hidden; overscroll-behavior: none;
+  touch-action: manipulation; background: var(--bg-page, #F7F7F7);
+  position: fixed; inset: 0;
+}
+html.view-mobile .prd-pane { display: none !important; }
+html.view-mobile .stage {
+  margin-left: 0; padding: 0; width: var(--app-w, 100%); height: var(--app-h, 100%);
+  display: block; position: fixed; top: var(--app-top, 0); left: var(--app-left, 0); overflow: hidden;
+}
+html.view-mobile #frame { box-shadow: none; border: none; width: 100%; height: 100%; max-width: none; }
+/* 真机演示：藏假状态栏；底部避让系统导航栏/手势条（勿置 0，否则页脚被挡） */
+html.view-mobile {
+  /* env 优先；部分 Android 在 viewport-fit=cover 下 inset 为 0，用 34px 兜底 */
+  --safe-bottom: max(34px, env(safe-area-inset-bottom, 0px));
+}
+html.view-mobile .status-bar { display: none !important; }
+html.view-mobile #phone-inner,
+html.view-mobile .phone-inner {
+  --status-bar-h: 0px;
+}
+
+/* 真机：左滑抽屉唤出完整导航 / 演示条 */
+.nav-drawer-mask,
+.nav-edge-hit { display: none; }
+
+html.view-mobile .site-nav {
+  display: flex !important;
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: min(86vw, 300px);
+  max-width: 300px;
+  z-index: 400;
+  transform: translate3d(-105%, 0, 0);
+  transition: transform 0.28s cubic-bezier(0.22, 0.82, 0.24, 1);
+  box-shadow: none;
+  padding-top: env(safe-area-inset-top, 0px);
+  -webkit-overflow-scrolling: touch;
+}
+html.view-mobile .site-nav.is-dragging {
+  transition: none !important;
+}
+html.view-mobile.nav-drawer-open .site-nav {
+  transform: translate3d(0, 0, 0);
+  box-shadow: 8px 0 28px rgba(0, 0, 0, 0.35);
+}
+html.view-mobile .nav-drawer-mask {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+html.view-mobile.nav-drawer-open .nav-drawer-mask {
+  opacity: 1;
+  pointer-events: auto;
+}
+html.view-mobile .nav-edge-hit {
+  display: block;
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 20px;
+  z-index: 300;
+  touch-action: pan-y;
+}
+html.view-mobile.nav-drawer-open .nav-edge-hit {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.view-mobile .site-nav,
+  html.view-mobile .nav-drawer-mask {
+    transition: none !important;
+  }
+}
+
+/* run-to-figma：隐藏左侧导航与 PRD 面板，固定桌面 390 壳 */
+html.figma-capture .site-nav { display: none !important; }
+html.figma-capture .prd-pane { display: none !important; }
+html.figma-capture .stage {
+  margin-left: 0 !important;
+  padding: 0 !important;
+  padding-right: 0 !important;
+  display: block; width: 390px; height: 844px;
+}
+html.figma-capture #frame {
+  box-shadow: none; border: none;
+  width: 390px; height: 844px;
+}
+html.figma-capture body { background: var(--bg-page, #F7F7F7); }
+
+.toast-msg {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  z-index: 120; background: rgba(0,0,0,.78); color: #fff;
+  padding: 12px 18px; border-radius: 10px; font-size: 14px; max-width: 260px;
+  text-align: center; pointer-events: none; opacity: 0; transition: opacity .2s;
+}
+.toast-msg.show { opacity: 1; }

@@ -1,0 +1,502 @@
+/* 开单结账2.0 · 纠偏版样式（C2/U2/E1 + 飞入 + 结算券/备注） */
+
+/* —— 首页 —— */
+.v2-home { background: #f5f5f5; }
+.v2-home-hero {
+  position: absolute; left: 0; top: 0; width: 390px; height: 160px;
+  background: linear-gradient(180deg, #FF5A6A 0%, #F32F41 55%, #f5f5f5 100%);
+  z-index: 1;
+}
+.v2-home-head {
+  position: absolute; left: 16px; right: 16px; top: calc(var(--statusbar-h, 53px) + 9px); z-index: 2;
+  display: flex; align-items: center; gap: 10px; color: #fff;
+}
+.v2-home-logo {
+  width: 40px; height: 40px; border-radius: 50%; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #F32F41;
+}
+.v2-home-meta .nm { font-size: 16px; font-weight: 600; line-height: 1.3; }
+.v2-home-meta .sub { font-size: 12px; opacity: .9; margin-top: 2px; }
+/* 两按钮下沿贴页面中线：844/2=422，按钮高88 → top=334 */
+.v2-home-actions {
+  position: absolute; left: 16px; right: 16px; top: 334px; z-index: 3;
+  display: flex; gap: 12px;
+}
+.v2-home-btn {
+  flex: 1; height: 88px; border: 0; border-radius: 14px; cursor: pointer;
+  font-family: inherit; text-align: left; padding: 14px 14px 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+.v2-home-btn.bill { background: linear-gradient(135deg, #FFE7D6 0%, #FFD4B8 100%); }
+.v2-home-btn.card { background: linear-gradient(135deg, #FFE0E6 0%, #FFC9D4 100%); }
+.v2-home-btn .t { font-size: 20px; font-weight: 700; color: #1a1a1a; }
+.v2-home-btn .s { font-size: 12px; color: #666; margin-top: 4px; }
+.v2-home-btn .ico {
+  float: right; width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,.65); display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+/* 首页「取挂单（N）」入口：两大按钮下方的描边小按钮 */
+.v2-home-hold {
+  position: absolute; left: 16px; right: 16px; top: 436px; height: 40px; z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid #F32F41; border-radius: 12px;
+  font-family: inherit; font-size: 15px; font-weight: 500; color: #F32F41;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.v2-home-hold:active { background: #FFF2F2; }
+.v2-home-tabs {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 56px;
+  background: #fff; border-top: 1px solid #eee; z-index: 4;
+  display: flex; align-items: center; justify-content: space-around;
+  padding-bottom: 8px; pointer-events: none;
+}
+.v2-home-tabs .ti { flex: 1; text-align: center; font-size: 10px; color: #929292; }
+.v2-home-tabs .ti.on { color: #F32F41; font-weight: 600; }
+.v2-home-tabs .ti .ic { display: block; font-size: 18px; line-height: 22px; margin-bottom: 2px; }
+
+/* —— 选顾客：挂单列表入口在标题栏右侧（.nav-bar .nav-hold）—— */
+/* s4 底部 34px 安全区露出的底色跟随列表（白），避免出现灰色分带 */
+#s4 { background: #fff; }
+#s4 .pick-list { top: calc(var(--chrome-top, 97px) + 50px); }
+/* 搜索态：隐藏右侧 A-Z 索引条 */
+#s4 .pick-list.is-searching ~ .index-bar { display: none; }
+
+/* —— 顾客行 + 常驻操作区（R16 建立 · R17 改版 · R25 整卡二分热区）——
+   删除折叠区与整行点击：行本身无响应，右侧常驻「开单 | 收款」。
+   R17：由「实心红分段胶囊」改为 iOS 列表语言的「纯文字 + 发丝竖线」：
+   无底、无框、无描边，开单 = 红字 600（主）、收款 = 灰字 500（次），中间 1px 竖线。
+   红色面积由整段实心红块降为 2 个字，页面右侧不再过重。
+   行内右内距同时由 12 → 30，与右侧 A–Z 字母索引条（370–388）留出 10px 净空，消除 8px 重叠。
+   R25：以这条 1px 竖线为分界，整张卡只切两个热区 —— 左（卡左缘 → 竖线左沿，含「开单」两字）
+   全部＝开单（点头像 / 姓名 / 手机号都进开单）、右（竖线 → 「收款」两字右缘）＝收款；
+   文案 / 字号 / 颜色 / 坐标一律不动，补的只是原先 0–249px 那段点不动的空白死区。
+   右下 30px 留白仍为死区（与 A–Z 索引条的净空不变，也不计入收款热区）。 */
+.pick-row-wrap {
+  position: relative;
+  display: flex; align-items: center; gap: 10px;
+  padding-right: 30px;
+  background: #fff; border-bottom: 1px solid #f5f5f5;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: background-color .14s ease;
+}
+/* R25：整卡按压反馈（iOS 列表行语义）；触点在两段文字上时文字仍各自变淡（.pick-seg:active） */
+.pick-row-wrap:active { background: #F7F7F8; }
+.pick-row-wrap .pick-row {
+  width: auto; flex: 1; min-width: 0; height: auto; min-height: 74px;
+  border-bottom: 0; padding-right: 0; cursor: pointer;
+}
+.pick-row-actions {
+  flex: none; display: inline-flex; align-items: center; height: 44px;
+  background: none; border: 0; border-radius: 0; overflow: visible;
+}
+.pick-seg {
+  border: 0; background: none; color: #8E8E93;
+  font-family: inherit; font-size: 13px; font-weight: 500; line-height: 1;
+  padding: 0 12px; height: 44px; cursor: pointer; white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity .14s ease;
+}
+.pick-seg.pick-seg--main { color: #F32F41; font-weight: 600; }
+.pick-seg:active { opacity: .5; }
+/* 两段之间的发丝竖线（高 14，垂直居中） */
+.pick-seg__div { flex: none; width: 1px; height: 14px; background: #E5E5E5; }
+
+/* —— 开单页：demo 结构（无会员卡/直接收款入口） —— */
+.v2-bill-body {
+  position: absolute; left: 0; right: 0; top: var(--chrome-top, 97px); bottom: 96px;
+  overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
+  background: #f7f7f7; z-index: 10;
+}
+.v2-bill .scroll.v2-legacy-hide { display: none !important; }
+
+/* —— 顾客卡片：默认收起（价目表贴住标题栏），点标题栏右侧入口从右上角展开 —— */
+.v2-ccard-wrap {
+  overflow: hidden; height: 0;
+  transition: height .38s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.v2-ccard-wrap > .v2-ccard {
+  transform-origin: 100% 0;
+  transition: transform .38s cubic-bezier(0.32, 0.72, 0, 1), opacity .24s ease;
+  transform: translateY(-14px) scale(.94);
+  opacity: 0;
+}
+.v2-bill-body.cust-open .v2-ccard-wrap > .v2-ccard {
+  transform: none; opacity: 1;
+}
+/* 收起态：价目表大卡片上移贴住标题栏（去掉卡片上方 12px 间隙） */
+.v2-bill-body:not(.cust-open) .v2-price-card { margin-top: 0; }
+
+.v2-ccard {
+  box-sizing: border-box; width: calc(100% - 32px); max-width: 358px;
+  margin: 12px 16px 0; padding: 14px 16px; min-height: 84px; border-radius: 12px;
+  position: relative; overflow: hidden;
+  background: linear-gradient(180deg, #FFE6E6 0%, #FFFFFF 100%);
+  box-shadow: 0 4px 8px rgba(0,0,0,.03), inset 0 1px 0 #fff;
+  display: flex; flex-direction: column; align-items: stretch; gap: 0;
+}
+.v2-ccard__row {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-width: 0;
+  cursor: default;
+}
+.v2-ccard__avatar {
+  width: 44px; height: 44px; border-radius: 50%; object-fit: cover;
+  flex-shrink: 0; background: #fff; cursor: pointer;
+}
+.v2-ccard__info { flex: 1; min-width: 0; cursor: pointer; }
+.v2-ccard__name {
+  font-size: 16px; font-weight: 500; color: #751616; line-height: 20px;
+  display: flex; align-items: center; gap: 6px;
+}
+.v2-ccard__name-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v2-ccard__vip {
+  width: 26px; height: 10px; display: block; flex-shrink: 0;
+  object-fit: contain; object-position: left center;
+}
+.v2-ccard__sub { font-size: 12px; color: #751616; opacity: .7; margin-top: 4px; }
+.v2-ccard__chev {
+  width: 28px; height: 28px; border: 0; border-radius: 50%;
+  background: rgba(255,255,255,.75); color: #751616; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; padding: 0; transition: transform .28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.v2-ccard__chev svg { width: 16px; height: 16px; display: block; }
+.v2-ccard.is-open .v2-ccard__chev { transform: rotate(180deg); }
+/* 会员卡展开区：持卡列表（一行一张卡｜左＝卡类型 pill + 卡名，右＝剩余权益；内容与线上一致） */
+.v2-ccard__cards {
+  display: none; flex-direction: column; gap: 8px;
+  margin-top: 12px; padding-top: 10px;
+  border-top: 0.5px solid rgba(117,22,22,.12);
+}
+.v2-ccard.is-open .v2-ccard__cards { display: flex; }
+.v2-ccard__mc { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.v2-ccard__mc-type {
+  flex: none; font-size: 11px; line-height: 16px; color: #751616; font-style: normal;
+  background: rgba(255,255,255,.85); border: .5px solid rgba(117,22,22,.18);
+  border-radius: 4px; padding: 0 6px; box-sizing: border-box;
+}
+.v2-ccard__mc-name {
+  flex: 1; min-width: 0; font-size: 14px; line-height: 20px; color: #751616;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.v2-ccard__mc-rest {
+  flex: none; font-size: 13px; line-height: 18px; font-weight: 500; color: #751616;
+  font-family: var(--font-data); white-space: nowrap;
+}
+.v2-ccard__cards.is-empty { font-size: 13px; line-height: 18px; color: #751616; opacity: .7; }
+
+/* 淡色卡（s2/s3/s6/s7）散客姓名：与会员卡统一 —— 字色 #751616、正常流排布（随头像中轴居中），
+   压掉旧版 .guest-card .nm 的白色字 / 绝对定位（旧规则优先级更高，故此处提高选择器权重） */
+.guest-card.v2-lite .v2-ccard__name-text.nm {
+  position: static; left: auto; top: auto;
+  color: #751616; font-size: 16px; font-weight: 500; line-height: 20px;
+}
+
+/* 散客卡右侧「添加会员」入口（与 s4 顾客列表同款图标，24×24 / 行内 36×36） */
+.v2-ccard__addmem {
+  width: 24px; height: 24px; flex: 0 0 24px; padding: 0; border: 0;
+  background: transparent; display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.v2-ccard__addmem svg { width: 24px; height: 24px; display: block; }
+.v2-ccard__addmem:active { opacity: .72; }
+
+/* 卡内快捷注册会员面板（字段沿用 s4 的 .pa-* 样式） */
+[data-addmem-panel] { display: none; }
+.v2-ccard.is-open > [data-addmem-panel],
+.guest-card.is-open > [data-addmem-panel] { display: block; }
+/* 卡内注册输入框：失焦态也为白底（不再用浅灰），报错态仍走 .pa-input.is-err */
+.v2-ccard__addpanel .pa-input { background: #fff; }
+.v2-ccard > [data-addmem-panel],
+.guest-card.v2-lite > [data-addmem-panel] {
+  margin-top: 12px; padding-top: 4px;
+  border-top: .5px solid rgba(117,22,22,.12);
+}
+/* 展开时浮在价目列表之上（s2/s3 淡色卡为绝对定位叠层） */
+.v2-ccard.is-open, .guest-card.v2-lite.is-open {
+  z-index: 8; box-shadow: 0 8px 24px rgba(0,0,0,.10), inset 0 1px 0 #fff;
+}
+
+/* 全页：黑卡改淡色（保留 gcard/mcard 显隐） */
+.guest-card.v2-lite,
+.member-card.v2-lite {
+  position: relative !important; left: auto !important; top: auto !important;
+  width: calc(100% - 32px) !important; max-width: 358px; height: auto !important;
+  min-height: 84px; margin: 12px 16px 0 !important; padding: 14px 16px !important;
+  border-radius: 12px; box-sizing: border-box; overflow: hidden;
+  background: linear-gradient(180deg, #FFE6E6 0%, #FFFFFF 100%) !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,.03), inset 0 1px 0 #fff;
+  z-index: 20;
+  display: flex !important; flex-direction: column; align-items: stretch; gap: 0;
+}
+.screen .gcard.v2-lite, .screen .mcard.v2-lite {
+  position: absolute !important; left: 12px !important; top: calc(var(--statusbar-h, 53px) + 54px) !important;
+  width: 366px !important; margin: 0 !important;
+}
+#s6 .gcard.v2-lite, #s6 .mcard.v2-lite,
+#s7 .gcard.v2-lite, #s7 .mcard.v2-lite {
+  position: relative !important; left: auto !important; top: auto !important;
+  width: calc(100% - 32px) !important; margin: 12px 16px 0 !important;
+}
+.guest-card.v2-lite .btn,
+.member-card.v2-lite .ops,
+.member-card.v2-lite .cards,
+.member-card.v2-lite .card-list { display: none !important; }
+
+/* 修：v2 淡色卡的 display:flex !important 压掉了 gcard/mcard 的显隐切换，
+   导致结算页同时渲染「散客卡 + 会员卡」两张顾客卡。此处显式声明显隐。 */
+.screen.cust-guest .mcard.v2-lite { display: none !important; }
+.screen.cust-member .gcard.v2-lite { display: none !important; }
+
+/* —— 价目表白卡：整块（tab + 分类 chips + 列表）为一张卡，视差时压住顾客卡片 —— */
+.v2-price-card {
+  position: relative; z-index: 2;
+  margin-top: 12px; background: #fff;
+  border-radius: 12px 12px 0 0;
+}
+/* tab + chips 一起吸顶：贴住标题栏后仅商品列表滚动 */
+.v2-price-head {
+  position: sticky; top: 0; z-index: 3;
+  background: #fff; border-radius: 12px 12px 0 0; overflow: hidden;
+}
+/* 视差滚动中：顾客卡片降到价目白卡之下，才能被「盖住」 */
+.v2-bill-body.is-scrolled .v2-ccard { z-index: 1; }
+
+.v2-page-tabs {
+  display: flex; height: 48px; background: #fff; margin-top: 0;
+  border-bottom: 0; flex-shrink: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+.v2-page-tabs button {
+  flex: 1; border: 0; background: none; font-family: inherit; font-size: 16px;
+  color: #929292; cursor: pointer; position: relative;
+}
+.v2-page-tabs button.on { color: #1a1a1a; font-weight: 500; }
+.v2-page-tabs button.on::after {
+  content: ''; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: 32px; height: 3px; border-radius: 2px; background: #F32F41;
+}
+
+.v2-group-bar { background: #fff; padding: 8px 12px 10px; flex-shrink: 0; }
+.v2-group-seg {
+  height: 32px; background: #F2F2F2; border-radius: 16px; padding: 2px; overflow: hidden;
+}
+.v2-group-scroll {
+  display: flex; align-items: center; gap: 2px; height: 28px;
+  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.v2-group-scroll::-webkit-scrollbar { display: none; }
+.v2-group-tab {
+  flex: 0 0 auto; height: 28px; padding: 0 12px; border: 0; border-radius: 14px;
+  background: transparent; color: #6C7279; font-size: 13px; font-family: inherit;
+  cursor: pointer; white-space: nowrap;
+}
+.v2-group-tab.on {
+  background: #fff; color: #1a1a1a; font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+
+.v2-catalog { background: #fff; padding: 0 16px 24px; min-height: 200px; }
+.v2-cat-item { border-bottom: 1px solid rgba(0,0,0,.04); }
+.v2-cat-main {
+  display: flex; align-items: center; gap: 12px; padding: 12px 0; min-height: 56px;
+}
+.v2-cat-info { flex: 1; min-width: 0; }
+.v2-cat-name {
+  font-size: var(--fs-card-title); font-weight: var(--fw-card-title);
+  color: var(--text); line-height: var(--lh-card-title);
+}
+/* 价目表价格：¥ 12/500 + 数值 15/700、间距 2、统一 #929292（设计稿 876:141） */
+.v2-cat-price {
+  display: flex; width: fit-content; align-items: flex-start; gap: 2px;
+  height: 25px; padding-top: 4px; box-sizing: border-box;
+  font-size: 15px; font-weight: 700; color: #929292; line-height: 18px;
+  font-family: var(--font-data); font-variant-numeric: tabular-nums;
+}
+.v2-cat-price .yen { font-size: 12px; font-weight: 500; line-height: 14px; margin-top: 2px; }
+/* 会员权益价已取消（R16）：价目表只显示原价 #929292，划线价 / 红色权益价样式一并删除 */
+
+/* 空价目表提示（项目/产品都为空时显示，本期仅说明文案） */
+.v2-cat-empty {
+  padding: 56px 0 64px; text-align: center;
+  font-size: var(--fs-hint); color: #929292; line-height: 1.6;
+}
+.v2-cat-right { flex-shrink: 0; display: flex; align-items: center; min-width: 72px; justify-content: flex-end; }
+
+/* 行右侧「＋」：点击弹出底部「设置内容」sheet */
+.v2-add-btn {
+  width: 28px; height: 28px; border: none; border-radius: 50%;
+  background: #F32F41; color: #fff;
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; margin: 0; line-height: 0; font-size: 0;
+  font-family: inherit; flex-shrink: 0;
+}
+.v2-add-btn svg {
+  width: 14px; height: 14px; display: block; pointer-events: none;
+}
+
+/* iOS 风格快速弹性：展开时轻微过冲后回弹到位 */
+@keyframes v2SpringIn {
+  0%   { opacity: 0; transform: translateY(-8px) scale(.985); }
+  55%  { opacity: 1; transform: translateY(1.6px) scale(1.003); }
+  78%  { transform: translateY(-0.7px) scale(1); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* 小球飞抵购物车时，购物车图标弹性回弹 */
+@keyframes v2CartPop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.18); }
+  55%  { transform: scale(.94); }
+  75%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.bottom-bar .btn-add.is-pop {
+  animation: v2CartPop .22s cubic-bezier(0.3, 0.9, 0.4, 1);
+  transform-origin: 50% 50%;
+}
+
+.v2-fly-ball {
+  position: fixed; z-index: 9999; width: 18px; height: 18px; border-radius: 50%;
+  background: #FF8956; pointer-events: none;
+  box-shadow: 0 2px 8px rgba(255,137,86,.45);
+  will-change: left, top, transform, background;
+}
+
+/* 底栏安全区：内容区仍 62px；购物车/金额与右侧按钮共用 top:10 + 高 42，中轴对齐 */
+.bottom-bar.v2-safe {
+  height: 96px; padding-bottom: 34px; box-sizing: border-box;
+}
+.bottom-bar.v2-safe .btn-guadan,
+.bottom-bar.v2-safe .btn-next { top: 10px; }
+/* cart-hot 贴顶，避免子元素再叠一层 top:10 导致购物车/金额整体偏下 */
+.bottom-bar.v2-safe .cart-hot { top: 0; bottom: 34px; }
+.bottom-bar.v2-safe .btn-add { top: 10px; }
+.bottom-bar.v2-safe .amount {
+  top: 10px; bottom: auto; height: 42px;
+  display: flex; align-items: center;
+}
+.cart-sheet-mask .cart-sheet { bottom: 96px; }
+
+/* —— 结算文档流：顾客卡→单号→明细→券→备注 —— */
+#s6.v2-co .scroll .page,
+#s7.v2-co .scroll .page {
+  height: auto !important;
+  min-height: 100%;
+  padding: 0 0 24px !important;
+  box-sizing: border-box;
+}
+#s6.v2-co .guest-card,
+#s7.v2-co .guest-card,
+#s6.v2-co .member-card,
+#s7.v2-co .member-card {
+  /* R9：改为吸在滚动区顶部（sticky，top=静止时的 12px 边距 → 起滚零跳动），
+     让明细白卡从下往上滑过并盖住它（层级见下方 z-index:1 / .co-items z-index:2） */
+  position: sticky !important;
+  left: auto !important;
+  top: 12px !important;
+  margin: 12px 16px 0 !important;
+  width: calc(100% - 32px) !important;
+  max-width: 358px;
+  z-index: 1 !important;
+}
+#s6.v2-co .co-items,
+#s7.v2-co .co-items,
+#s6.v2-co #coItems,
+#s7.v2-co #qcoItems {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  width: 100% !important;
+  margin-top: 12px !important;
+  z-index: 2;
+}
+/* —— R9「明细白卡盖住顾客卡片」：与开单页同源（白卡 z-index 2 + 滚动时顾客卡降到 1）
+   ① 顾客卡片在本页改为 sticky 吸在滚动区顶部（见 v2.js enableCheckoutFlow）
+   ② 明细区 / 券·备注区整块不透明（底色＝页面底色 #f7f7f7，静止时零视觉变化），
+      并抬到顾客卡之上，滚动时白卡从下往上滑过并盖住卡片；
+      卡片之间的 12px 空隙因此不再“漏底”（不会透出被盖住的顾客卡）
+   ③ 首张明细卡上缘圆角，与开单页价目白卡 .v2-price-card 同一视觉语言 */
+#s6.v2-co .co-items,
+#s7.v2-co .co-items,
+#s6.v2-co .co-extras,
+#s7.v2-co .co-extras {
+  background: #f7f7f7;
+}
+#s6.v2-co .co-items > .co-item:first-child,
+#s7.v2-co .co-items > .co-item:first-child {
+  border-radius: 12px 12px 0 0;
+}
+#s6.v2-co .scroll.is-scrolled .guest-card,
+#s7.v2-co .scroll.is-scrolled .guest-card,
+#s6.v2-co .scroll.is-scrolled .member-card,
+#s7.v2-co .scroll.is-scrolled .member-card {
+  z-index: 1;
+}
+
+.co-extras { padding: 0 0 16px; }
+/* 优惠券 / 备注：左右贴边、无圆角；内文仍保留 16px 内边距 */
+.co-coupon-row {
+  display: flex; align-items: center; height: 52px; padding: 0 16px;
+  background: #fff; border-radius: 0; margin-bottom: var(--gap-card); cursor: pointer;
+}
+.co-coupon-row .l { font-size: var(--fs-label); font-weight: var(--fw-block-title); color: var(--text); line-height: var(--lh-text); }
+.co-coupon-row .r {
+  margin-left: auto; font-size: var(--fs-value); color: var(--text-sec);
+  display: flex; align-items: center; gap: 4px;
+}
+/* R14：已选券由红改为主文字色 —— 这一行是「本单信息」，与「应付」的红色
+   （唯一的强调色，留给金额）职责分离，避免同一屏出现两处红色争主次 */
+.co-coupon-row .r.has { color: var(--text); }
+/* 进入箭头：SVG，固定 14px，不随字体度量漂移（与明细行的 .co-arr 同一规格） */
+.co-coupon-row .r svg { width: 14px; height: 14px; flex: none; display: block; color: #c7c7cc; }
+.co-remark-card {
+  background: #fff; border-radius: 0; padding: 14px 16px;
+  box-sizing: border-box;
+}
+.co-remark-card .t {
+  font-size: var(--fs-label); font-weight: var(--fw-block-title); color: var(--text);
+  line-height: var(--lh-text); margin-bottom: 10px;
+}
+.co-remark-card .box {
+  position: relative; background: #fafafa; border-radius: 8px;
+  min-height: 96px; padding: 12px; box-sizing: border-box;
+}
+.co-remark-card textarea {
+  width: 100%; min-height: 64px; border: 0; background: transparent; resize: none;
+  font-family: inherit; font-size: var(--fs-value); color: var(--text); outline: none;
+  line-height: 1.4;
+}
+.co-remark-card textarea::placeholder { color: #757575; }
+.co-remark-card .cnt {
+  position: absolute; right: 12px; bottom: 10px; font-size: var(--fs-hint);
+  color: var(--text-sec); line-height: 1;
+}
+
+/* 结算明细卡片：内边距收口（字号/行高由 index.html 的 #s6/#s7 Token 规则决定） */
+.co-item.v2-compact { padding: 0; }
+.co-item.v2-compact .co-thumb { display: none !important; }
+.co-item.v2-compact .co-emp-detail { display: none !important; }
+/* R16：结算页每项可改「应付 / 服务员工」——
+   「权益」行与「服务员工」行保留 › 箭头；「应付」行走铅笔图标。 */
+.co-item.v2-compact .co-arr { display: none !important; }
+.co-item.v2-compact .co-row[data-benefit="1"] .co-arr { display: inline-flex !important; }
+.co-item.v2-compact .co-row[data-staff-edit="1"] .co-arr { display: inline-flex !important; }
+
+/* 结算页：服务员工摘要（每名员工一行：姓名 · 工位 · 顾客指定） */
+.co-staff-list { margin-left: auto; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* R13：宽度不再用固定 236px 上限，改为「能占多少占多少」
+   —— 行内可用宽 = 390 - 左右内距 32 - 左标签「服务员工」56 = 302px。
+   「3 工位 + 顾客指定」的长摘要实测 265px：旧上限 236 会裁成省略号，放开后完整显示且仍有 37px 余量。
+   左侧标签与摘要同一 flex 行，摘要先按 max-content 取宽、超宽才收缩，
+   故右侧始终与上方「权益 / 应付」的「值」右边缘对齐；ellipsis 仅作极端情况的兜底。 */
+.co-staff-list .co-staff-line {
+  font-size: var(--fs-value); color: var(--text); line-height: var(--lh-text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right;
+  max-width: none;
+}
+.co-staff-list .co-staff-line .nm { font-weight: 500; }
+.co-staff-list .co-staff-line .sep { color: #d0d0d0; margin: 0 4px; }
+/* 工位摘要降 1px 灰字：与姓名形成层级，并再让出约 17px 宽度（约 248px < 302px） */
+.co-staff-list .co-staff-line .dim { color: var(--text-sec); font-size: 13px; }

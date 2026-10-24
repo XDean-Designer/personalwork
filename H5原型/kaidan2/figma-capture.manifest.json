@@ -1,0 +1,97 @@
+{
+  "fileKey": "H8tHj10vI0knynuIg76End",
+  "nodeId": "0:1",
+  "port": 8765,
+  "basePath": "/index.html",
+  "selector": "#frame",
+  "frameWidth": 390,
+  "gap": 80,
+  "rowGap": 120,
+  "fontFamily": "Noto Sans SC",
+  "bitmapPlaceholder": "#E8E8E8",
+  "iconsMustBeSvg": true,
+  "sliceBitmapsOnlyWhenUserAsks": true,
+  "layout": {
+    "mode": "rows",
+    "rows": [
+      ["s0-sp-badge"],
+      ["s16-pending", "s16-done", "s16-voided"],
+      ["s16-expand", "s16-expand-quick", "s16-filter", "s16-date", "s16-price", "s16-staff"],
+      ["s16-void-dlg", "s16-void-ro"]
+    ]
+  },
+  "screens": [
+    {
+      "capture": "s0-sp-badge",
+      "name": "自助-首页开单角标",
+      "captureId": "127790a0-570b-4a96-92e7-c03e6923103c",
+      "delay": 1800
+    },
+    {
+      "capture": "s16-pending",
+      "name": "自助-待处理",
+      "captureId": "a9e730d1-635a-4400-846d-bedeec89fa10",
+      "delay": 1800
+    },
+    {
+      "capture": "s16-done",
+      "name": "自助-已处理",
+      "captureId": "f91e4d35-349a-4848-a9be-5a1983bda176",
+      "delay": 1800
+    },
+    {
+      "capture": "s16-voided",
+      "name": "自助-已作废",
+      "captureId": "4f6c7476-1615-4811-9158-49f382462238",
+      "delay": 1800
+    },
+    {
+      "capture": "s16-expand",
+      "name": "自助-补全卡",
+      "captureId": "7710ddee-bf03-4293-98e3-bbad18d9621b",
+      "delay": 4000
+    },
+    {
+      "capture": "s16-expand-quick",
+      "name": "自助-补全卡快捷",
+      "captureId": "ba8d6394-da64-4c41-8d95-e517f005d1d7",
+      "delay": 4200
+    },
+    {
+      "capture": "s16-filter",
+      "name": "自助-筛选Sheet",
+      "captureId": "e3679f3a-8cb6-4f2d-ab26-54d996c576ff",
+      "delay": 3500
+    },
+    {
+      "capture": "s16-date",
+      "name": "自助-选日期",
+      "captureId": "07763805-c03b-4d2a-a8b2-55c5e37db268",
+      "delay": 3800
+    },
+    {
+      "capture": "s16-price",
+      "name": "自助-价目Sheet",
+      "captureId": "5df38a21-787a-49ba-9105-5e77a093243b",
+      "delay": 4500
+    },
+    {
+      "capture": "s16-staff",
+      "name": "自助-员工Sheet",
+      "captureId": "baf5433e-3d76-46de-8574-08b4dd6d0b71",
+      "delay": 4500
+    },
+    {
+      "capture": "s16-void-dlg",
+      "name": "自助-作废确认",
+      "captureId": "3bfee4b8-cbf8-46a1-9969-249d1cf12a11",
+      "delay": 4200
+    },
+    {
+      "capture": "s16-void-ro",
+      "name": "自助-作废只读大卡",
+      "captureId": "285a8994-64e2-4f59-9f50-86f7ee13c805",
+      "delay": 4200
+    }
+  ]
+}

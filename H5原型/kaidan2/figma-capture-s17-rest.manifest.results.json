@@ -1,0 +1,13 @@
+{
+  "finishedAt": "2026-10-17T08:59:41.435Z",
+  "results": [
+    {
+      "capture": "s17-guest-female",
+      "name": "补全-散客女",
+      "captureId": "17f9883e-1d9e-4e76-9d1d-e3a0e0391470",
+      "pageUrl": "http://127.0.0.1:8765/index.html?capture=s17-guest-female",
+      "ok": false,
+      "error": "captureForDesign timeout"
+    }
+  ]
+}

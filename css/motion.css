@@ -78,14 +78,30 @@ html.js .stagger.in-view > *:nth-child(6) { transition-delay: 0.29s; }
   .hero-stage {
     perspective: none !important;
   }
+  .hero-stage-bloom,
+  .hero-stage[data-active="game"] .hero-stage-bloom,
+  .hero-stage[data-active="internet"] .hero-stage-bloom {
+    transform: translate(-50%, -50%) !important;
+  }
   .career-card,
   .career-card:hover,
   .career-card:focus-within,
   .career-card.is-active,
+  .career-card.game.is-active,
+  .career-card.internet.is-active,
   .career-deck:hover .career-card:not(:hover),
   .career-deck.has-active .career-card:not(.is-active) {
     transform: none !important;
     filter: none !important;
+  }
+  .career-card-shine,
+  .career-card.is-active .career-card-shine::before {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+  .career-card.is-active {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(28, 28, 30, 0.85);
   }
   .flow-step:hover {
     transform: none !important;

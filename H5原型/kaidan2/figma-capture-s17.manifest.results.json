@@ -1,0 +1,13 @@
+{
+  "finishedAt": "2026-10-17T08:53:03.839Z",
+  "results": [
+    {
+      "capture": "s17-member-full",
+      "name": "补全-会员满态",
+      "captureId": "b6851570-7db3-4432-8495-56c63f69119b",
+      "pageUrl": "http://127.0.0.1:8765/index.html?capture=s17-member-full",
+      "ok": false,
+      "error": "captureForDesign timeout"
+    }
+  ]
+}

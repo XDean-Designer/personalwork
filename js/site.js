@@ -80,9 +80,10 @@ function createShowcaseCard(work, extraClass = "") {
   panIndex += 1;
   const index = modalRegistry.length;
   modalRegistry.push({ path: work.path, title: work.title });
+  const thumbSrc = encodeURI(work.thumb || work.path);
   card.innerHTML = `
     <div class="showcase-media">
-      <img src="${encodeURI(work.path)}" alt="${work.title}" loading="lazy" />
+      <img src="${thumbSrc}" alt="${work.title}" loading="lazy" decoding="async" />
     </div>
     <div class="showcase-overlay">
       <strong>${work.title}</strong>

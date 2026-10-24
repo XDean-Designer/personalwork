@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>01 建原型 | 薛鼎</title>
+  <title>交互原型·PRD·设计稿 | 薛鼎</title>
   <link rel="stylesheet" href="../css/site.css" />
 </head>
 <body>
@@ -25,27 +25,29 @@
     <header class="container page-hero">
       <a class="back-link" href="../index.html#method">← 返回工作流</a>
       <span class="section-label">01 · Prototype</span>
-      <h1>建原型</h1>
-      <p>用 Cursor 搭建可完整跑通的 H5 交互原型，先验证流程与逻辑。</p>
+      <h1>交互原型·PRD·设计稿</h1>
+      <p>左侧选项目，场景栏切页面；手机框可看原型或 PRD。全屏演示按设备自动进电脑/手机模式；扫码在手机进入预览。</p>
     </header>
 
     <section class="section" style="padding-top: 0;">
       <div class="container">
-        <div class="placeholder-grid">
-          <div class="placeholder-block">
-            <h3>交互原型</h3>
-            <p>接入后以 iframe 嵌入可点击原型。</p>
-            <p><code>prototypes/</code>（待放入 HTML）</p>
+        <div class="proto-studio" data-proto-studio>
+          <aside>
+            <div class="proto-rail-label">Index</div>
+            <div class="proto-rail" data-proto-rail></div>
+          </aside>
+          <aside class="proto-scenes" data-proto-scenes></aside>
+          <div class="proto-stage">
+            <div class="proto-stage-shell" data-proto-stage-label="01">
+              <div class="proto-stage-bezel">
+                <iframe data-proto-frame title="交互原型" loading="lazy"></iframe>
+              </div>
+            </div>
+            <div class="proto-stage-caption">PHONE STAGE · LIVE H5</div>
           </div>
-          <div class="placeholder-block">
-            <h3>说明</h3>
-            <p>本节点侧重「能跑通」。评审与交付级视觉见后续节点。</p>
-          </div>
+          <div class="proto-meta" data-proto-meta></div>
         </div>
-        <div class="placeholder-panel" style="margin-top: 20px;">
-          <strong>原型待接入</strong>
-          将可运行的 H5 放入 <code>prototypes/</code> 后，在此页嵌入即可。
-        </div>
+        <p class="studio-note">提示：手机扫码需能访问当前站点域名；本机预览请用电脑局域网 IP 打开本页后再扫。</p>
       </div>
     </section>
 
@@ -53,6 +55,8 @@
       <div class="container">© 2026 薛鼎 · Workflow</div>
     </footer>
   </div>
+  <script src="../js/qrcode.min.js"></script>
   <script src="../js/site.js"></script>
+  <script src="../js/proto-studio.js"></script>
 </body>
 </html>

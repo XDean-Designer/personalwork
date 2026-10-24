@@ -39,6 +39,10 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
   --ease-ios: cubic-bezier(0.25, 0.1, 0.25, 1);
+  /* Hero Spatial：无过冲，出缓到位 */
+  --ease-spatial: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-spatial: 480ms;
+  --dur-spatial-fast: 280ms;
   --dur-fast: 180ms;
   --dur-mid: 360ms;
   --dur-slow: 520ms;

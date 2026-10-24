@@ -1,10 +1,35 @@
 (function initHeroStage() {
+  const stage = document.getElementById("heroStage");
   const deck = document.getElementById("careerDeck");
   if (!deck) return;
 
   const cards = [...deck.querySelectorAll(".career-card")];
   let clearTimer = 0;
   let activeName = null;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const allowTilt = !reduceMotion && finePointer;
+
+  const TILT_MAX = 3.6; // deg
+
+  function setTilt(card, xDeg, yDeg) {
+    card.style.setProperty("--tilt-x", `${xDeg.toFixed(2)}deg`);
+    card.style.setProperty("--tilt-y", `${yDeg.toFixed(2)}deg`);
+  }
+
+  function resetTilt(card) {
+    setTilt(card, 0, 0);
+  }
+
+  function resetAllTilts() {
+    cards.forEach(resetTilt);
+  }
+
+  function setStageActive(name) {
+    if (!stage) return;
+    if (name) stage.dataset.active = name;
+    else delete stage.dataset.active;
+  }
 
   function setActive(name) {
     if (clearTimer) {
@@ -13,8 +38,11 @@
     }
     activeName = name;
     deck.classList.add("has-active");
+    setStageActive(name);
     cards.forEach((card) => {
-      card.classList.toggle("is-active", card.dataset.card === name);
+      const on = card.dataset.card === name;
+      card.classList.toggle("is-active", on);
+      if (!on) resetTilt(card);
     });
   }
 
@@ -22,7 +50,6 @@
     if (clearTimer) clearTimeout(clearTimer);
     clearTimer = window.setTimeout(() => {
       clearTimer = 0;
-      // 若焦点仍在某张卡内，保持激活
       const focusedCard = cards.find((c) => c.contains(document.activeElement));
       if (focusedCard) {
         setActive(focusedCard.dataset.card);
@@ -30,7 +57,9 @@
       }
       activeName = null;
       deck.classList.remove("has-active");
+      setStageActive(null);
       cards.forEach((card) => card.classList.remove("is-active"));
+      resetAllTilts();
     }, delay);
   }
 
@@ -40,9 +69,23 @@
     });
 
     card.addEventListener("pointerleave", () => {
-      // 短延迟：快速划向另一张卡时，enter 会先取消 clear，避免中间态两张都未拉近
+      resetTilt(card);
       scheduleClear(80);
     });
+
+    if (allowTilt) {
+      card.addEventListener("pointermove", (e) => {
+        if (activeName !== card.dataset.card) return;
+        const rect = card.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        // rotateX 跟随纵向（上负下正），rotateY 跟随横向
+        const tiltX = Math.max(-1, Math.min(1, -ny)) * TILT_MAX;
+        const tiltY = Math.max(-1, Math.min(1, nx)) * TILT_MAX;
+        setTilt(card, tiltX, tiltY);
+      });
+    }
 
     card.addEventListener("focusin", () => {
       setActive(card.dataset.card);
@@ -62,7 +105,6 @@
     });
   });
 
-  // 整组离开时复位（同样带一点延迟，兼容快速出入）
   deck.addEventListener("pointerleave", () => {
     scheduleClear(100);
   });

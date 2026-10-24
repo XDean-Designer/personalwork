@@ -26,27 +26,28 @@
       <a class="back-link" href="../index.html#method">← 返回工作流</a>
       <span class="section-label">03 · UI &amp; Motion</span>
       <h1>交付级 UI · UX</h1>
-      <p>Cursor 配合 Figma，将原型页面做成交付级界面，并设计整套交互动效。</p>
+      <p>交付级展台：项目轨 · 场景导航 · 手机舞台 · 扫码预览。机框内不含原型左侧演示栏。</p>
     </header>
 
     <section class="section" style="padding-top: 0;">
       <div class="container">
-        <div class="placeholder-grid">
-          <div class="placeholder-block">
-            <h3>交互原型（高保真）</h3>
-            <p>含动效演示的原型嵌入位。</p>
-            <p><code>prototypes/</code></p>
+        <div class="proto-studio" data-proto-studio>
+          <aside>
+            <div class="proto-rail-label">Index</div>
+            <div class="proto-rail" data-proto-rail></div>
+          </aside>
+          <aside class="proto-scenes" data-proto-scenes></aside>
+          <div class="proto-stage">
+            <div class="proto-stage-shell" data-proto-stage-label="01">
+              <div class="proto-stage-bezel">
+                <iframe data-proto-frame title="交互原型" loading="lazy"></iframe>
+              </div>
+            </div>
+            <div class="proto-stage-caption">DELIVERY STAGE · LIVE H5</div>
           </div>
-          <div class="placeholder-block">
-            <h3>界面截图</h3>
-            <p>关键页与动效关键帧。</p>
-            <p><code>figma-shots/</code></p>
-          </div>
+          <div class="proto-meta" data-proto-meta></div>
         </div>
-        <div class="placeholder-panel" style="margin-top: 20px;">
-          <strong>素材待接入</strong>
-          原型与截图就绪后，替换本占位区即可。
-        </div>
+        <p class="studio-note">本页与「建原型」共用展台；设计稿目录见下一节点。</p>
       </div>
     </section>
 
@@ -54,6 +55,8 @@
       <div class="container">© 2026 薛鼎 · Workflow</div>
     </footer>
   </div>
+  <script src="../js/qrcode.min.js"></script>
   <script src="../js/site.js"></script>
+  <script src="../js/proto-studio.js"></script>
 </body>
 </html>

@@ -3,3 +3,25 @@ Thumbs.db
 desktop.ini
 *.log
 .cursor/
+
+# 构建与部署产物
+_dist/
+site/
+.edgeone/
+
+# 本地部署脚本（含密钥，勿提交）
+tools/
+.cloudbaseignore
+
+# Tencent Cloud EdgeOne
+.env
+.edgeone/*
+.tef_dist/*
+  
+# H5 原型：各子项目是独立仓库，主仓只收录发布产物（与 tools/build_dist.py 一致）
+H5原型/**/.git/
+H5原型/**/.tmp/
+H5原型/**/参考资料/
+H5原型/**/_figma_qa/
+H5原型/**/_figma_sync/
+H5原型/**/*.md

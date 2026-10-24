@@ -1,0 +1,45 @@
+{
+  "finishedAt": "2026-10-17T09:01:39.392Z",
+  "results": [
+    {
+      "capture": "s17-guest-empty",
+      "name": "补全-散客男空项",
+      "captureId": "2a76a348-62fb-4b06-b3fb-9693cb911205",
+      "ok": true,
+      "status": {
+        "fired": false,
+        "err": null
+      }
+    },
+    {
+      "capture": "s17-quick",
+      "name": "补全-快捷开单",
+      "captureId": "0a0dd038-d6ff-4d1f-b3ea-d65197cefee9",
+      "ok": true,
+      "status": {
+        "fired": false,
+        "err": null
+      }
+    },
+    {
+      "capture": "s17-average",
+      "name": "补全-平均分配",
+      "captureId": "276455d5-7eb9-4c07-8d32-7297b7af26e7",
+      "ok": true,
+      "status": {
+        "fired": false,
+        "err": null
+      }
+    },
+    {
+      "capture": "s17-staff",
+      "name": "补全-员工Sheet",
+      "captureId": "3c248c83-9096-4abf-aa5a-fb25a0951c53",
+      "ok": true,
+      "status": {
+        "fired": false,
+        "err": null
+      }
+    }
+  ]
+}

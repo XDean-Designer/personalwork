@@ -26,32 +26,22 @@
       <a class="back-link" href="../index.html#method">← 返回工作流</a>
       <span class="section-label">04 · PRD &amp; Design</span>
       <h1>PRD · 设计稿</h1>
-      <p>AI 反向输出 PRD 与全套 Figma 稿，核对修改至完善。</p>
+      <p>每套 UI 对应 Figma 一个 Page。点击卡片进入完整设计稿（不在站内嵌截图）。</p>
     </header>
 
     <section class="section" style="padding-top: 0;">
-      <div class="container">
-        <div class="placeholder-grid">
-          <div class="placeholder-block">
-            <h3>PRD 文档</h3>
-            <p>结构化需求说明（规则、边界、埋点等）。</p>
-            <p><code>prd/</code></p>
-          </div>
-          <div class="placeholder-block">
-            <h3>Figma 截图</h3>
-            <p>交付稿关键页面预览（非稿墙主展）。</p>
-            <p><code>figma-shots/</code></p>
-          </div>
-          <div class="placeholder-block">
-            <h3>交互原型</h3>
-            <p>与 PRD 对照的最终原型入口。</p>
-            <p><code>prototypes/</code></p>
-          </div>
+      <div class="container" data-figma-wall-root>
+        <div class="section-head" style="margin-bottom: 8px;">
+          <span class="section-label">Figma Pages</span>
+          <h2 class="section-title" style="font-size: 1.6rem;">设计稿目录</h2>
+          <p class="section-desc">来源文件：Dean-work · 每页一套界面体系。</p>
         </div>
-        <div class="placeholder-panel" style="margin-top: 20px;">
-          <strong>文档与截图待接入</strong>
-          放入对应目录后，在此页挂载预览与下载链接。
-        </div>
+        <div class="figma-wall" data-figma-wall></div>
+        <p class="studio-note">
+          也可先回
+          <a href="ui-motion.html">交付级 UI · UX</a>
+          体验可点原型，再跳转对应 Figma Page。
+        </p>
       </div>
     </section>
 
@@ -60,5 +50,6 @@
     </footer>
   </div>
   <script src="../js/site.js"></script>
+  <script src="../js/proto-studio.js"></script>
 </body>
 </html>

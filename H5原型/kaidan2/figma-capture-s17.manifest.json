@@ -1,0 +1,59 @@
+{
+  "fileKey": "H8tHj10vI0knynuIg76End",
+  "nodeId": "0:1",
+  "port": 8765,
+  "basePath": "/index.html",
+  "selector": "#frame",
+  "frameWidth": 390,
+  "gap": 80,
+  "rowGap": 120,
+  "fontFamily": "Noto Sans SC",
+  "bitmapPlaceholder": "#E8E8E8",
+  "iconsMustBeSvg": true,
+  "sliceBitmapsOnlyWhenUserAsks": true,
+  "layout": {
+    "mode": "rows",
+    "rows": [
+      ["s17-member-full", "s17-guest-female", "s17-guest-empty", "s17-quick", "s17-average"],
+      ["s17-staff"]
+    ]
+  },
+  "screens": [
+    {
+      "capture": "s17-member-full",
+      "name": "补全-会员满态",
+      "captureId": "b6851570-7db3-4432-8495-56c63f69119b",
+      "delay": 2200
+    },
+    {
+      "capture": "s17-guest-female",
+      "name": "补全-散客女",
+      "captureId": "17f9883e-1d9e-4e76-9d1d-e3a0e0391470",
+      "delay": 2000
+    },
+    {
+      "capture": "s17-guest-empty",
+      "name": "补全-散客男空项",
+      "captureId": "2a76a348-62fb-4b06-b3fb-9693cb911205",
+      "delay": 2000
+    },
+    {
+      "capture": "s17-quick",
+      "name": "补全-快捷开单",
+      "captureId": "0a0dd038-d6ff-4d1f-b3ea-d65197cefee9",
+      "delay": 2000
+    },
+    {
+      "capture": "s17-average",
+      "name": "补全-平均分配",
+      "captureId": "276455d5-7eb9-4c07-8d32-7297b7af26e7",
+      "delay": 2400
+    },
+    {
+      "capture": "s17-staff",
+      "name": "补全-员工Sheet",
+      "captureId": "3c248c83-9096-4abf-aa5a-fb25a0951c53",
+      "delay": 4200
+    }
+  ]
+}
