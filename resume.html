@@ -14,8 +14,8 @@
     <span class="rv-bar-title">薛鼎 · 产品经理 · 简历</span>
     <span class="rv-bar-spacer"></span>
     <div class="rv-bar-actions">
-      <button class="rv-btn" type="button" id="rvPrint">打印</button>
-      <a class="rv-btn rv-btn-primary" id="rvDownload" href="resume/薛鼎-产品经理-简历.pdf" download="薛鼎-产品经理-简历.pdf">下载 PDF</a>
+      <button class="rv-btn" type="button" id="rvPrint" data-track="resume_print">打印</button>
+      <a class="rv-btn rv-btn-primary" id="rvDownload" href="resume/薛鼎-产品经理-简历.pdf" download="薛鼎-产品经理-简历.pdf" data-track="pdf_download" data-track-source="resume_page">下载 PDF</a>
     </div>
   </div>
 
@@ -68,7 +68,7 @@
     </header>
 
     <!-- ══════════ 01 核心优势 ══════════ -->
-    <section class="rv-sec">
+    <section class="rv-sec" data-track-section="核心优势">
       <h2 class="rv-sec-head">
         <span class="rv-sec-idx">01</span>
         <span class="rv-sec-cn">核心优势</span>
@@ -103,7 +103,7 @@
     </section>
 
     <!-- ══════════ 02 AI 产品工作流 ══════════ -->
-    <section class="rv-sec">
+    <section class="rv-sec" data-track-section="AI工作流">
       <h2 class="rv-sec-head">
         <span class="rv-sec-idx">02</span>
         <span class="rv-sec-cn">AI 产品工作流</span>
@@ -225,7 +225,7 @@
     </section>
 
     <!-- ══════════ 03 工作经历 ══════════ -->
-    <section class="rv-sec">
+    <section class="rv-sec" data-track-section="工作经历">
       <h2 class="rv-sec-head">
         <span class="rv-sec-idx">03</span>
         <span class="rv-sec-cn">工作经历</span>
@@ -317,7 +317,7 @@
     </section>
 
     <!-- ══════════ 04 技能 ══════════ -->
-    <section class="rv-sec">
+    <section class="rv-sec" data-track-section="技能矩阵">
       <h2 class="rv-sec-head">
         <span class="rv-sec-idx">04</span>
         <span class="rv-sec-cn">技能矩阵</span>
@@ -348,7 +348,7 @@
     </section>
 
     <!-- ══════════ 05 教育 ══════════ -->
-    <section class="rv-sec">
+    <section class="rv-sec" data-track-section="教育经历">
       <h2 class="rv-sec-head">
         <span class="rv-sec-idx">05</span>
         <span class="rv-sec-cn">教育经历</span>
@@ -367,5 +367,6 @@
       window.print();
     });
   </script>
+<script src="js/analytics.js" defer></script>
 </body>
 </html>
