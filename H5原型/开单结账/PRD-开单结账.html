@@ -2649,5 +2649,21 @@ s8-s9（门店流水 / 退款）+ s14-s15（挂单列表 / 开单成功）：原
   onScroll();
 })();
 </script>
+<!-- prd-mobile-fit: 手机端适配（tools/patch_prd_mobile.py 注入，勿手改） -->
+<style id="prd-mobile-fit">
+@media (max-width: 900px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-size: 13.5px; }
+  .sidebar, aside.sidebar, .toc-side { display: none !important; }
+  .main { margin-left: 0 !important; padding: 20px 14px 64px !important; max-width: none !important; }
+  img, video, canvas { max-width: 100% !important; height: auto !important; }
+  table { display: block; width: 100% !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  pre { white-space: pre-wrap; word-break: break-word; overflow-x: auto; }
+  .toc-cards, .cards-2, .grid-2, .cols-2 { grid-template-columns: 1fr !important; }
+  h1 { font-size: 20px !important; line-height: 1.35; }
+  h2 { font-size: 17px !important; }
+  h3 { font-size: 15px !important; }
+}
+</style>
 </body>
 </html>

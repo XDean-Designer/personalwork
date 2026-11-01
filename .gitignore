@@ -9,6 +9,10 @@ _dist/
 site/
 .edgeone/
 
+# 本地草稿/预览（未参与构建，勿提交）
+_figma_ai/
+_preview/
+
 # 本地部署脚本（含密钥，勿提交）
 tools/
 .cloudbaseignore

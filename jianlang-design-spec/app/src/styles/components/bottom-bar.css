@@ -1,0 +1,6 @@
+@layer components {
+  .u-bottom-bar {
+    @apply flex gap-3 py-2 px-4 bg-white border-0 shrink-0;
+    box-shadow: var(--bottom-surface-shadow);
+  }
+}

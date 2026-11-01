@@ -1,0 +1,1037 @@
+/* ══════════════════════════════════════════════════════════
+   简历 — 单栏强化层级
+   层级：姓名 / 板块 / 组织 / 正文 / 注脚 五级字号阶梯
+   节奏：板块大间隔 → 条目不换行 → 行内紧凑
+══════════════════════════════════════════════════════════ */
+
+/* 简历专用静态字重子集（由 tools/build_resume_font_subset.py 生成）
+   静态实例可被 Chromium 正常嵌入 PDF；可变字体打印会退化为 Type3 */
+@font-face {
+  font-family: "Noto Sans SC Resume";
+  src: url("../assets/fonts/resume/NotoSansSC-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans SC Resume";
+  src: url("../assets/fonts/resume/NotoSansSC-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans SC Resume";
+  src: url("../assets/fonts/resume/NotoSansSC-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Sans SC Resume";
+  src: url("../assets/fonts/resume/NotoSansSC-800.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --rv-ink: #0e1116;
+  --rv-ink-2: #333a45;
+  --rv-ink-3: #727a88;
+  --rv-ink-4: #9aa2b1;
+  --rv-line: #e3e7ee;
+  --rv-line-2: #eef1f6;
+  --rv-accent: #0b63ce;
+  --rv-accent-ink: #0a4a9c;
+  --rv-accent-soft: #eef4fd;
+  --rv-paper: #ffffff;
+
+  --rv-font: "Noto Sans SC Resume", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+
+  /* 字号阶梯 */
+  --fs-name: 25pt;
+  --fs-sec: 10.8pt;
+  --fs-org: 10pt;
+  --fs-body: 9pt;
+  --fs-meta: 8.2pt;
+  --fs-micro: 7.5pt;
+}
+
+html.rv-page {
+  scroll-behavior: smooth;
+}
+
+body.rv-body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse 80% 46% at 50% 0%, rgba(30, 31, 34, 0.92), transparent 62%),
+    #060606;
+  color: #f5f5f7;
+  font-family: var(--rv-font);
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ══════ 顶部工具栏（仅屏幕） ══════ */
+.rv-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px max(16px, calc((100vw - 210mm) / 2 - 8px));
+  background: rgba(10, 10, 10, 0.78);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.rv-bar-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(235, 235, 245, 0.66);
+  text-decoration: none;
+  font-size: 0.82rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: color 160ms ease, background 160ms ease;
+}
+.rv-bar-back:hover {
+  color: #f5f5f7;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.rv-bar-title {
+  font-size: 0.82rem;
+  color: rgba(235, 235, 245, 0.42);
+}
+.rv-bar-spacer {
+  flex: 1;
+}
+.rv-bar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.rv-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f5f5f7;
+  font-family: inherit;
+  font-size: 0.82rem;
+  padding: 7px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+.rv-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+.rv-btn:active {
+  transform: scale(0.977);
+}
+.rv-btn-primary {
+  background: #0a84ff;
+  border-color: #0a84ff;
+  color: #fff;
+  font-weight: 600;
+}
+.rv-btn-primary:hover {
+  background: #2f97ff;
+  border-color: #2f97ff;
+}
+
+/* ══════ 纸面 ══════ */
+.rv-paper {
+  width: 210mm;
+  max-width: calc(100vw - 24px);
+  margin: 26px auto 64px;
+  padding: 15mm 14mm 13mm;
+  background: var(--rv-paper);
+  color: var(--rv-ink);
+  border-radius: 3px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 30px 80px rgba(0, 0, 0, 0.62);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+}
+
+/* ══════ 页眉 ══════ */
+.rv-head {
+  padding-bottom: 13px;
+  border-bottom: 2px solid var(--rv-ink);
+}
+
+.rv-name-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.rv-name-block {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  flex-wrap: wrap;
+}
+
+.rv-name {
+  font-size: var(--fs-name);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin: 0;
+  color: var(--rv-ink);
+}
+
+.rv-role {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: var(--rv-accent);
+  letter-spacing: 0.04em;
+}
+
+/* 主页短链（姓名区右侧） */
+.rv-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--rv-accent);
+  text-decoration: none;
+  padding: 4px 9px 4px 8px;
+  border: 1px solid #cfe0f7;
+  border-radius: 999px;
+  background: #f7fafe;
+  white-space: nowrap;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+.rv-site:hover {
+  background: var(--rv-accent-soft);
+  border-color: #a9c9ef;
+}
+.rv-site-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22a06b;
+  box-shadow: 0 0 0 2.5px rgba(34, 160, 107, 0.14);
+}
+.rv-site svg {
+  width: 9px;
+  height: 9px;
+  opacity: 0.75;
+}
+
+/* 求职意向条 */
+.rv-target {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px 0;
+  margin-top: 11px;
+  font-size: var(--fs-body);
+  color: var(--rv-ink-2);
+}
+.rv-target-k {
+  font-size: var(--fs-micro);
+  color: var(--rv-ink-3);
+  letter-spacing: 0.06em;
+  margin-right: 5px;
+}
+.rv-target b {
+  font-weight: 800;
+  color: var(--rv-ink);
+  letter-spacing: 0.01em;
+}
+.rv-target b.is-key {
+  color: var(--rv-accent);
+  font-size: 10.4pt;
+}
+.rv-target-sep {
+  width: 1px;
+  height: 9px;
+  background: var(--rv-line);
+  margin: 0 13px;
+  align-self: center;
+}
+
+/* 个人信息 */
+.rv-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 0;
+  margin: 7px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-meta);
+  color: var(--rv-ink-3);
+}
+.rv-meta li {
+  display: inline-flex;
+  align-items: center;
+}
+.rv-meta li + li::before {
+  content: "";
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--rv-ink-4);
+  margin: 0 9px;
+  opacity: 0.8;
+}
+.rv-meta a {
+  color: var(--rv-ink-2);
+  text-decoration: none;
+}
+.rv-meta a .rv-mi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rv-accent);
+  margin-right: 5px;
+  vertical-align: -1px;
+}
+.rv-meta a .rv-mi svg {
+  width: 10.5px;
+  height: 10.5px;
+}
+
+/* 主页通栏 CTA */
+.rv-cta {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 13px;
+  padding: 10px 13px;
+  border-radius: 9px;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(180deg, #ffffff 0%, #f5f9fe 100%);
+  border: 1px solid #d7e3f5;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(11, 99, 206, 0.05),
+    0 8px 18px -10px rgba(11, 99, 206, 0.22);
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+.rv-cta:hover {
+  transform: translateY(-1px);
+  border-color: #b7d2f0;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 2px 4px rgba(11, 99, 206, 0.08),
+    0 12px 24px -12px rgba(11, 99, 206, 0.3);
+}
+
+.rv-cta-glyph {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: var(--rv-accent);
+  background: linear-gradient(180deg, #ffffff, #eaf2fd);
+  border: 1px solid #d3e2f6;
+  box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(11, 99, 206, 0.08);
+}
+.rv-cta-glyph svg {
+  width: 16px;
+  height: 16px;
+}
+
+.rv-cta-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.rv-cta-url {
+  font-size: 10pt;
+  font-weight: 800;
+  color: var(--rv-accent);
+  letter-spacing: 0.02em;
+}
+.rv-cta-desc {
+  font-size: var(--fs-micro);
+  color: var(--rv-ink-3);
+  letter-spacing: 0.01em;
+}
+
+.rv-cta-go {
+  margin-left: auto;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  color: var(--rv-accent);
+  white-space: nowrap;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #cfe0f7;
+  box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(11, 99, 206, 0.07);
+}
+.rv-cta-go svg {
+  width: 9px;
+  height: 9px;
+}
+
+/* ══════ 板块通用 ══════ */
+.rv-sec {
+  margin-top: 17px;
+}
+.rv-sec:first-of-type {
+  margin-top: 15px;
+}
+
+.rv-sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 0 0 10px;
+  padding: 0 0 5px;
+  border-bottom: 1px solid var(--rv-line);
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.rv-sec-idx {
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--rv-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.rv-sec-cn {
+  font-size: var(--fs-sec);
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  color: var(--rv-ink);
+}
+
+.rv-sec-en {
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rv-ink-4);
+}
+
+.rv-sec-tail {
+  margin-left: auto;
+  font-size: var(--fs-micro);
+  color: var(--rv-ink-3);
+  letter-spacing: 0.01em;
+}
+
+/* ══════ 01 核心优势 ══════ */
+.rv-strengths {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px 20px;
+  counter-reset: st;
+}
+.rv-strengths li {
+  counter-increment: st;
+  position: relative;
+  padding-left: 24px;
+  break-inside: avoid;
+}
+/* 条目序号：刻意与章节号 .rv-sec-idx 区分，撑起两级层级差 ——
+   ① 形态：装进细描边圆环，读作「条目徽标」，而非章节的裸露数字；
+   ② 颜色：中性灰 vs 章节号的品牌蓝；
+   ③ 计数：1–6 不补零 vs 章节 01–05 补零。 */
+.rv-strengths li::before {
+  content: counter(st);
+  position: absolute;
+  left: 0;
+  top: 0.17em;
+  box-sizing: border-box;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #c8d5e8;
+  border-radius: 50%;
+  background: #fbfcfe;
+  font-size: 7.2pt;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--rv-ink-3);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.rv-strengths b {
+  display: block;
+  font-size: var(--fs-body);
+  font-weight: 800;
+  color: var(--rv-ink);
+  letter-spacing: 0.01em;
+  margin-bottom: 1px;
+}
+.rv-strengths span {
+  display: block;
+  font-size: var(--fs-meta);
+  color: var(--rv-ink-2);
+  line-height: 1.55;
+}
+
+/* ══════ 02 AI 产品工作流（轻拟物流水线） ══════ */
+.rv-ai {
+  border-radius: 9px;
+  padding: 12px 13px 11px;
+  background: linear-gradient(180deg, #fdfefe 0%, #f6f9fd 100%);
+  border: 1px solid #e2e9f3;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(16, 24, 40, 0.035),
+    0 10px 22px -16px rgba(16, 24, 40, 0.28);
+  break-inside: avoid;
+}
+
+.rv-ai-lead {
+  margin: 0 0 10px;
+  font-size: var(--fs-meta);
+  color: var(--rv-ink-2);
+  letter-spacing: 0.01em;
+}
+
+.rv-pipe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.rv-pipe-step {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-width: 0;
+}
+
+/* 3 + 2：前 3 个一行，后 2 个一行 */
+.rv-pipe-step:nth-child(-n + 3) { flex: 1 1 calc(33.333% - 1px); }
+.rv-pipe-step:nth-child(n + 4) { flex: 1 1 calc(50% - 1px); }
+
+/* 行末箭头只占位不显示，保证同一行卡片宽度一致 */
+.rv-pipe-step:nth-child(3) .rv-pipe-arrow,
+.rv-pipe-step:nth-child(5) .rv-pipe-arrow {
+  visibility: hidden;
+}
+
+.rv-pipe-card {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 10px 10px;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+  border: 1px solid #e4eaf3;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 1px 2px rgba(16, 24, 40, 0.045),
+    0 5px 12px -8px rgba(16, 24, 40, 0.2);
+  break-inside: avoid;
+}
+
+.rv-pipe-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.rv-pipe-badge {
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--rv-accent);
+  background: #f2f7fe;
+  border: 1px solid #d9e6f8;
+  border-radius: 4px;
+  padding: 0 5px;
+  line-height: 1.6;
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+.rv-pipe-icon {
+  width: 18px;
+  height: 18px;
+  color: #8fa9c9;
+  flex: 0 0 auto;
+}
+.rv-pipe-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.rv-pipe-card strong {
+  font-size: var(--fs-meta);
+  font-weight: 800;
+  color: var(--rv-ink);
+  letter-spacing: 0.01em;
+}
+
+.rv-pipe-card p {
+  margin: 0;
+  font-size: var(--fs-micro);
+  line-height: 1.5;
+  color: var(--rv-ink-3);
+}
+
+.rv-pipe-arrow {
+  flex: 0 0 20px;
+  display: grid;
+  place-items: center;
+  color: #bfd1e7;
+}
+.rv-pipe-arrow svg {
+  width: 18px;
+  height: 10px;
+}
+.rv-pipe-step:last-child .rv-pipe-arrow {
+  visibility: hidden;
+}
+/* 末段补等宽占位，保证三张卡片等宽 */
+.rv-pipe-step:last-child::after {
+  content: "";
+  flex: 0 0 20px;
+}
+
+.rv-ai-out {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 6px;
+  margin: 11px 0 0;
+  padding-top: 9px;
+  border-top: 1px dashed #dde5f0;
+}
+
+.rv-ai-out-label {
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  color: var(--rv-ink-2);
+  letter-spacing: 0.06em;
+  margin-right: 2px;
+}
+
+.rv-ai-out-chip {
+  font-size: var(--fs-micro);
+  color: var(--rv-ink-2);
+  background: #fff;
+  border: 1px solid #e4eaf3;
+  border-radius: 4px;
+  padding: 1px 7px;
+  box-shadow: inset 0 1px 0 #fff, 0 1px 1px rgba(16, 24, 40, 0.03);
+}
+
+/* ══════ 03 工作经历（时间轴） ══════ */
+.rv-job {
+  position: relative;
+  padding-left: 107px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.rv-job:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.rv-job-time {
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 94px;
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: var(--rv-ink-3);
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.rv-job.is-current .rv-job-time {
+  color: var(--rv-accent);
+}
+
+.rv-job-main {
+  position: relative;
+  padding-left: 13px;
+}
+.rv-job-main::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  bottom: -10px;
+  width: 1px;
+  background: var(--rv-line);
+}
+.rv-job:last-child .rv-job-main::before {
+  display: none;
+}
+.rv-job-main::after {
+  content: "";
+  position: absolute;
+  left: -2.5px;
+  top: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid #c6cfdc;
+}
+.rv-job.is-current .rv-job-main::after {
+  border-color: var(--rv-accent);
+  background: var(--rv-accent);
+  box-shadow: 0 0 0 2.5px rgba(11, 99, 206, 0.12);
+}
+
+.rv-job-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rv-job-org {
+  font-size: var(--fs-org);
+  font-weight: 800;
+  color: var(--rv-ink);
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.rv-job-title {
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  color: var(--rv-accent-ink);
+  letter-spacing: 0.01em;
+}
+.rv-job-title::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 8px;
+  background: var(--rv-line);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.rv-job-sub {
+  margin: 1px 0 4px;
+  font-size: var(--fs-meta);
+  color: var(--rv-ink-3);
+  line-height: 1.5;
+}
+.rv-job-sub b {
+  color: var(--rv-ink-2);
+  font-weight: 700;
+}
+
+.rv-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+}
+.rv-list li {
+  position: relative;
+  padding-left: 10px;
+  font-size: var(--fs-body);
+  color: var(--rv-ink-2);
+  line-height: 1.58;
+}
+.rv-list li::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 0.66em;
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background: #c3cbd8;
+}
+/* 防止单条要点在分页处被切断 */
+.rv-list li {
+  break-inside: avoid;
+}
+
+/* 早期经历紧凑行 */
+.rv-compact {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+}
+.rv-compact li {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 8px;
+  font-size: var(--fs-meta);
+  color: var(--rv-ink-2);
+  line-height: 1.55;
+  break-inside: avoid;
+}
+.rv-compact .ct {
+  font-variant-numeric: tabular-nums;
+  color: var(--rv-ink-4);
+  font-size: var(--fs-micro);
+  padding-top: 0.15em;
+  white-space: nowrap;
+}
+.rv-compact b {
+  color: var(--rv-ink);
+  font-weight: 700;
+}
+
+/* ══════ 04 技能 ══════ */
+.rv-skills {
+  display: grid;
+  gap: 6px;
+}
+.rv-skill-row {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 11px;
+  align-items: start;
+  break-inside: avoid;
+}
+.rv-skill-key {
+  font-size: var(--fs-meta);
+  font-weight: 800;
+  color: var(--rv-ink);
+  letter-spacing: 0.06em;
+  padding-top: 0.1em;
+  border-left: 2px solid var(--rv-accent);
+  padding-left: 7px;
+  line-height: 1.4;
+}
+.rv-skill-val {
+  font-size: var(--fs-meta);
+  color: var(--rv-ink-2);
+  line-height: 1.55;
+}
+.rv-skill-val em {
+  font-style: normal;
+  color: var(--rv-ink-4);
+  margin: 0 6px;
+}
+
+/* ══════ 05 教育 ══════ */
+.rv-edu {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 13px;
+  font-size: var(--fs-body);
+  color: var(--rv-ink-2);
+}
+.rv-edu .ct {
+  font-variant-numeric: tabular-nums;
+  color: var(--rv-ink-3);
+  font-size: var(--fs-meta);
+}
+.rv-edu b {
+  color: var(--rv-ink);
+  font-weight: 800;
+}
+
+/* ══════ 小屏（仅屏幕；打印时纸面也是 793px 宽，不能命中） ══════ */
+@media screen and (max-width: 860px) {
+  .rv-paper {
+    width: auto;
+    margin: 14px 10px 40px;
+    padding: 18px 16px 22px;
+    font-size: 10pt;
+  }
+  .rv-bar {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+  .rv-bar-title {
+    display: none;
+  }
+  .rv-btn {
+    padding: 6px 11px;
+    font-size: 0.78rem;
+  }
+  .rv-strengths {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .rv-job,
+  .rv-edu {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .rv-job {
+    padding-left: 0;
+  }
+  .rv-job-time {
+    position: static;
+    width: auto;
+    margin-bottom: 1px;
+    font-size: var(--fs-meta);
+  }
+  .rv-job-main {
+    padding-left: 12px;
+  }
+  .rv-pipe {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .rv-pipe-step {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  /* 单列时恢复等分与箭头（改指向下） */
+  .rv-pipe-step:nth-child(-n + 3),
+  .rv-pipe-step:nth-child(n + 4) {
+    flex: 0 0 auto;
+  }
+  .rv-pipe-step .rv-pipe-arrow { visibility: visible; }
+  .rv-pipe-step:last-child::after {
+    display: none;
+  }
+  .rv-pipe-arrow {
+    flex: 0 0 auto;
+    height: 12px;
+  }
+  .rv-pipe-arrow svg {
+    transform: rotate(90deg);
+  }
+  .rv-skill-row {
+    grid-template-columns: 46px 1fr;
+  }
+  .rv-compact li {
+    grid-template-columns: 88px 1fr;
+  }
+  .rv-name-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* ══════════════ 打印 / 导出 PDF ══════════════ */
+@page {
+  size: A4;
+  margin: 13mm 14mm;
+}
+
+@media print {
+  html.rv-page,
+  body.rv-body {
+    background: #fff !important;
+  }
+  .rv-bar {
+    display: none !important;
+  }
+  .rv-paper {
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none !important;
+    font-size: 8.9pt;
+    line-height: 1.56;
+  }
+  .rv-head {
+    padding-bottom: 10px;
+  }
+  .rv-sec {
+    margin-top: 16px;
+  }
+  .rv-sec:first-of-type {
+    margin-top: 12px;
+  }
+  .rv-sec-head {
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+  }
+  .rv-job {
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+  }
+  .rv-list {
+    gap: 3px;
+  }
+  .rv-strengths {
+    gap: 10px 18px;
+  }
+  .rv-ai {
+    padding: 10px 11px;
+  }
+  .rv-pipe-card {
+    padding: 8px 9px 9px;
+  }
+  .rv-cta {
+    margin-top: 10px;
+    padding: 9px 11px;
+  }
+  .rv-skills {
+    gap: 6px;
+  }
+
+  /* 打印时收敛阴影，避免灰度扫描发灰 */
+  .rv-cta,
+  .rv-ai,
+  .rv-pipe-card,
+  .rv-ai-out-chip {
+    box-shadow: none !important;
+  }
+
+  .rv-job,
+  .rv-ai,
+  .rv-strengths li,
+  .rv-skill-row,
+  .rv-compact li,
+  .rv-pipe-card {
+    break-inside: avoid;
+  }
+  .rv-sec-head,
+  .rv-job-head {
+    break-after: avoid;
+  }
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+}

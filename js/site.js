@@ -3,6 +3,58 @@ document.documentElement.classList.add("js");
 /* ─────────────── 作品弹窗 ─────────────── */
 const modalRegistry = [];
 let modalIndex = 0;
+const MODAL_LOADER_MIN_MS = 280;
+
+function ensureModalLoader(stage) {
+  if (!stage) return null;
+  let loader = stage.querySelector("[data-brand-loader]");
+  if (loader) return loader;
+  loader = document.createElement("div");
+  loader.className = "brand-loader";
+  loader.setAttribute("data-brand-loader", "");
+  loader.setAttribute("aria-hidden", "true");
+  loader.innerHTML =
+    `<div class="brand-loader-mark" aria-hidden="true">` +
+    `<svg class="brand-loader-ring" viewBox="0 0 48 48" fill="none">` +
+    `<circle class="brand-loader-track" cx="24" cy="24" r="18" />` +
+    `<circle class="brand-loader-arc" cx="24" cy="24" r="18" />` +
+    `</svg>` +
+    `<span class="brand-loader-core">XD</span>` +
+    `</div>` +
+    `<div class="brand-loader-label">加载中</div>`;
+  stage.appendChild(loader);
+  return loader;
+}
+
+function setModalLoading(on) {
+  const stage = document.querySelector("#modal .modal-stage");
+  const loader = ensureModalLoader(stage);
+  if (!stage || !loader) return;
+  if (on) {
+    loader.dataset.shownAt = String(Date.now());
+    stage.classList.add("is-loading");
+    loader.classList.add("is-on");
+    loader.setAttribute("aria-busy", "true");
+    loader.setAttribute("aria-hidden", "false");
+    return;
+  }
+  const shownAt = Number(loader.dataset.shownAt || 0);
+  const wait = Math.max(0, MODAL_LOADER_MIN_MS - (Date.now() - shownAt));
+  window.setTimeout(() => {
+    stage.classList.remove("is-loading");
+    loader.classList.remove("is-on");
+    loader.setAttribute("aria-busy", "false");
+    loader.setAttribute("aria-hidden", "true");
+  }, wait);
+}
+
+function bindModalImgLoad(modalImg) {
+  if (!modalImg || modalImg.dataset.loaderBound === "1") return;
+  modalImg.dataset.loaderBound = "1";
+  const done = () => setModalLoading(false);
+  modalImg.addEventListener("load", done);
+  modalImg.addEventListener("error", done);
+}
 
 function openModal(src, alt) {
   const match = modalRegistry.findIndex((m) => m.path === src);
@@ -15,8 +67,11 @@ function openModal(src, alt) {
     const count = document.getElementById("modalCount");
     const caption = document.getElementById("modalCaption");
     if (!modal || !modalImg) return;
+    bindModalImgLoad(modalImg);
+    setModalLoading(true);
     modalImg.src = encodeURI(src);
     modalImg.alt = alt || "";
+    if (modalImg.complete && modalImg.naturalWidth > 0) setModalLoading(false);
     if (count) count.textContent = "";
     if (caption) caption.textContent = alt || "";
     modal.classList.add("open");
@@ -30,8 +85,11 @@ function openModalAt(idx) {
   modalIndex = idx;
   const item = modalRegistry[modalIndex];
   if (!item) return;
+  bindModalImgLoad(modalImg);
+  setModalLoading(true);
   modalImg.src = encodeURI(item.path);
   modalImg.alt = item.title;
+  if (modalImg.complete && modalImg.naturalWidth > 0) setModalLoading(false);
   const count = document.getElementById("modalCount");
   const caption = document.getElementById("modalCaption");
   if (count) {

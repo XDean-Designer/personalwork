@@ -231,17 +231,59 @@ a:hover { opacity: 0.85; }
 /* ── Hero ── */
 .hero-block {
   position: relative;
-  padding: 48px 0 24px;
+  padding: 32px 0 20px;
   min-height: calc(100vh - var(--nav-h));
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
+/* ── Hero 极光光帘 ──
+   画布由 js/aurora.js 逐帧绘制；此处只负责定位与四向渐隐。
+   上 / 下 / 左 / 右 用两层遮罩 intersect，让光帘自然溶入黑色。 */
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 14%, #000 34%, #000 64%, transparent 96%),
+    linear-gradient(to right, transparent 0%, #000 11%, #000 89%, transparent 100%);
+  mask-image:
+    linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 14%, #000 34%, #000 64%, transparent 96%),
+    linear-gradient(to right, transparent 0%, #000 11%, #000 89%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+.hero-aurora-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-10deg) scale(1.34);
+  transform-origin: 50% 58%;
+}
+/* 光帘位于内容之下 */
+.hero-intro {
+  position: relative;
+  z-index: 1;
+}
+.hero-stage {
+  z-index: 1;
+}
+
+@media (max-width: 760px) {
+  .hero-aurora-canvas {
+    transform: rotate(-10deg) scale(1.18);
+  }
+}
+
 .hero-intro {
   text-align: center;
   max-width: 720px;
-  margin: 0 auto 40px;
+  margin: 0 auto 28px;
 }
 .hero-kicker {
   display: inline-flex;
@@ -270,6 +312,119 @@ a:hover { opacity: 0.85; }
   font-size: 1.1rem;
 }
 
+/* ── Hero AI Mark ──
+   纯字标；星芒间歇弹起旋转，落下后竖笔受力回弹；
+   星与竖笔保持间距；渐变流光由 JS 插值。 */
+.hero-ai-slot {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+  pointer-events: none;
+}
+
+.ai-mark {
+  width: 72px;
+  height: 72px;
+  line-height: 0;
+  filter: drop-shadow(0 2px 10px rgba(68, 133, 255, 0.22));
+}
+
+.ai-mark-svg {
+  display: block;
+  width: 72px;
+  height: 72px;
+  overflow: visible;
+}
+
+/* 星心 ≈ (70.83, 29.17)；竖笔顶 ≈ y50，间距约 6 viewBox 单位 */
+.ai-glyph-star {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: translate(0, 0) rotate(0deg);
+  will-change: transform;
+}
+
+.ai-glyph-i {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  transform: scaleY(1) translateY(0);
+  will-change: transform;
+}
+
+.ai-glyph-a {
+  transform-origin: center;
+}
+
+/* 星：弹起 → 空中顺时针转满一圈（先加速后减速）→ 落下归位 */
+.ai-mark.is-beat .ai-glyph-star {
+  animation: aiStarHop 1.12s linear both;
+}
+
+/* 竖笔：对齐星落地时刻再受压回弹 */
+.ai-mark.is-beat .ai-glyph-i {
+  animation: aiStemRebound 0.62s cubic-bezier(0.34, 1.4, 0.48, 1) 0.78s both;
+}
+
+@keyframes aiStarHop {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  18% {
+    transform: translate(0, -9px) rotate(70deg) scale(1.06);
+  }
+  36% {
+    transform: translate(0, -10px) rotate(180deg) scale(1.05);
+  }
+  55% {
+    transform: translate(0, -9px) rotate(290deg) scale(1.04);
+  }
+  72% {
+    transform: translate(0, -3px) rotate(345deg) scale(1.01);
+  }
+  86% {
+    transform: translate(0, 1.2px) rotate(358deg) scale(0.98);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg) scale(1);
+  }
+}
+
+@keyframes aiStemRebound {
+  0% {
+    transform: scaleY(1) translateY(0);
+  }
+  22% {
+    transform: scaleY(0.86) translateY(1.5px);
+  }
+  48% {
+    transform: scaleY(1.08) translateY(-0.6px);
+  }
+  72% {
+    transform: scaleY(0.97) translateY(0.3px);
+  }
+  100% {
+    transform: scaleY(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-mark.is-beat .ai-glyph-star,
+  .ai-mark.is-beat .ai-glyph-i {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .ai-mark,
+  .ai-mark-svg {
+    width: 60px;
+    height: 60px;
+  }
+  .hero-ai-slot {
+    margin-bottom: 10px;
+  }
+}
+
 /* Hero stage — Spatial Glass */
 .hero-stage {
   position: relative;
@@ -278,7 +433,7 @@ a:hover { opacity: 0.85; }
   min-height: 480px;
   margin: 0 auto;
   max-width: 980px;
-  padding: 44px 8px 60px;
+  padding: 16px 8px 48px;
 }
 .hero-stage-space {
   position: absolute;
@@ -636,6 +791,12 @@ a:hover { opacity: 0.85; }
 .entry-grid-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   max-width: 720px;
+  margin: 0 auto;
+  gap: 18px;
+}
+.entry-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 1080px;
   margin: 0 auto;
   gap: 18px;
 }
@@ -1110,6 +1271,10 @@ footer {
     padding-bottom: 28px;
     perspective: none;
   }
+  /* 光晕容器左右外扩会撑出 6px 横向溢出，窄屏收平 */
+  .hero-stage-space {
+    inset: -10% 0;
+  }
   .hero-stage-bloom {
     width: 140%;
     height: 90%;
@@ -1142,47 +1307,6 @@ footer {
     width: 100%;
   }
   .section { padding: 56px 0; }
-
-  .proto-studio,
-  .proto-studio[data-mode="prd"] {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-  .proto-studio[data-mode="prd"] .proto-stage-shell {
-    max-width: none;
-    height: min(70vh, 640px);
-  }
-  .proto-rail,
-  .proto-scenes {
-    max-height: none;
-  }
-  .proto-rail {
-    flex-direction: row;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    -webkit-overflow-scrolling: touch;
-  }
-  .proto-rail-item {
-    min-width: 180px;
-    flex: 0 0 auto;
-  }
-  .proto-scenes {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    max-height: 220px;
-    overflow: auto;
-  }
-  .proto-scene-label,
-  .proto-scene-group {
-    grid-column: 1 / -1;
-  }
-  .proto-stage-shell {
-    max-width: 300px;
-  }
-  .figma-wall {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ── Proto Studio (formal showcase) ── */
@@ -1405,6 +1529,105 @@ footer {
   background: #fff;
   display: block;
 }
+
+/* Brand loader — Proto Studio phone stage + Modal */
+.brand-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 42%, rgba(28, 28, 30, 0.55), transparent 70%),
+    rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(10px) saturate(1.1);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity var(--dur-mid) var(--ease-spatial),
+    visibility var(--dur-mid) var(--ease-spatial);
+}
+.brand-loader.is-on {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.brand-loader-mark {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+}
+.brand-loader-ring {
+  position: absolute;
+  inset: 0;
+  width: 52px;
+  height: 52px;
+  animation: brandLoaderSpin 1.8s linear infinite;
+}
+.brand-loader-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1.25;
+}
+.brand-loader-arc {
+  fill: none;
+  stroke: #f5f5f7;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 42 72;
+  filter: drop-shadow(0 0 6px rgba(245, 245, 247, 0.35));
+}
+.brand-loader-core {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  color: var(--text);
+  animation: brandLoaderPulse 2.4s var(--ease-spatial) infinite;
+}
+.brand-loader-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  animation: brandLoaderLabelFade 1.8s var(--ease-spatial) infinite;
+}
+@keyframes brandLoaderSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes brandLoaderPulse {
+  0%, 100% { opacity: 0.72; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+@keyframes brandLoaderLabelFade {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.9; }
+}
+
+.modal-stage .brand-loader {
+  border-radius: 12px;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 45%, rgba(28, 28, 30, 0.4), transparent 68%),
+    rgba(0, 0, 0, 0.55);
+}
+.modal-stage.is-loading img {
+  opacity: 0.22;
+  filter: blur(2px);
+  transition: opacity var(--dur-mid) var(--ease-spatial), filter var(--dur-mid) var(--ease-spatial);
+}
+.modal-stage img {
+  transition: opacity var(--dur-mid) var(--ease-spatial), filter var(--dur-mid) var(--ease-spatial);
+}
 .proto-stage-caption {
   font-size: 0.78rem;
   color: var(--text-tertiary);
@@ -1478,6 +1701,9 @@ footer {
   background: rgba(10, 132, 255, 0.14);
   color: var(--text);
 }
+/* 「新窗口打开」仅在 PRD 模式下出现 */
+.proto-prd-newtab { display: none; }
+.proto-studio[data-mode="prd"] .proto-prd-newtab { display: inline-flex; }
 .proto-qr {
   margin-top: 22px;
   padding: 16px;
@@ -1538,9 +1764,353 @@ footer {
   text-decoration: none;
   color: inherit;
   min-height: 128px;
+  transition:
+    border-color var(--dur-fast) var(--ease-ios),
+    background var(--dur-fast) var(--ease-ios);
 }
 .figma-wall-card:hover {
   border-color: rgba(10, 132, 255, 0.35);
+  background: #202022;
+}
+.figma-wall-card:hover .figma-wall-logo {
+  opacity: 1;
+  transform: scale(1.06);
+}
+.figma-wall-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.figma-wall-logo {
+  width: 15px;
+  height: 22px;
+  flex: 0 0 auto;
+  opacity: 0.72;
+  transition:
+    opacity var(--dur-fast) var(--ease-ios),
+    transform var(--dur-fast) var(--ease-ios);
+}
+.figma-wall-card .entry-go {
+  margin-top: auto;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--blue);
+}
+
+/* ── 设计规范入口条（PRD 页底部） ── */
+.spec-entry {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+  padding: 20px 22px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(243, 47, 65, 0.28);
+  background:
+    radial-gradient(ellipse 70% 120% at 0% 50%, rgba(243, 47, 65, 0.12), transparent 62%),
+    var(--surface-solid);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color var(--dur-fast) var(--ease-ios),
+    transform var(--dur-fast) var(--ease-ios);
+}
+.spec-entry:hover {
+  color: inherit;
+  opacity: 1;
+  border-color: rgba(243, 47, 65, 0.5);
+  transform: translateY(-2px);
+}
+.spec-entry-badge {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.spec-entry-badge img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+.spec-entry-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.spec-entry-kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ff6b78;
+  font-weight: 700;
+}
+.spec-entry-body strong {
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+.spec-entry-body span {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.spec-entry-go {
+  margin-left: auto;
+  flex: 0 0 auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--blue);
+  white-space: nowrap;
+}
+
+/* ══════ 设计规范介绍页 ══════ */
+.spec-hero p { max-width: 640px; }
+.spec-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.spec-meta li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.spec-meta span {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  font-weight: 650;
+}
+.spec-meta b {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* 工作流定位 */
+.spec-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 8px 0 44px;
+  padding: 18px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--separator-soft);
+  background: var(--surface-solid);
+}
+.spec-flow-node {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+}
+.spec-flow-node.is-key {
+  background: rgba(243, 47, 65, 0.1);
+  border-color: rgba(243, 47, 65, 0.32);
+}
+.spec-flow-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+}
+.spec-flow-node.is-key .spec-flow-num { color: #ff6b78; }
+.spec-flow-node strong {
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.spec-flow-node em {
+  font-style: normal;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+.spec-flow-arrow {
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  color: var(--text-tertiary);
+  font-size: 0.95rem;
+}
+
+/* 能力 / 边界 */
+.spec-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 16px;
+}
+.spec-panel {
+  padding: 22px 22px 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--separator-soft);
+  background: var(--surface-solid);
+}
+.spec-panel.is-good { border-color: rgba(48, 209, 88, 0.22); }
+.spec-panel.is-limit { border-color: rgba(255, 159, 10, 0.22); }
+.spec-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 14px;
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.spec-panel-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+.spec-panel.is-good .spec-panel-dot { background: var(--green); }
+.spec-panel.is-limit .spec-panel-dot { background: var(--orange); }
+.spec-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.spec-list li {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  padding-left: 14px;
+  position: relative;
+}
+.spec-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 5px;
+  height: 1px;
+  background: var(--separator);
+}
+.spec-list b {
+  display: block;
+  color: var(--text);
+  font-weight: 620;
+  margin-bottom: 2px;
+}
+
+/* 目录 */
+.spec-toc {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.spec-toc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--separator-soft);
+  background: var(--surface-solid);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color var(--dur-fast) var(--ease-ios),
+    background var(--dur-fast) var(--ease-ios),
+    transform var(--dur-fast) var(--ease-ios);
+}
+.spec-toc-item:hover {
+  color: inherit;
+  opacity: 1;
+  border-color: rgba(10, 132, 255, 0.4);
+  background: #202022;
+  transform: translateY(-2px);
+}
+.spec-toc-num {
+  flex: 0 0 26px;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--blue);
+  line-height: 1.4;
+}
+.spec-toc-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.spec-toc-copy strong {
+  font-size: 0.9rem;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+}
+.spec-toc-copy em {
+  font-style: normal;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--text-tertiary);
+}
+.spec-toc-go {
+  margin-left: auto;
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+/* 实景截图 */
+.spec-shots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.spec-shot {
+  margin: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--separator-soft);
+  background: var(--surface-solid);
+}
+.spec-shot img {
+  width: 100%;
+  display: block;
+  border-bottom: 1px solid var(--separator-soft);
+}
+.spec-shot figcaption {
+  padding: 11px 14px;
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+.spec-cta {
+  margin-top: 40px;
+  text-align: center;
+}
+.spec-cta-btn {
+  font-size: 0.95rem;
+  padding: 12px 24px;
+}
+.spec-cta-btn svg {
+  width: 12px;
+  height: 12px;
+}
+.spec-cta-note {
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
 }
 .figma-wall-num {
   font-size: 0.78rem;
@@ -1557,3 +2127,202 @@ footer {
   color: var(--text-tertiary);
   font-size: 0.82rem;
 }
+
+/* ══════════════════════════════════════════════
+   移动端：原型 / PRD 展台
+   —— 必须写在 .proto-* 组件定义之后。此前这批规则放在
+   @media (max-width: 900px) 里（文件靠前），被后置的同权重
+   组件规则覆盖，导致手机上展台仍是 4 列、被 overflow 裁掉。
+══════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .proto-studio,
+  .proto-studio[data-mode="prd"] {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    padding: 16px 14px 18px;
+    transition: none;
+  }
+
+  /* 顺序：项目轨 → 手机舞台 → 场景栏 → 说明 */
+  .proto-rail-pane { order: 1; min-width: 0; }
+  .proto-stage { order: 2; min-width: 0; align-items: stretch; }
+  .proto-scenes { order: 3; }
+  .proto-meta { order: 4; min-width: 0; padding-top: 0; }
+
+  /* 项目轨：横向卡片，可滑；不靠内部滚动藏内容 */
+  .proto-rail {
+    flex-direction: row;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 8px;
+    padding: 0 0 8px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  .proto-rail-item {
+    flex: 0 0 auto;
+    min-width: 168px;
+    grid-template-columns: 32px 1fr;
+    gap: 8px;
+    padding: 10px 11px;
+    scroll-snap-align: start;
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--separator-soft);
+  }
+  .proto-rail-item.is-active { transform: none; }
+  .proto-rail-num { font-size: 1.05rem; }
+  .proto-rail-copy strong { font-size: 0.82rem; }
+  .proto-rail-copy em { font-size: 0.68rem; }
+  .proto-rail-label { margin-bottom: 8px; }
+
+  /* 场景栏：两列铺满，去掉 max-height / overflow，14 个场景全部可见 */
+  .proto-scenes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    max-height: none;
+    overflow: visible;
+    padding: 10px;
+  }
+  .proto-scene-label,
+  .proto-scene-group { grid-column: 1 / -1; }
+  .proto-scene-item {
+    font-size: 0.78rem;
+    padding: 9px 8px;
+    line-height: 1.35;
+  }
+
+  /* 手机框取满容器宽：390 视口下机内宽度 ~305（原 236）；
+     平板（768–900）用 400 上限，避免机框被拉成 1700px 高 */
+  .proto-stage-shell {
+    max-width: 400px;
+    width: 100%;
+    margin-inline: auto;
+  }
+  .proto-studio[data-mode="prd"] .proto-stage-shell {
+    max-width: none;
+    aspect-ratio: auto;
+    height: min(76vh, 700px);
+    padding: 6px;
+    border-radius: 22px;
+  }
+  .proto-studio[data-mode="prd"] .proto-stage-bezel { border-radius: 17px; }
+  .proto-stage-caption,
+  .proto-studio[data-mode="prd"] .proto-stage-caption {
+    max-width: none;
+    font-size: 0.74rem;
+    text-align: center;
+  }
+
+  .proto-meta-title { font-size: 1.35rem; }
+  .proto-meta-blurb,
+  .proto-guide { max-width: none; }
+  /* 手机上扫码无意义，收起，把版面留给内容与按钮 */
+  .proto-qr { display: none; }
+
+  .figma-wall { grid-template-columns: minmax(0, 1fr); }
+  .figma-wall-card { min-height: 0; padding: 18px 16px; }
+
+  /* 设计规范入口条：窄屏改为图标 + 文字两行 */
+  .spec-entry {
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 16px;
+  }
+  .spec-entry-body { flex: 1 1 60%; }
+  .spec-entry-go {
+    margin-left: 0;
+    flex: 1 0 100%;
+    padding-top: 2px;
+    font-size: 0.82rem;
+  }
+
+  /* 设计规范介绍页 */
+  .spec-flow {
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+  }
+  .spec-flow-arrow {
+    flex: 0 0 auto;
+    transform: rotate(90deg);
+    height: 16px;
+  }
+  .spec-flow-node { padding: 12px 14px; }
+  .spec-split { grid-template-columns: minmax(0, 1fr); }
+  .spec-toc { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .spec-toc-item { padding: 12px; gap: 9px; }
+  .spec-toc-copy em { display: none; }
+  .spec-toc-go { display: none; }
+  .spec-shots { grid-template-columns: minmax(0, 1fr); }
+  .spec-meta { gap: 12px 20px; }
+}
+
+/* ══════════════════════════════════════════════
+   宽屏层：1440 / 1760+（1080P 为主目标）
+   —— 只放大容器与舞台，不改动 1440 以下的任何表现
+══════════════════════════════════════════════ */
+@media (min-width: 1440px) {
+  .hero-intro { max-width: 760px; }
+  .hero-stage { max-width: 1080px; }
+  .section-desc { max-width: 600px; }
+  .entry-grid-2 { gap: 24px; }
+}
+
+@media (min-width: 1760px) {
+  .hero-intro { max-width: 800px; margin-bottom: 32px; }
+  .hero-intro h1 { font-size: clamp(2rem, 1.4rem + 2.6vw, 3.75rem); }
+  .hero-intro p { max-width: 580px; font-size: 1.15rem; }
+  .hero-stage {
+    width: 100%;
+    max-width: 1120px;
+    min-height: 520px;
+    padding: 20px 8px 52px;
+  }
+  .career-deck { gap: 36px; }
+
+  .section { padding: 96px 0; }
+  .section-head { margin-bottom: 40px; }
+  .section-desc { max-width: 620px; }
+
+  /* 5 步工作流：每步 ~250px，说明从 5 行降到 3 行 */
+  .flow { padding: 14px 4px 22px; }
+  .flow-step { padding: 24px 20px; }
+  .flow-step p { font-size: 0.9rem; }
+  .flow-connector { flex: 0 0 34px; }
+
+  .entry-grid-2 { gap: 28px; }
+
+  /* 原型展台：手机框 320 → 372，机内宽度 296 → 348 */
+  .proto-studio {
+    grid-template-columns:
+      minmax(180px, 224px)
+      minmax(180px, 236px)
+      minmax(320px, 372px)
+      minmax(240px, 1fr);
+    gap: 24px;
+    padding: 28px;
+  }
+  .proto-studio[data-mode="prd"] {
+    grid-template-columns:
+      minmax(180px, 224px)
+      minmax(520px, 1.5fr)
+      minmax(240px, 1fr);
+  }
+  .proto-stage-shell { max-width: 372px; }
+  .proto-stage-caption { max-width: 372px; }
+  .proto-studio[data-mode="prd"] .proto-stage-shell { height: min(78vh, 810px); }
+  .proto-scenes { max-height: min(78vh, 760px); }
+  .proto-rail { max-height: min(78vh, 760px); }
+}
+
+/* 宽屏 + 矮视口（如 1920×950 的浏览器可视区）：收紧首屏，避免溢出到第二屏 */
+@media (min-width: 1760px) and (max-height: 1020px) {
+  .hero-intro { margin-bottom: 24px; }
+  .hero-stage {
+    min-height: 470px;
+    padding: 16px 8px 44px;
+  }
+}
+

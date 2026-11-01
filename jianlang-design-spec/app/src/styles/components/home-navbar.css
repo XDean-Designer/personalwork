@@ -1,0 +1,13 @@
+@layer components {
+  .u-home-navbar {
+    @apply w-full max-w-canvas h-nav-h mx-auto bg-white flex items-center gap-2 px-4 border-0 shadow-none box-border;
+  }
+
+  .u-home-navbar__logo {
+    @apply w-7 h-7 shrink-0 object-contain;
+  }
+
+  .u-home-navbar__title {
+    @apply m-0 text-base font-medium leading-tight text-figma-primary;
+  }
+}

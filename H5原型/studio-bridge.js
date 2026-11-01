@@ -80,6 +80,14 @@
         btn.click();
         return;
       }
+      if (typeof window.runPriceFlow === "function") {
+        window.runPriceFlow(msg.flow);
+        return;
+      }
+      if (window.PRICE_FLOW && typeof window.PRICE_FLOW[msg.flow] === "function") {
+        window.PRICE_FLOW[msg.flow]();
+        return;
+      }
       return;
     }
     if (msg.kind === "click" && msg.selector) {
@@ -113,6 +121,9 @@
     if (p.indexOf("tiktok") >= 0) {
       return "请点击三张入口卡：账号管理 / 工作台 / 扫码核销";
     }
+    if (p.indexOf("/menu") >= 0) {
+      return "可点「添加」、项目/产品 Tab、分组齿轮；长按可排序，左滑可操作";
+    }
     return "请点击页面上的可操作热区";
   }
 
@@ -130,6 +141,10 @@
       var home = document.getElementById("screen-home");
       return !!(home && home.classList.contains("active"));
     }
+    if (p.indexOf("/menu") >= 0) {
+      var list = document.getElementById("screen-p-list");
+      return !!(list && !list.classList.contains("hidden"));
+    }
     return false;
   }
 
@@ -138,9 +153,11 @@
     return !!t.closest(
       "button,a,input,select,textarea,label," +
         '[role="button"],[data-v2-home],[data-hub-go],[data-entry],' +
-        "[data-wb],[data-wb-tab],[data-home-tab]," +
-        ".hub-card,.vh-hot,.sp-ticket,.sp-ticket-more,.nav-item," +
-        ".wb-tile,.home-icon-btn,.home-store-name"
+        "[data-wb],[data-wb-tab],[data-home-tab],[data-price-catalog-tab]," +
+        "[data-col-sort],.hub-card,.vh-hot,.sp-ticket,.sp-ticket-more,.nav-item," +
+        ".wb-tile,.home-icon-btn,.home-store-name,.page-tabs__item," +
+        ".title-add-btn,.catalog-group-gear,.catalog-group-tab,.proj-row," +
+        ".table-head__cell"
     );
   }
 

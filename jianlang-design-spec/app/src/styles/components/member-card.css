@@ -1,0 +1,143 @@
+@layer components {
+  .u-member-card {
+    @apply w-full max-w-card overflow-hidden bg-white border border-border rounded-card shadow-none;
+    --mc-fallback: #CFDBF6;
+    --mc-detail-bg: url('/assets/member-card/stored-detail.png');
+    --mc-compact-bg: url('/assets/member-card/stored-compact.png');
+    --mc-cta: #CEDAF2;
+  }
+
+  .u-member-card:not(.u-member-card--compact) .u-member-card__head {
+    @apply flex flex-col min-h-[168px] mb-2 pt-[24px] px-4 pb-4 rounded-card box-border text-figma-primary;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    background-color: var(--mc-fallback);
+    background-image: var(--mc-detail-bg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .u-member-card__type {
+    @apply text-[17px] font-semibold leading-tight m-0 shrink-0;
+  }
+
+  .u-member-card__metrics {
+    @apply flex justify-between items-end gap-4 mt-auto pt-2;
+  }
+
+  .u-member-card__metrics .metric {
+    @apply min-w-0;
+  }
+
+  .u-member-card__metrics .metric--end {
+    @apply text-left shrink-0;
+  }
+
+  .u-member-card__metrics .metric__label {
+    @apply block text-[11px] text-mc-label leading-snug mb-1.5;
+  }
+
+  .u-member-card__metrics .metric__value {
+    @apply text-sm font-semibold leading-snug;
+  }
+
+  .u-member-card__metrics .metric__price {
+    @apply font-data text-xl font-normal tracking-tight;
+  }
+
+  .u-member-card__body {
+    @apply py-2 px-4 pb-3 bg-white text-xs leading-normal text-mc-body;
+  }
+
+  .u-member-card__body p + p {
+    @apply mt-2.5;
+  }
+
+  .u-member-card__foot {
+    @apply flex items-center gap-2.5 py-3.5 px-4 bg-white relative;
+  }
+
+  .u-member-card__foot::before {
+    content: '';
+    @apply absolute top-0 h-px border-0;
+    left: 14px;
+    right: 14px;
+    background: repeating-linear-gradient(90deg, #DCDCDC 0, #DCDCDC 4px, transparent 4px, transparent 10px);
+  }
+
+  .app-root .u-member-card button.u-member-card__del {
+    @apply inline-flex shrink-0 items-center justify-center p-0 border-0 rounded-none bg-transparent text-mc-del text-[13px] leading-none cursor-pointer appearance-none;
+    width: auto;
+    height: auto;
+    min-width: 0;
+  }
+
+  .u-member-card__del-icon {
+    @apply w-[18px] h-[18px];
+    stroke: currentColor;
+  }
+
+  .u-member-card__links {
+    @apply flex flex-1 justify-end items-center gap-4 text-[13px] font-medium leading-7 text-figma-primary min-w-0;
+  }
+
+  .u-member-card__links a {
+    @apply text-inherit no-underline whitespace-nowrap text-[13px] font-medium leading-7;
+  }
+
+  .app-root .u-member-card button.u-member-card__cta {
+    @apply inline-flex shrink-0 h-7 px-[18px] border-0 rounded-pill text-[13px] font-medium leading-7 text-figma-primary cursor-pointer appearance-none;
+    background: var(--mc-cta);
+    background-color: var(--mc-cta);
+  }
+
+  .u-member-card--stored {
+    --mc-fallback: #D0D9F7;
+    --mc-detail-bg: url('/assets/member-card/stored-detail.png');
+    --mc-compact-bg: url('/assets/member-card/stored-compact.png');
+    --mc-cta: #CEDAF2;
+  }
+
+  .u-member-card--times {
+    --mc-fallback: #C7DDE8;
+    --mc-detail-bg: url('/assets/member-card/times-detail.png');
+    --mc-compact-bg: url('/assets/member-card/times-compact.png');
+    --mc-cta: #C5DCEB;
+  }
+
+  .u-member-card--discount {
+    --mc-fallback: #EDD19C;
+    --mc-detail-bg: url('/assets/member-card/discount-detail.png');
+    --mc-compact-bg: url('/assets/member-card/discount-compact.png');
+    --mc-cta: #E5C88A;
+  }
+
+  .u-member-card--period {
+    --mc-fallback: #F8D3C9;
+    --mc-detail-bg: url('/assets/member-card/period-detail.png');
+    --mc-compact-bg: url('/assets/member-card/period-compact.png');
+    --mc-cta: #EBC0B5;
+  }
+
+  .u-member-card--package {
+    --mc-fallback: #E7D1B9;
+    --mc-detail-bg: url('/assets/member-card/package-detail.png');
+    --mc-compact-bg: url('/assets/member-card/package-compact.png');
+    --mc-cta: #DCC9AE;
+  }
+
+  .u-member-card--compact {
+    @apply max-w-card h-12 flex items-center pl-[78px] pr-3.5 rounded-[10px] shadow-none border border-border relative overflow-hidden;
+    background-color: var(--mc-fallback);
+    background-image: var(--mc-compact-bg);
+    background-position: left center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .u-member-card--compact .u-member-card__name {
+    @apply flex-1 text-sm font-semibold text-figma-primary whitespace-nowrap overflow-hidden text-ellipsis relative z-[1];
+  }
+}

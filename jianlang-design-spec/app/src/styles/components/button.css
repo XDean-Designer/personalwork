@@ -1,0 +1,60 @@
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center h-12 max-w-btn px-5 rounded-xl text-base font-medium leading-tight text-center border-0 cursor-pointer font-ui shadow-none box-border;
+    background-image: none;
+  }
+
+  .btn-block {
+    @apply w-full max-w-btn;
+  }
+
+  .btn--r4 {
+    @apply rounded;
+  }
+
+  .btn--r8 {
+    @apply rounded-lg;
+  }
+
+  .btn--r12 {
+    @apply rounded-xl;
+  }
+
+  .btn--r16 {
+    @apply rounded-2xl;
+  }
+
+  .btn-primary {
+    @apply bg-brand-6 text-white border border-brand-6;
+  }
+
+  .btn-primary:hover {
+    @apply bg-brand-7 border-brand-7 text-white;
+  }
+
+  .btn-outline {
+    @apply bg-white text-brand-6 border border-brand-6;
+  }
+
+  .btn-outline:hover {
+    @apply bg-white text-brand-6 border-brand-6;
+  }
+
+  .btn-disabled,
+  .btn-primary.btn-disabled {
+    @apply bg-[#EDEDED] text-figma-secondary opacity-100 pointer-events-none border-0;
+  }
+
+  .btn-sm,
+  .btn-lg {
+    @apply h-12;
+  }
+
+  .btn-sm {
+    @apply px-4 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-6 text-base;
+  }
+}

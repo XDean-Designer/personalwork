@@ -1,0 +1,14 @@
+@layer components {
+  .u-tabbar {
+    @apply w-full max-w-canvas h-tabbar-h mx-auto bg-white border-0 flex shrink-0;
+    box-shadow: var(--bottom-surface-shadow);
+  }
+
+  .u-tabbar .tab {
+    @apply flex-1 flex flex-col items-center justify-center gap-0.5 text-[11px] leading-[15px] text-figma-secondary;
+  }
+
+  .u-tabbar .tab.on {
+    @apply text-brand-6;
+  }
+}

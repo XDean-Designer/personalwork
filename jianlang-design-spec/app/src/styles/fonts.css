@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'TCloudNumber';
+  src: url('/assets/fonts/TCloudNumber/TCloudNumber-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TCloudNumber';
+  src: url('/assets/fonts/TCloudNumber/TCloudNumber-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TCloudNumber';
+  src: url('/assets/fonts/TCloudNumber/TCloudNumber-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}

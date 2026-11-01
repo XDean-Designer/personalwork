@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>剑琅联盟设计规范 | 薛鼎</title>
+  <meta name="description" content="《剑琅联盟》移动端设计规范 —— AI 读取规范批量修正常规页面 UI，达到交付品质。" />
+  <link rel="stylesheet" href="../css/site.css" />
+</head>
+<body>
+  <div class="bg-ambient" aria-hidden="true"></div>
+  <div class="page">
+    <nav class="nav" id="siteNav">
+      <div class="container nav-inner">
+        <a class="brand" href="../index.html">
+          <img class="brand-avatar" src="../assets/avatar-robot.png" alt="" />
+          <span>Dean 薛鼎</span>
+        </a>
+        <div class="nav-links" id="navLinks">
+          <a href="../index.html#method">工作流</a>
+          <a href="prd-figma.html">PRD</a>
+        </div>
+      </div>
+    </nav>
+
+    <header class="container page-hero spec-hero">
+      <a class="back-link" href="prd-figma.html">← 返回设计稿目录</a>
+      <span class="section-label">Design System</span>
+      <h1>剑琅联盟移动端设计规范</h1>
+      <p>
+        一套写给 AI 读的规范：把色彩、字号、间距、圆角、组件固化成 Token 与硬性约束，
+        让 Cursor 按规范批量修正原型里的常规页面，直接推到交付品质。
+      </p>
+      <ul class="spec-meta">
+        <li><span>版本</span><b>v1.6</b></li>
+        <li><span>设计基准</span><b>390 × 844</b></li>
+        <li><span>技术栈</span><b>HTML + Tailwind</b></li>
+        <li><span>章节</span><b>13 章</b></li>
+      </ul>
+    </header>
+
+    <section class="section" style="padding-top: 0;">
+      <div class="container">
+
+        <!-- 工作流定位 -->
+        <div class="spec-flow" aria-label="设计规范在工作流中的位置">
+          <div class="spec-flow-node">
+            <span class="spec-flow-num">03</span>
+            <strong>交付级 UI · UX</strong>
+            <em>产出高保真原型</em>
+          </div>
+          <span class="spec-flow-arrow" aria-hidden="true">→</span>
+          <div class="spec-flow-node is-key">
+            <span class="spec-flow-num">★</span>
+            <strong>读取设计规范</strong>
+            <em>AI 批量修正常规页 UI</em>
+          </div>
+          <span class="spec-flow-arrow" aria-hidden="true">→</span>
+          <div class="spec-flow-node">
+            <span class="spec-flow-num">04</span>
+            <strong>PRD · 设计稿</strong>
+            <em>核对修改至定稿</em>
+          </div>
+        </div>
+
+        <!-- 能力与边界 -->
+        <div class="spec-split">
+          <div class="spec-panel is-good">
+            <h2 class="spec-panel-title">
+              <span class="spec-panel-dot" aria-hidden="true"></span>它能做什么
+            </h2>
+            <ul class="spec-list">
+              <li><b>常规页面批量替换</b>列表、详情、表单、弹窗、空状态等结构简单的页面，一次性按规范重排色彩、字号、间距、圆角与组件。</li>
+              <li><b>硬性约束可校验</b>直角画板、无阴影无渐变、0.5px 分隔线、44px 导航、48px 按钮、按钮宽 ≤370px 等，写成条款后 AI 可逐条对照。</li>
+              <li><b>组件优先复用</b>优先调用规范第 7 章已命名组件（PageTitleBar / TabBar / HomeNavbar 等），避免同类元素出现两套视觉。</li>
+              <li><b>口径统一</b>同一个项目里的多个功能模块，视觉术语和 Token 只有一份，减少跨模块返工。</li>
+            </ul>
+          </div>
+          <div class="spec-panel is-limit">
+            <h2 class="spec-panel-title">
+              <span class="spec-panel-dot" aria-hidden="true"></span>它做不到什么
+            </h2>
+            <ul class="spec-list">
+              <li><b>强定制布局</b>需要重新设计信息架构、或版式本身就非常规的页面，仍需人工判断。</li>
+              <li><b>新增交互概念</b>规范只管视觉与结构，不负责定义新的操作方式或业务规则。</li>
+              <li><b>替代评审</b>AI 改完的页面仍需按 PRD 逐条核对；规范保证的是视觉一致性，不是需求正确性。</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 规范目录 -->
+        <div class="section-head" style="margin-top: 56px;">
+          <span class="section-label">Contents</span>
+          <h2 class="section-title">规范目录</h2>
+          <p class="section-desc">点任意章节直接跳到规范对应位置。</p>
+        </div>
+        <div class="spec-toc" data-spec-toc></div>
+
+        <!-- 实景预览 -->
+        <div class="section-head" style="margin-top: 56px;">
+          <span class="section-label">Preview</span>
+          <h2 class="section-title">规范实景</h2>
+          <p class="section-desc">规范以独立站点维护，浅色主题，按章节组织。</p>
+        </div>
+        <div class="spec-shots">
+          <figure class="spec-shot">
+            <img src="../assets/spec-colors.webp" alt="色彩系统章节" loading="lazy" width="900" height="952" />
+            <figcaption>2 · 色彩系统 · 品牌色阶与语义色</figcaption>
+          </figure>
+          <figure class="spec-shot">
+            <img src="../assets/spec-components.webp" alt="组件库章节" loading="lazy" width="900" height="952" />
+            <figcaption>7 · 组件库 · 可调用组件与命名</figcaption>
+          </figure>
+        </div>
+
+        <div class="spec-cta">
+          <a class="btn btn-primary pressable spec-cta-btn" href="../jianlang-design-spec/index.html" target="_blank" rel="noopener">
+            打开完整规范
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.6 3.5H8.5V7.4"/></svg>
+          </a>
+          <p class="spec-cta-note">规范站为独立浅色站点，将在新窗口打开。</p>
+        </div>
+
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">© 2026 薛鼎 · Workflow</div>
+    </footer>
+  </div>
+  <script src="../js/site.js"></script>
+  <script>
+    (function () {
+      const SPEC = "../jianlang-design-spec/index.html";
+      const CHAPTERS = [
+        { no: "★", name: "全局强制 UI", desc: "直角画板 · 无阴影无渐变 · 硬性约束", hash: "global-ui" },
+        { no: "◎", name: "品牌标识", desc: "LOGO 用法与安全边距", hash: "brand" },
+        { no: "0.1", name: "HTML + Tailwind 落地", desc: "从规范到代码的接入方式", hash: "tailwind-delivery" },
+        { no: "0", name: "概述与 AI 使用指引", desc: "AI 批量出图必读规则", hash: "overview" },
+        { no: "1", name: "设计原则", desc: "克制的视觉语言", hash: "principles" },
+        { no: "2", name: "色彩系统", desc: "品牌色阶 · 语义色 · 禁用态", hash: "colors" },
+        { no: "3", name: "字体排版", desc: "思源黑体 · 字号层级 · 金额数字", hash: "typography" },
+        { no: "4", name: "间距与布局", desc: "16 / 8 / 12 / 4px 栅格", hash: "spacing" },
+        { no: "5", name: "圆角", desc: "四档圆角与使用场景", hash: "radius-shadow" },
+        { no: "6", name: "图标调用", desc: "Lucide 联网 SVG", hash: "icons" },
+        { no: "7", name: "组件库", desc: "可调用组件与命名", hash: "components" },
+        { no: "8", name: "B 端业务规范", desc: "管理后台的页面结构", hash: "b2b" },
+        { no: "9", name: "Design Token JSON", desc: "可直接喂给工程的 Token", hash: "tokens" }
+      ];
+      const host = document.querySelector("[data-spec-toc]");
+      if (!host) return;
+      host.innerHTML = CHAPTERS.map((c) => (
+        `<a class="spec-toc-item pressable" href="${SPEC}#${c.hash}" target="_blank" rel="noopener">` +
+        `<span class="spec-toc-num">${c.no}</span>` +
+        `<span class="spec-toc-copy"><strong>${c.name}</strong><em>${c.desc}</em></span>` +
+        `<span class="spec-toc-go" aria-hidden="true">↗</span>` +
+        `</a>`
+      )).join("");
+    })();
+  </script>
+</body>
+</html>

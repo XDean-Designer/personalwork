@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>剑琅联盟移动端设计规范</title>
+  <link rel="icon" href="LOGO2.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/tailwind-spec-config.js"></script>
+  <style type="text/tailwindcss">
+    /* MemberCard removed from design spec */
+  </style>
+  <script>
+    (function () {
+      var ua = navigator.userAgent || '';
+      var platform = navigator.platform || '';
+      var isWindows = /Win/i.test(ua) || /Win/i.test(platform);
+      document.documentElement.classList.add('platform-source-han'); /* 全局统一思源黑体 */
+    })();
+  </script>
+  <style>
+    :root {
+      --sidebar-bg: #FFFFFF;
+      --sidebar-surface: #F5F6F8;
+      --sidebar-text: rgba(0,0,0,0.55);
+      --sidebar-text-active: #F32F41;
+      --sidebar-border: #E7E7E7;
+      --sidebar-shadow: none;
+      --main-bg: #F7F7F7;
+      --spec-content-max: 920px;
+      --brand-1: #FEF0F1; --brand-2: #FDD9DC; --brand-3: #FCBDC3; --brand-4: #FB9BA3;
+      --brand-5: #F97883; --brand-6: #F32F41; --brand-7: #D92939; --brand-8: #BF2432;
+      --brand-9: #991D28; --brand-10: #73161E;
+      --success-1: #E8F8F2; --success-6: #2BA471; --success-7: #008858;
+      --warning-1: #FEF3E6; --warning-6: #E37318; --warning-7: #BE5A00;
+      --error-1: #FDECEE; --error-6: #D54941; --error-7: #AD352F;
+      --info-1: #ECF2FE; --info-6: #0052D9; --info-7: #003CAB;
+      --gray-1: #F7F7F7; --gray-2: #EDEDED; --gray-3: #D7D7D5; --gray-4: #DCDCDC;
+      --gray-5: #C5C5C5; --gray-6: #A6A6A6; --gray-7: #8B8B8B; --gray-8: #777777;
+      --gray-9: #5E5E5E; --gray-10: #4B4B4B; --gray-11: #383838; --gray-12: #2C2C2C;
+      --text-strong: #000000;
+      --text-primary: #333333; --text-secondary: #929292;
+      --text-placeholder: #929292; --text-disabled: #929292;
+      --text-anti: #FFFFFF; --text-brand: #F32F41;
+      --bg-page: #F7F7F7; --bg-container: #FFFFFF; --bg-secondary: #EDEDED;
+      --bg-disabled: #EDEDED;
+      --brand-aux-1: #FFD5D9; --brand-aux-2: #FFF2F2;
+      --border: #D7D7D5; --border-focus: #F32F41;
+      --radius-tag: 4px; --radius-input: 8px; --radius-card: 12px;
+      --radius-btn-4: 4px; --radius-btn-8: 8px; --radius-btn-12: 12px; --radius-btn-16: 16px;
+      --radius-btn: var(--radius-btn-12);
+      --radius-s: 4px; --radius-m: 8px; --radius-l: 12px; --radius-xl: 12px; --radius-round: 999px;
+      --radius-btn-primary: var(--radius-btn-12);
+      --shadow-1: none; --shadow-2: none; --shadow-3: none;
+      --nav-h: 44px; --tabbar-h: 56px;
+      --bottom-surface-shadow: 0 -0.5px 4px 0 rgba(0, 0, 0, 0.08); /* TabBar / Bottom Action Bar 顶部分离 */
+      --status-bar-h: 53px; /* 系统状态栏占位（与标题栏分属两层） */
+      --safe-top: var(--status-bar-h); /* 别名 · 兼容旧引用 */
+      --safe-bottom: 34px; --bottom-placeholder: 34px;
+      --space-page: 16px; --space-module: 16px; --space-card: 16px;
+      --space-icon-text: 8px; --space-list-y: 12px; --space-tag-y: 4px; --space-tag-x: 8px; --space-divider-y: 12px;
+      --divider-weight: 0.5px; /* 内容分隔线线粗 */
+      --divider-color: var(--gray-2); /* #EDEDED · 卡片/列表内同级分隔 */
+      --divider-inset: var(--space-card); /* 左右缩进 16px · 与内容对齐 */
+      --icon-size: 24px; --icon-safe: 20px; --icon-size-sm: 16px;
+      --icon-color-primary: #F32F41; --icon-color-default: #333333; --icon-color-secondary: #929292;
+      --price-gap: 4px;
+      --sidebar-w: 280px;
+      --canvas-w: 390px; /* 画布宽：固定 */
+      --canvas-h: 844px; /* 画布高：默认；phone-frame 使用 min-height 可向下延展 */
+      --btn-max-width: 370px; /* 按钮最大宽度（画布 390，左右各留 10px） */
+      --page-tab-width: 390px; /* 顶部 Tab 条画布宽 */
+      --page-title-bar-side: 72px; /* PageTitleBar 左右等宽列 · 保证标题几何居中 */
+      --modal-margin: 32px; /* 居中弹窗距画布左右边距 */
+      --modal-centered-w: calc(var(--canvas-w) - var(--modal-margin) * 2); /* 326px */
+      --toast-margin-h: 40px; /* Toast 外缘距画布左右边距 */
+      --toast-max-width: calc(var(--canvas-w) - var(--toast-margin-h) * 2); /* 310px */
+      --empty-state-icon: #D1D5DC; /* 空状态文件图标描边 · Figma 666-1758 */
+      --empty-state-bubble: #e5e7eb; /* 空状态装饰圆 */
+      --tab-indicator-w: 32px; /* Tabs / PageTabs 选中指示条宽度 */
+      /* Figma 主页面 / RTP 零售模块 实测 Token */
+      --figma-text-primary: #333333;
+      --figma-text-secondary: #929292;
+      --figma-text-muted: #b8b8b8;
+      --figma-text-inactive: #d7d7d5;
+      --figma-blue: #1A70FE;
+      --figma-blue-bg: #E7F1FF;
+      --figma-orange: #F77357;
+      --figma-card-pink: #FFF2F2;
+      --figma-promo-border: rgba(249, 117, 107, 0.2);
+      --font-ui: "Source Han Sans SC", "Source Han Sans CN", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      --font-data: var(--font-ui); /* 金额与 UI 统一思源黑体 */
+      --font-data-weight: 400; /* 金额默认 Regular */
+      --font-data-weight-lg: 700; /* 金额 ≥24px → Bold */
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    /* platform font override removed · 全局思源黑体 */
+    body.spec-site, body.spec-site button, body.spec-site input, body.spec-site textarea, body.spec-site select { font-family: var(--font-ui); font-size: 14px; line-height: 1.6; color: var(--text-primary); background: var(--bg-page); -webkit-font-smoothing: antialiased; }
+    a { color: var(--brand-6); text-decoration: none; transition: opacity .15s; }
+    a:hover { opacity: .85; }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { width: var(--sidebar-w); background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border); box-shadow: var(--sidebar-shadow); position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; z-index: 100; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.12) transparent; }
+    .sidebar-brand { padding: 24px 16px 20px; text-align: center; background: var(--brand-aux-2); border-bottom: 1px solid var(--sidebar-border); }
+    .sidebar-brand .logo-wrap { width: 72px; height: 72px; margin: 0 auto 12px; border-radius: var(--radius-card); background: #fff; padding: 8px; border: 1px solid var(--border); }
+    .sidebar-brand .logo-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .sidebar-brand h1 { font-size: 18px; font-weight: 600; color: var(--gray-12); letter-spacing: .06em; }
+    .sidebar-brand .sub { font-size: 11px; color: var(--text-secondary); margin-top: 6px; letter-spacing: .02em; }
+    .sidebar-brand .ver { display: inline-block; margin-top: 10px; font-size: 10px; padding: var(--space-tag-y) var(--space-tag-x); border-radius: var(--radius-tag); background: var(--brand-1); color: var(--brand-6); border: 1px solid var(--brand-3); }
+    .nav-list { padding: var(--space-page) 12px 24px; list-style: none; }
+    .nav-list a { display: flex; align-items: center; min-height: var(--nav-h); padding: 0 14px; font-size: 14px; color: var(--text-secondary); text-decoration: none; border-radius: var(--radius-input); margin-bottom: 4px; transition: background .15s, color .15s; }
+    .nav-list a:hover { color: var(--text-primary); background: var(--gray-1); }
+    .nav-list a.active { color: var(--brand-6); font-weight: 500; background: var(--brand-1); border: 1px solid var(--brand-3); }
+    .nav-list a.nav-mandate { color: var(--brand-6); font-weight: 600; }
+    .spec-topbar { display: none; height: var(--nav-h); align-items: center; gap: var(--space-icon-text); padding: 0 var(--space-page); background: var(--bg-container); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 90; }
+    .spec-topbar img { width: 28px; height: 28px; object-fit: contain; }
+    .spec-topbar-title { font-size: 16px; font-weight: 500; color: var(--text-primary); flex: 1; }
+    .spec-topbar-ver { font-size: 11px; color: var(--text-secondary); padding: var(--space-tag-y) var(--space-tag-x); border-radius: var(--radius-tag); background: var(--brand-1); color: var(--brand-6); border: 1px solid var(--brand-3); }
+    .main { margin-left: var(--sidebar-w); flex: 1; padding: 0 0 80px; min-width: 0; background: var(--bg-page); }
+    .main-inner { max-width: var(--spec-content-max); margin: 0 auto; padding: var(--space-page) var(--space-page) 0; }
+    .page-hero { margin: 0 0 var(--space-module); padding: var(--space-card); background: var(--bg-container); border: 1px solid var(--border); border-radius: var(--radius-card); box-shadow: none; }
+    .page-hero-inner { display: flex; align-items: center; gap: var(--space-card); }
+    .page-hero .hero-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: var(--radius-card); background: var(--brand-aux-2); padding: 10px; border: 1px solid var(--border); }
+    .page-hero .hero-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .page-hero h2 { font-size: 24px; font-weight: 600; color: var(--text-primary); border: none; padding: 0; margin: 0 0 8px; letter-spacing: .02em; }
+    .page-hero .hero-desc { font-size: 14px; color: var(--text-secondary); max-width: 520px; line-height: 1.65; }
+    .page-hero .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--space-page); }
+    .page-hero .hero-pill { font-size: 12px; padding: var(--space-tag-y) var(--space-tag-x); border-radius: var(--radius-tag); background: var(--brand-1); color: var(--brand-6); border: 1px solid var(--brand-3); }
+    section { margin-bottom: 56px; scroll-margin-top: 32px; }
+    h2.section-title { font-size: 22px; font-weight: 600; margin-bottom: 20px; color: var(--gray-12); display: flex; align-items: center; gap: 12px; padding-bottom: 0; border: none; }
+    h2.section-title .num { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; font-size: 14px; font-weight: 600; color: var(--text-anti); background: var(--brand-6); border-radius: var(--radius-input); }
+    h2.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); margin-left: var(--space-icon-text); opacity: .85; }
+    h3 { font-size: 17px; font-weight: 600; margin: 28px 0 14px; color: var(--gray-11); }
+    h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; }
+    p, li { color: var(--text-secondary); margin-bottom: 8px; }
+    ul, ol { padding-left: 20px; margin-bottom: 12px; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: var(--radius-m); font-size: 11px; font-weight: 500; margin-right: 6px; }
+    .tag-brand { background: var(--brand-1); color: var(--brand-6); }
+    .tag-ai { background: #ECF2FE; color: var(--info-6); }
+    .card { background: var(--bg-container); border: 1px solid var(--border); border-radius: var(--radius-card); padding: var(--space-card); margin: var(--space-module) 0; box-shadow: none; overflow: hidden; }
+    .card-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--gray-12); }
+    .brand-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; align-items: stretch; }
+    .brand-showcase .brand-card { display: flex; flex-direction: column; align-items: center; min-height: 220px; padding: 28px 24px 24px; text-align: center; border-radius: 12px; box-shadow: none; }
+    .brand-showcase .brand-card--light { background: #fff; border: 1px solid var(--border); }
+    .brand-showcase .brand-card--dark { background: var(--gray-12); border: 1px solid var(--gray-11); }
+    .brand-logo-stage { width: 120px; height: 120px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 16px; margin-bottom: 16px; }
+    .brand-logo-stage--light { background: var(--gray-1); border: 1px solid var(--border); }
+    .brand-logo-stage--dark { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); }
+    .brand-logo-stage img { width: 80px; height: 80px; object-fit: contain; display: block; }
+    .brand-card-label { font-size: 14px; font-weight: 600; line-height: 1.4; margin-bottom: 6px; }
+    .brand-card--light .brand-card-label { color: var(--gray-12); }
+    .brand-card--dark .brand-card-label { color: #fff; }
+    .brand-showcase .brand-card p { font-size: 13px; line-height: 1.5; color: var(--text-secondary); margin: 0; max-width: 240px; }
+    .brand-showcase .brand-card--dark p { color: rgba(255,255,255,.65); }
+    .brand-rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+    .brand-rule { background: var(--gray-1); border-radius: 8px; padding: 14px; font-size: 13px; }
+    .brand-rule strong { display: block; color: var(--gray-12); margin-bottom: 4px; font-size: 13px; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; margin: var(--space-list-y) 0; border-radius: var(--radius-input); overflow: hidden; box-shadow: none; border: 1px solid var(--border); }
+    th, td { border: none; border-bottom: 1px solid var(--border); padding: 12px 16px; text-align: left; }
+    tr:last-child td { border-bottom: none; }
+    th { background: var(--gray-1); font-weight: 600; white-space: nowrap; color: var(--gray-11); font-size: 12px; text-transform: none; }
+    tbody tr:hover td { background: rgba(243,47,65,.02); }
+    code { background: var(--gray-1); padding: 2px 6px; border-radius: var(--radius-s); font-size: 12px; font-family: Consolas, monospace; }
+    pre { background: var(--gray-12); color: var(--gray-3); padding: var(--space-card); border-radius: var(--radius-input); overflow-x: auto; font-size: 12px; line-height: 1.6; margin: var(--space-list-y) 0; border: 1px solid var(--border); box-shadow: none; }
+    .ai-prompt-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: var(--space-module) 0 0; }
+    .ai-prompt-head h3 { margin: 0; }
+    .ai-prompt-copy-btn {
+      flex-shrink: 0;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: var(--radius-input);
+      border: 1px solid var(--brand-6);
+      background: #fff;
+      color: var(--brand-6);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .ai-prompt-copy-btn:hover { background: var(--brand-1); }
+    .ai-prompt-copy-btn.is-copied { border-color: var(--success-6, #2BA471); color: var(--success-6, #2BA471); background: #E8F8EF; }
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+    .color-item { border-radius: var(--radius-l); overflow: hidden; border: 1px solid var(--border); }
+    .color-swatch { height: 64px; }
+    .color-info { padding: 8px 10px; background: #fff; font-size: 12px; }
+    .color-info strong { display: block; font-size: 13px; }
+    .demo-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 12px 0; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+      max-width: var(--btn-max-width);
+      padding: 0 20px;
+      border-radius: var(--radius-btn);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.2;
+      text-align: center;
+      border: none;
+      cursor: default;
+      font-family: var(--font-ui);
+      box-shadow: none;
+      background-image: none;
+      box-sizing: border-box;
+    }
+    .btn-block { width: 100%; max-width: var(--btn-max-width); }
+    .btn.btn--r4 { border-radius: var(--radius-btn-4); }
+    .btn.btn--r8 { border-radius: var(--radius-btn-8); }
+    .btn.btn--r12 { border-radius: var(--radius-btn-12); }
+    .btn.btn--r16 { border-radius: var(--radius-btn-16); }
+    .btn-primary,
+    .btn.btn-primary {
+      background: var(--brand-6);
+      color: #fff;
+      border: 1px solid var(--brand-6);
+    }
+    .btn-primary:hover,
+    .btn.btn-primary:hover { background: var(--brand-7); border-color: var(--brand-7); color: #fff; }
+    .btn-primary.btn-lg, .btn-primary.btn-sm { height: 48px; }
+    .btn-outline,
+    .btn.btn-outline {
+      background: #fff;
+      color: var(--brand-6);
+      border: 1px solid var(--brand-6);
+    }
+    .btn-outline:hover,
+    .btn.btn-outline:hover { background: #fff; color: var(--brand-6); border-color: var(--brand-6); }
+    .btn-disabled { background: var(--gray-3); color: var(--text-disabled); }
+    .btn-sm { height: 48px; padding: 0 16px; font-size: 14px; }
+    .btn-lg { height: 48px; padding: 0 24px; font-size: 16px; }
+    .btn-disabled, .btn-primary.btn-disabled { background: var(--bg-disabled); color: var(--text-secondary); opacity: 1; pointer-events: none; border: none; }
+    .input-demo { height: 44px; border: 1px solid var(--border); border-radius: var(--radius-input); padding: 0 12px; font-size: 14px; width: 240px; outline: none; background: #fff; box-shadow: none; }
+    .input-demo:focus { border-color: var(--brand-6); outline: 2px solid var(--brand-2); outline-offset: 0; }
+    .tag-demo { display: inline-flex; align-items: center; min-height: 22px; padding: var(--space-tag-y) var(--space-tag-x); border-radius: var(--radius-tag); font-size: 12px; box-shadow: none; }
+    .tag-default { background: var(--gray-1); color: var(--text-secondary); }
+    .tag-brand-demo { background: var(--brand-1); color: var(--brand-6); }
+    .tag-success { background: var(--success-1); color: var(--success-6); }
+    .tag-warning { background: var(--warning-1); color: var(--warning-6); }
+    .tag-error { background: var(--error-1); color: var(--error-6); }
+    .alert { padding: 12px 16px; border-radius: var(--radius-m); font-size: 13px; margin: 8px 0; }
+    .alert-info { background: var(--info-1); color: var(--info-7); border-left: 3px solid var(--info-6); }
+    .alert-warn { background: var(--warning-1); color: var(--warning-7); border-left: 3px solid var(--warning-6); }
+    .phone-frame { width: var(--canvas-w); border: 10px solid #1A1A1F; border-radius: 40px; overflow: hidden; background: var(--bg-page); margin: 16px auto; box-shadow: none; position: relative; }
+    .phone-frame--844 { height: var(--canvas-h); min-height: var(--canvas-h); max-height: var(--canvas-h); display: flex; flex-direction: column; }
+    .phone-frame::before { content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 100px; height: 28px; background: #1A1A1F; border-radius: 20px; z-index: 10; }
+    .phone-splash { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: #fff; min-height: 0; }
+    .phone-splash--pure { background: #fff; }
+    .phone-layout-stack { flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--bg-page); }
+    .phone-body--fill { flex: 1; min-height: 0; overflow: hidden; padding: 16px; }
+    .phone-splash img { width: 96px; height: 96px; object-fit: contain; margin-bottom: 20px; }
+    .phone-splash .app-name { font-size: 24px; font-weight: 600; color: var(--gray-12); letter-spacing: .08em; }
+    .phone-splash .app-tagline { font-size: 13px; color: var(--text-secondary); margin-top: 8px; }
+    .canvas-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--gray-12); color: #fff; font-size: 11px; padding: 5px 12px; border-radius: 4px; margin-bottom: 16px; font-weight: 500; letter-spacing: .03em; }
+    .canvas-badge::before { content: ''; width: 6px; height: 6px; background: var(--brand-6); border-radius: 50%; }
+    .tap-feedback { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+    .tap-feedback { transition: border-color .15s, background .15s, opacity .15s; }
+    .spec-site .tap-feedback:active { opacity: .92; }
+    .tap-feedback.tap-flash { outline: 2px solid rgba(243,47,65,.35); outline-offset: 2px; box-shadow: none; }
+    .sidebar .tap-feedback.tap-flash { outline: 2px solid rgba(243,47,65,.25); outline-offset: 2px; box-shadow: none; }
+    .ripple-fx { position: absolute; border-radius: 50%; pointer-events: none; transform: scale(0); animation: rippleExpand .55s ease-out forwards; }
+    @keyframes rippleExpand { to { transform: scale(2.8); opacity: 0; } }
+    .comp-block { background: var(--bg-container); border: 1px solid var(--border); border-radius: var(--radius-card); margin-bottom: var(--space-module); overflow: hidden; box-shadow: none; }
+    .s-icon { display: inline-flex; align-items: center; justify-content: center; width: 1em; height: 1em; flex-shrink: 0; vertical-align: -0.125em; color: inherit; line-height: 0; }
+    .s-icon svg { width: 100%; height: 100%; display: block; color: inherit; overflow: visible; }
+    /* 线性图标：禁止继承填充，描边路径仅显示轮廓 */
+    .s-icon:not(.s-icon--filled):not([data-filled="1"]) svg { fill: none !important; }
+    .s-icon:not(.s-icon--filled):not([data-filled="1"]) svg [stroke] {
+      fill: none !important;
+      stroke: currentColor !important;
+    }
+    .s-icon:not(.s-icon--filled):not([data-filled="1"]) svg path:not([stroke]),
+    .s-icon:not(.s-icon--filled):not([data-filled="1"]) svg circle:not([stroke]),
+    .s-icon:not(.s-icon--filled):not([data-filled="1"]) svg rect:not([stroke]) {
+      fill: currentColor !important;
+      stroke: none !important;
+    }
+    .s-icon.is-missing { opacity: 0.35; }
+    .comp-block-hd { padding: 14px 20px; background: var(--bg-page); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .comp-block-hd strong { font-size: 14px; }
+    .comp-block-hd code { font-size: 11px; color: var(--brand-6); }
+    .comp-block-bd { padding: 20px 16px; }
+    .comp-preview-phone { width: var(--canvas-w); margin: 0 auto; border: 1px solid var(--border); border-radius: var(--radius-l); overflow: hidden; background: var(--bg-page); }
+  /* 页面标题栏 · Figma 6-623 仅参考顶栏区域（见 #comp-page-title-bar） */
+    .u-page-title-bar {
+      width: 100%;
+      max-width: var(--canvas-w);
+      height: var(--nav-h);
+      margin: 0 auto;
+      background: var(--bg-container);
+      display: grid;
+      grid-template-columns: var(--page-title-bar-side) 1fr var(--page-title-bar-side);
+      align-items: stretch;
+      padding: 0;
+      border: none;
+      box-shadow: none;
+      box-sizing: border-box;
+    }
+    .u-page-title-bar .back {
+      justify-self: start;
+      align-self: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin-left: 4px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      color: var(--icon-color-default);
+      text-decoration: none;
+      font-family: inherit;
+    }
+    .u-page-title-bar .back-icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      stroke: currentColor;
+      flex-shrink: 0;
+    }
+    .u-page-title-bar .title {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      height: 100%;
+      margin: 0;
+      padding: 0 4px 11px;
+      box-sizing: border-box;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.2;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .u-page-title-bar .action {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      height: 100%;
+      padding: 0 var(--space-page) 11px 0;
+      box-sizing: border-box;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 16px;
+      line-height: 1.2;
+      color: var(--text-primary);
+      font-weight: 400;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .u-page-title-bar .action--muted { color: var(--text-secondary); }
+    .u-page-title-bar .action--icon { gap: 4px; }
+    .u-page-title-bar .action__icon {
+      width: var(--icon-size-sm);
+      height: var(--icon-size-sm);
+      stroke: currentColor;
+      flex-shrink: 0;
+      margin-bottom: 1px;
+    }
+    .u-page-title-bar--no-back .back { visibility: hidden; pointer-events: none; }
+    .page-title-bar-variants { display: flex; flex-direction: column; gap: 20px; }
+    .page-title-bar-variants .variant-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin: 0 0 -8px; }
+    /* HomeNavbar · 首页品牌顶栏（与 PageTitleBar 分轨） */
+    .u-home-navbar {
+      width: 100%;
+      max-width: var(--canvas-w);
+      height: var(--nav-h);
+      margin: 0 auto;
+      background: var(--bg-container);
+      display: flex;
+      align-items: center;
+      gap: var(--space-icon-text);
+      padding: 0 var(--space-page);
+      border: none;
+      box-shadow: none;
+      box-sizing: border-box;
+    }
+    .u-home-navbar__logo { width: 28px; height: 28px; object-fit: contain; flex-shrink: 0; }
+    .u-home-navbar__title { margin: 0; font-size: 16px; font-weight: 500; line-height: 1.2; color: var(--text-primary); }
+    .phone-status-bar {
+      width: 100%;
+      max-width: var(--canvas-w);
+      height: var(--status-bar-h);
+      margin: 0 auto;
+      background: #fff;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .phone-bottom-safe {
+      width: 100%;
+      max-width: var(--canvas-w);
+      height: var(--bottom-placeholder);
+      margin: 0 auto;
+      background: #fff;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .u-page-tabs-wrap { width: var(--page-tab-width); max-width: 100%; margin: 0 auto; box-sizing: border-box; }
+    .u-page-tabs {
+      width: var(--page-tab-width);
+      max-width: 100%;
+      height: 48px;
+      background: var(--bg-container);
+      border: none;
+      display: flex;
+      box-sizing: border-box;
+    }
+    .u-page-tabs span {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+      position: relative;
+    }
+    .u-page-tabs span.on { color: var(--text-primary); font-weight: 500; }
+    .u-page-tabs span.on::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: var(--tab-indicator-w);
+      height: 3px;
+      background: var(--brand-6);
+      border-radius: 2px;
+    }
+    .u-tabs { display: flex; height: 48px; background: #fff; border: none; }
+    .u-tabs span { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-secondary); position: relative; }
+    .u-tabs span.on { color: var(--text-primary); font-weight: 500; }
+    .u-tabs span.on::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: var(--tab-indicator-w); height: 3px; background: var(--brand-6); border-radius: 2px; }
+    .u-tabbar { height: var(--tabbar-h); background: var(--bg-container); border: none; box-shadow: var(--bottom-surface-shadow); display: flex; box-sizing: border-box; }
+    .u-tabbar .tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 11px;
+      line-height: 15px;
+      color: var(--text-secondary);
+    }
+    .u-tabbar .tab.on { color: var(--brand-6); }
+    .u-tabbar .s-icon {
+      font-size: var(--icon-size);
+      width: var(--icon-size);
+      height: var(--icon-size);
+      color: var(--icon-color-default);
+    }
+    .u-tabbar .tab.on .s-icon { color: var(--brand-6); }
+    .u-tabbar .s-icon:not(.s-icon--filled):not([data-filled="1"]) svg [stroke] {
+      stroke-width: 1.5 !important;
+    }
+    .font-data-sample {
+      display: flex;
+      align-items: baseline;
+      gap: var(--price-gap);
+      font-size: 20px;
+      color: var(--text-primary);
+      margin-top: 10px;
+    }
+    .font-data-sample .yen { font-family: var(--font-ui); font-weight: 500; }
+    .font-data-sample .num { font-family: var(--font-data); font-weight: var(--font-data-weight); letter-spacing: -.02em; }
+    .u-card-stat-num { font-size: 28px; line-height: 1.2; color: var(--text-primary); }
+    .u-card-stat-num .yen { font-family: var(--font-ui); font-weight: 600; margin-right: 4px; }
+    .u-card-stat-num .num { font-family: var(--font-data); font-weight: var(--font-data-weight-lg); letter-spacing: -.02em; }
+    .u-search { height: 36px; background: var(--bg-disabled); border-radius: var(--radius-input); margin: var(--space-list-y) var(--space-page); display: flex; align-items: center; padding: 0 12px; gap: var(--space-icon-text); color: var(--text-secondary); font-size: 14px; border: 1px solid var(--border); box-shadow: none; }
+    .u-notice,
+    .u-alert-blue,
+    .alert-info {
+      min-height: 40px;
+      font-size: 13px;
+      line-height: 1.5;
+      display: flex;
+      align-items: baseline;
+      padding: 10px 12px;
+      gap: var(--space-icon-text);
+      box-sizing: border-box;
+    }
+    .u-notice { background: var(--warning-1); color: var(--warning-7); }
+    .u-alert-blue { background: var(--figma-blue-bg); color: var(--figma-blue); border-radius: var(--radius-input); margin: var(--space-list-y) var(--space-page); }
+    .u-notice .s-icon,
+    .u-alert-blue .s-icon,
+    .alert-info .s-icon {
+      flex-shrink: 0;
+      font-size: var(--icon-size-sm);
+      width: var(--icon-size-sm);
+      height: var(--icon-size-sm);
+      line-height: 1;
+      align-self: baseline;
+    }
+    .u-notice .alert-text,
+    .u-alert-blue .alert-text,
+    .alert-info .alert-text { flex: 1; min-width: 0; }
+    .u-steps { display: flex; padding: 16px; background: #fff; gap: 4px; }
+    .u-steps .step { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 12px; color: var(--text-secondary); }
+    .u-steps .step .dot { width: 24px; height: 24px; border-radius: 50%; background: var(--gray-3); color: var(--text-secondary); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; margin-bottom: 8px; flex-shrink: 0; }
+    .u-steps .step.done .dot { background: var(--success-6); color: #fff; font-size: 0; }
+    .u-steps .step.cur .dot { background: var(--brand-6); color: #fff; }
+    .u-checkbox-mark {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      background: var(--brand-6);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .u-checkbox-mark .s-icon { width: 17px; height: 17px; font-size: 17px; color: #fff; }
+    .u-steps .step.done .dot .s-icon { width: 17px; height: 17px; font-size: 17px; color: #fff; }
+    .u-switch { width: 44px; height: 24px; background: var(--gray-4); border-radius: 12px; position: relative; }
+    .u-switch.on { background: var(--brand-6); }
+    .u-switch::after { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 50%; left: 2px; transform: translateY(-50%); border: 1px solid var(--border); box-shadow: none; box-sizing: border-box; }
+    .u-switch.on::after { left: auto; right: 2px; transform: translateY(-50%); }
+    .u-action-sheet { max-width: var(--canvas-w); margin: 0 auto; background: var(--bg-page); border-radius: var(--radius-card) var(--radius-card) 0 0; overflow: hidden; }
+    .u-action-sheet .sheet-item { display: block; width: 100%; padding: 16px; text-align: center; font-size: 16px; color: var(--text-primary); background: #fff; border: none; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .u-action-sheet .sheet-item--cancel { margin-top: 8px; font-weight: 500; }
+    .u-search-bar { max-width: var(--canvas-w); height: 36px; margin: 0 auto; padding: 0 12px; display: flex; align-items: center; gap: 8px; background: var(--bg-page); border-radius: var(--radius-input); font-size: 14px; color: var(--text-secondary); }
+    .u-search-bar .s-icon { flex-shrink: 0; color: var(--text-secondary); }
+    .u-badge { display: inline-flex; min-width: 16px; height: 16px; padding: 0 4px; background: var(--brand-6); color: #fff; font-size: 10px; border-radius: 8px; align-items: center; justify-content: center; }
+    .u-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gray-3); display: flex; align-items: center; justify-content: center; color: var(--gray-7); }
+    .u-progress { height: 4px; background: var(--gray-2); border-radius: 2px; overflow: hidden; }
+    .u-progress i { display: block; height: 100%; width: 60%; background: var(--brand-6); border-radius: 2px; }
+    .u-fab { width: 48px; height: 48px; border-radius: 50%; background: var(--brand-6); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: none; margin-left: auto; }
+    .u-bottom-bar { display: flex; gap: 12px; padding: 8px 16px; background: var(--bg-container); border: none; box-shadow: var(--bottom-surface-shadow); }
+    .u-bottom-bar .btn { flex: 1; }
+    .u-dialog { width: 311px; margin: 0 auto; background: #fff; border-radius: var(--radius-xl); padding: 24px 16px 16px; text-align: center; }
+    .u-dialog h5 { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .u-dialog p { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
+    .u-dialog .acts { display: flex; gap: 12px; }
+    /* Toast 轻提示 · 业绩PK动画设置 Figma RpwcM1biwkmAghkRzcx4qS · node 27-381 */
+    .u-toast-stage {
+      position: relative;
+      width: var(--canvas-w);
+      max-width: 100%;
+      height: 200px;
+      margin: 0 auto;
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-l);
+      overflow: hidden;
+    }
+    .u-toast-stage .u-toast {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .u-toast {
+      display: inline-block;
+      box-sizing: border-box;
+      max-width: var(--toast-max-width);
+      padding: 10px 16px;
+      background: rgba(51, 51, 51, 0.9);
+      color: #FFFFFF;
+      font-family: "Source Han Sans SC", "Source Han Sans CN", "Noto Sans SC", var(--font-ui), sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-align: center;
+      white-space: normal;
+      border-radius: 4px;
+      box-shadow: none;
+      border: none;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+    .u-modal-popup {
+      box-sizing: border-box;
+      background: var(--bg-container);
+      border-radius: var(--radius-btn-16);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      box-shadow: none;
+      border: none;
+      overflow: hidden;
+      width: 100%;
+    }
+    .u-modal-popup__title {
+      margin: 0;
+      width: 100%;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 26px;
+      text-align: center;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+    .u-modal-popup__desc {
+      margin: 0;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+      text-align: center;
+      color: var(--text-secondary);
+      word-break: break-word;
+    }
+    .u-modal-popup__icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-disabled);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--text-primary);
+    }
+    .u-modal-popup__icon-wrap img,
+    .u-modal-popup__icon-wrap svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+    .u-modal-popup__media {
+      width: 100%;
+      height: 135px;
+      border-radius: var(--radius-input);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .u-modal-popup__media.u-image-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .u-modal-popup__actions {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      padding-top: 8px;
+      box-sizing: border-box;
+    }
+    .u-modal-popup__actions .btn { flex: 1; min-width: 0; }
+    .u-modal-popup--centered {
+      width: var(--modal-centered-w);
+      max-width: var(--modal-centered-w);
+      margin-left: var(--modal-margin);
+      margin-right: var(--modal-margin);
+    }
+    .u-modal-popup--bottom {
+      width: var(--canvas-w);
+      max-width: var(--canvas-w);
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: var(--radius-btn-16) var(--radius-btn-16) 0 0;
+      padding: 20px 20px 40px;
+      flex-shrink: 0;
+    }
+    .u-modal-demo-stage {
+      width: var(--canvas-w);
+      max-width: 100%;
+      margin: 0 auto 16px;
+      background: var(--bg-page);
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+    .u-modal-demo-stage--centered {
+      padding: 48px 0;
+      display: flex;
+      justify-content: center;
+    }
+    .u-modal-demo-stage--bottom {
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .modal-variant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--space-module);
+    }
+    .modal-variant-card {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-input);
+      padding: 12px;
+      box-shadow: none;
+    }
+    .modal-variant-card .cap {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    .modal-variant-card code { font-size: 10px; }
+    .modal-variant-card--bottom {
+      grid-column: 1 / -1;
+      max-width: var(--canvas-w);
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0;
+      overflow: visible;
+    }
+    .modal-variant-card--bottom .u-modal-demo-stage {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      overflow: visible;
+    }
+    .modal-variant-card--bottom .u-modal-popup--bottom {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+    }
+    .modal-variant-card--bottom .cap {
+      padding: 8px 12px 12px;
+    }
+    .u-empty { text-align: center; padding: 40px 16px; color: var(--text-secondary); }
+    /* Empty 占位插画 · RTP 零售 · Figma 666-1758（见 #comp-empty） */
+    .u-empty__illustration {
+      position: relative;
+      width: 144px;
+      height: 128px;
+      margin: 0 auto;
+      flex-shrink: 0;
+    }
+    .u-empty__circle {
+      position: absolute;
+      left: 16px;
+      top: 8px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--bg-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .u-empty__circle img {
+      width: 57px;
+      height: 57px;
+      display: block;
+    }
+    .u-empty__bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--empty-state-bubble);
+      opacity: 0.5;
+    }
+    .u-empty__bubble--tr { width: 24px; height: 24px; left: 120px; top: 0; }
+    .u-empty__bubble--bl { width: 16px; height: 16px; left: 0; top: 96px; }
+    .u-empty--canvas {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-page);
+      box-sizing: border-box;
+    }
+    .u-card-inner-safe { overflow: hidden; min-width: 0; }
+    .u-card-inner-safe .s-icon { flex-shrink: 0; }
+    .u-content-card {
+      background: var(--bg-container);
+      border-radius: var(--radius-card);
+      padding: var(--space-card);
+      border: none;
+      box-shadow: none;
+      overflow: hidden;
+    }
+    /* Divider · 卡片/列表内同级内容分隔（见 #comp-divider） */
+    .u-divider {
+      display: block;
+      border: none;
+      height: 0;
+      margin: var(--space-divider-y) 0;
+      border-top: var(--divider-weight) solid var(--divider-color);
+      box-sizing: border-box;
+    }
+    .u-divider--inset {
+      margin-left: var(--divider-inset);
+      margin-right: var(--divider-inset);
+    }
+    .u-skeleton { height: 16px; background: var(--bg-disabled); border-radius: var(--radius-tag); margin-bottom: 8px; border: 1px solid var(--border); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .phone-status,
+    .phone-status-bar { height: var(--status-bar-h); background: #fff; }
+    .phone-status { display: none; }
+    .phone-body { min-height: 400px; padding: 16px; }
+    .phone-tabbar { height: var(--tabbar-h); background: var(--bg-container); border: none; box-shadow: var(--bottom-surface-shadow); display: flex; }
+    .phone-tabbar span { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: var(--text-secondary); }
+    .phone-tabbar span.active { color: var(--brand-6); }
+    .spec-block {
+      background: var(--bg-container);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: var(--space-card);
+      margin: var(--space-module) 0;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      box-shadow: none;
+    }
+    .global-mandate { border: 2px solid var(--brand-6); background: #fff; }
+    .global-mandate .mandate-lead { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.7; }
+    .global-mandate h3 { margin-top: 24px; color: var(--brand-6); }
+    .global-mandate h3:first-of-type { margin-top: 8px; }
+    .global-mandate ol { padding-left: 22px; }
+    .global-mandate ol > li { margin-bottom: 14px; color: var(--text-primary); }
+    .global-mandate ol > li > strong { color: var(--text-strong); }
+    .global-mandate ul { margin-top: 8px; padding-left: 18px; }
+    .global-mandate ul li { color: var(--text-secondary); font-size: 13px; margin-bottom: 4px; }
+    .global-swatch-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 4px; }
+    .global-swatch { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius-tag); font-size: 12px; background: #fff; }
+    .global-swatch i { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(0,0,0,.06); }
+    .price-row-demo { display: flex; align-items: baseline; gap: var(--price-gap); font-size: 20px; margin: 12px 0; }
+    .price-row-demo .yen { font-family: var(--font-ui); font-weight: 500; color: var(--text-primary); }
+    .price-row-demo .num { font-family: var(--font-data); font-weight: var(--font-data-weight); color: var(--text-primary); }
+    .price-row-demo .label { font-family: var(--font-ui); font-size: 14px; color: var(--text-secondary); margin-right: 8px; }
+    .s-icon--24 { font-size: var(--icon-size); width: var(--icon-size); height: var(--icon-size); color: var(--icon-color-default); }
+    .s-icon--16 { font-size: var(--icon-size-sm); width: var(--icon-size-sm); height: var(--icon-size-sm); color: var(--icon-color-secondary); }
+    .s-icon--brand { color: var(--icon-color-primary); }
+    .s-icon--on-brand { color: #fff; }
+    .s-icon--on-brand svg [stroke] { stroke: #fff !important; stroke-width: 2 !important; }
+    .s-icon--on-brand svg path:not([stroke]),
+    .s-icon--on-brand svg circle:not([stroke]),
+    .s-icon--on-brand svg rect:not([stroke]) { fill: #fff !important; stroke: none !important; }
+    .u-icon-btn-square {
+      width: 48px; height: 48px; border-radius: var(--radius-input);
+      background: var(--brand-6); border: none; box-shadow: none;
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .u-image-placeholder {
+      background: var(--bg-disabled); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .u-image-placeholder .s-icon { color: #fff; }
+    .u-image-placeholder .s-icon svg [stroke] { stroke: #fff !important; stroke-width: 2 !important; }
+    .global-demo-grid { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; margin: 16px 0 8px; }
+    .global-demo-item { text-align: center; font-size: 11px; color: var(--text-secondary); }
+    .global-demo-item .cap { margin-top: 8px; line-height: 1.4; }
+    .global-layout-demo { width: 100%; max-width: 358px; margin: 12px auto 0; border: 1px dashed var(--border); border-radius: var(--radius-input); overflow: hidden; background: var(--bg-page); }
+    .global-layout-demo .demo-tabs { height: 44px; background: #fff; border: none; display: flex; align-items: stretch; }
+    .global-layout-demo .demo-tabs span { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-secondary); }
+    .global-layout-demo .demo-tabs span.on { color: var(--brand-6); font-weight: 500; box-shadow: inset 0 -2px 0 var(--brand-6); }
+    .global-layout-demo .demo-card { margin: 16px; padding: 16px; background: #fff; border: none; border-radius: var(--radius-card); font-size: 13px; color: var(--text-primary); overflow: hidden; }
+    .spec-block strong { color: var(--text-primary); font-weight: 600; }
+    .spec-block code { color: var(--text-primary); }
+    .spec-block a { color: var(--brand-6); font-weight: 500; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-2 .card { margin: 0; height: 100%; }
+    .token-visual-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin: 20px 0 28px; }
+    .token-visual-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-l); padding: 16px; text-align: center; box-shadow: none; }
+    .token-visual-card .sample { margin: 0 auto 12px; background: var(--gray-1); display: flex; align-items: center; justify-content: center; }
+    .token-visual-card .label { font-size: 12px; font-weight: 600; color: var(--gray-12); }
+    .token-visual-card .val { font-size: 11px; color: var(--text-secondary); margin-top: 4px; font-family: Consolas, monospace; }
+    .radius-sample { width: 72px; height: 72px; background: #fff; border: 2px solid var(--brand-6); }
+    .radius-sample.primary-btn { width: 100%; max-width: 120px; height: 40px; background: var(--brand-6); border: none; color: #fff; font-size: 13px; font-weight: 500; }
+    .layout-phones { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; align-items: flex-start; margin: 16px 0; }
+    .layout-phone-wrap { text-align: center; }
+    .layout-phone-wrap .cap { font-size: 12px; color: var(--text-secondary); margin-top: 12px; }
+    /* 4.3 布局结构示意 · 区域标注与底部安全区可视化 */
+    .layout-structure-demo .phone-status-bar { flex-shrink: 0; height: var(--status-bar-h); min-height: var(--status-bar-h); max-height: var(--status-bar-h); }
+    .layout-structure-demo .phone-layout-stack { flex: 1; min-height: 0; }
+    .layout-structure-demo .phone-bottom-safe {
+      flex-shrink: 0;
+      height: 34px;
+      min-height: 34px;
+      max-height: 34px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      box-shadow: inset 0 1px 0 var(--gray-2);
+    }
+    .layout-structure-demo .phone-bottom-safe::before {
+      content: '底部安全区 34px';
+      font-size: 10px;
+      line-height: 1;
+      color: var(--text-secondary);
+      letter-spacing: 0;
+      pointer-events: none;
+    }
+    .layout-structure-demo .u-content-card {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .site-footer { margin-top: var(--space-module); padding: var(--space-card) 0; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-page); background: transparent; }
+    .site-footer .foot-brand { display: flex; align-items: center; gap: 12px; }
+    .site-footer .foot-brand img { width: 36px; height: 36px; object-fit: contain; }
+    .site-footer .foot-brand span { font-size: 14px; font-weight: 600; color: var(--gray-12); }
+    .site-footer .foot-copy { font-size: 12px; color: var(--text-secondary); }
+    .color-item { transition: border-color .15s; }
+    .color-item:hover { border-color: var(--brand-5); box-shadow: none; }
+    .figma-link-card { display: flex; align-items: center; gap: var(--space-page); padding: var(--space-card); background: var(--bg-container); border: 1px solid var(--border); border-radius: var(--radius-card); margin: var(--space-module) 0; text-decoration: none; color: inherit; transition: border-color .15s; box-shadow: none; }
+    .figma-link-card:hover { box-shadow: none; border-color: var(--brand-5); opacity: 1; }
+    .figma-link-card .icon-box { width: 48px; height: 48px; background: var(--brand-6); border-radius: var(--radius-input); display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+    .comp-catalog { width: 100%; font-size: 12px; margin-bottom: 24px; }
+    .comp-catalog td code { font-size: 11px; }
+    .icon-cat-title { grid-column: 1 / -1; font-size: 13px; font-weight: 600; color: var(--gray-11); padding: 16px 0 4px; border-bottom: 1px solid var(--border); margin-top: 8px; }
+    .u-brand-header { height: 200px; background: var(--brand-6); padding: 56px 16px 16px; color: #fff; position: relative; box-shadow: none; }
+    .u-brand-header .store-row { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 20px; }
+    .u-brand-header .store-row img { width: 20px; height: 20px; border-radius: 50%; }
+    .u-quick-actions { display: flex; justify-content: space-between; padding: 0 28px; }
+    .u-quick-actions .qa { text-align: center; width: 60px; }
+    .u-quick-actions .qa .s-icon { font-size: 30px; }
+    .u-quick-actions .qa span { display: block; font-size: 15px; font-weight: 500; margin-top: 6px; }
+    .u-glass-tabbar { height: 56px; margin: 12px 16px 24px; padding: 0; background: #fff; border-radius: 0; border: none; box-shadow: none; backdrop-filter: none; display: flex; align-items: center; position: relative; }
+    .u-glass-tabbar .tab { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--figma-text-primary); gap: 2px; z-index: 1; }
+    .u-glass-tabbar .tab.on { font-weight: 500; }
+    .u-glass-tabbar .tab-fab { width: 50px; height: 50px; margin-top: -20px; border-radius: 50%; background: #1a1a1a; border: 1px solid #999; box-shadow: none; }
+    .u-glass-tabbar .pill-active { position: absolute; left: 4px; top: 4px; width: 72px; height: 52px; background: #1a1a1a; border-radius: 100px; transition: left .2s; }
+    .u-stat-card { background: var(--brand-aux-2); border-radius: var(--radius-card); padding: var(--space-card); margin: 0 var(--space-page); border: 1px solid var(--border); box-shadow: none; }
+    .u-stat-card .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .u-stat-card .seg { display: flex; background: #fff; border-radius: 100px; padding: 2px; font-size: 12px; border: 1px solid var(--border); }
+    .u-stat-card .seg span { padding: 4px 12px; border-radius: 100px; color: var(--figma-text-inactive); }
+    .u-stat-card .seg span.on { background: var(--figma-card-pink); color: var(--figma-text-primary); font-weight: 500; }
+    .u-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 17px; }
+    .u-stat-grid .label { font-size: 13px; color: var(--figma-text-secondary); }
+    .u-stat-grid .val { font-family: var(--font-data); font-size: 20px; font-weight: var(--font-data-weight); color: var(--figma-text-primary); }
+    .u-stat-grid .val small { font-size: 15px; }
+    .u-grid-entry { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px 4px; padding: 0 16px; }
+    .u-grid-entry .item { text-align: center; padding: 8px 0; }
+    .u-grid-entry .s-icon { font-size: 38px; color: var(--gray-8); }
+    .u-grid-entry span { display: block; font-size: 13px; color: var(--figma-text-primary); margin-top: 4px; }
+    .u-product-card { width: 175px; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: none; }
+    .u-product-card .body { overflow: hidden; }
+    .u-product-card .thumb { aspect-ratio: 1; background: var(--bg-disabled); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
+    .u-product-card .thumb .s-icon { font-size: 32px; color: #fff; }
+    .u-product-card .thumb .s-icon svg [stroke] { stroke: #fff !important; stroke-width: 2 !important; }
+    .u-product-card .body { padding: 8px; }
+    .u-product-card .brand { font-size: 10px; color: var(--figma-text-secondary); }
+    .u-product-card .title { font-size: 12px; font-weight: 600; line-height: 1.35; margin: 2px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .u-product-card .price { font-family: var(--font-data); font-size: 14px; font-weight: var(--font-data-weight); color: var(--brand-6); }
+    .u-product-card .sub { font-size: 10px; color: var(--figma-text-secondary); }
+    .u-price-row { display: flex; gap: 16px; font-size: 12px; flex-wrap: wrap; }
+    .u-price-row .col label { display: block; font-size: 10px; color: var(--figma-text-secondary); margin-bottom: 4px; }
+    .u-price-row .col .v { font-weight: 600; color: var(--figma-text-primary); }
+    .u-price-row .col .v.retail { color: var(--brand-6); }
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .spec-topbar { display: flex; }
+      .main { margin-left: 0; }
+      .main-inner { padding: var(--space-page); max-width: 100%; overflow-x: hidden; }
+      .page-hero-inner { flex-direction: column; text-align: center; }
+      .page-hero .hero-meta { justify-content: center; }
+      .brand-showcase, .brand-rules { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    /** GitHub Pages 子路径（/jianlang-design-spec/）与本地 file:// 兼容 */
+    window.SPEC_BASE = (function () {
+      if (location.protocol === 'file:') return '';
+      if (location.hostname.endsWith('github.io')) {
+        var parts = location.pathname.split('/').filter(Boolean);
+        if (parts.length && parts[0].indexOf('.') === -1) return '/' + parts[0] + '/';
+      }
+      return '';
+    })();
+    window.specAssetUrl = function (rel) {
+      return window.SPEC_BASE + String(rel).replace(/^\//, '');
+    };
+  </script>
+  <script src="assets/js/wechat-ux-components.js"></script>
+  <script src="assets/js/xiaobin-modal-components.js"></script>
+</head>
+<body class="spec-site">
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-wrap"><img src="LOGO2.png" alt="剑琅联盟"></div>
+      <h1>剑琅联盟</h1>
+      <p class="sub">移动端设计规范</p>
+      <span class="ver">Design System v1.6 · Tailwind</span>
+    </div>
+    <ul class="nav-list">
+      <li><a href="#global-ui" class="nav-mandate">★ 全局强制 UI</a></li>
+      <li><a href="#brand">品牌标识</a></li>
+      <li><a href="#tailwind-delivery">0.1 HTML + Tailwind 落地</a></li>
+      <li><a href="#overview">0. 概述与 AI 指引</a></li>
+      <li><a href="#principles">1. 设计原则</a></li>
+      <li><a href="#colors">2. 色彩系统</a></li>
+      <li><a href="#typography">3. 字体排版</a></li>
+      <li><a href="#spacing">4. 间距与布局</a></li>
+      <li><a href="#radius-shadow">5. 圆角</a></li>
+      <li><a href="#icons">6. 图标调用</a></li>
+      <li><a href="#components">7. 组件库（可调用）</a></li>
+      <li><a href="#b2b">8. B端业务规范</a></li>
+      <li><a href="#tokens">9. Design Token JSON</a></li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <div class="spec-topbar" role="banner">
+      <img src="LOGO2.png" alt="剑琅联盟">
+      <span class="spec-topbar-title">剑琅联盟 · 设计规范</span>
+      <span class="spec-topbar-ver">v1.6</span>
+    </div>
+    <div class="main-inner">
+
+    <header class="page-hero">
+      <div class="page-hero-inner">
+        <div class="hero-logo"><img src="LOGO2.png" alt="剑琅联盟 Logo"></div>
+        <div>
+          <h2>剑琅联盟移动端设计规范</h2>
+          <p class="hero-desc">移动端设计规范 · 统一视觉语言与组件标准，支撑 AI 批量出图。本站视觉已按 <a href="#global-ui">全局强制 UI</a> 落地（#F7F7F7 页面底、无阴影无渐变、思源黑体 Source Han Sans SC）。</p>
+          <div class="hero-meta">
+            <span class="hero-pill">390 × 844</span>
+            <span class="hero-pill">#F7F7F7 页面底</span>
+            <span class="hero-pill">无阴影 · 无渐变</span>
+            <span class="hero-pill">按钮 48px · 圆角 4/8/12/16</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ★ 全局强制 UI（最高优先级） -->
+    <section id="global-ui">
+      <h2 class="section-title"><span class="num">★</span>全局强制 UI 规范</h2>
+      <div class="card global-mandate">
+        <p class="mandate-lead">以下条款为<strong>剑琅联盟移动端</strong>最高优先级约束，优先于本规范其他章节及历史 Figma 样稿。AI 出图、设计评审与 <strong>HTML + Tailwind</strong> 落地均须先满足本章；冲突时以本章为准。</p>
+        <ol>
+          <li><strong>画布基准</strong>：390×844px 移动端 1 倍设计稿（宽固定 390；高默认 844，内容超出可向下延展）。
+            <ul>
+              <li><strong>画布外框 ★</strong>：Figma / AI 出图画布为<strong>直角矩形</strong>，<strong>禁止</strong>给画板加圆角、外描边、投影或设备外壳装饰；规范站内 <code>phone-frame</code> 机模仅为本站预览，非交付稿样式。</li>
+              <li><strong>Figma 自动布局 ★</strong>：设计稿中<strong>所有 Frame（容器）</strong>须启用<strong>自动布局（Auto Layout）</strong>；禁止仅用绝对定位手工摆放。根画板、页面主容器、标题栏、卡片、按钮、列表行等一律用 Auto Layout 纵向或横向排布，间距遵循 4px 模数。</li>
+            </ul>
+          </li>
+          <li><strong>页面背景色</strong>：<code>#F7F7F7</code>（<code>--bg-page</code>）。
+            <div class="global-swatch-row"><span class="global-swatch"><i style="background:#F7F7F7"></i>#F7F7F7</span></div>
+          </li>
+          <li><strong>视觉铁律</strong>：全站<strong>无阴影、无投影、无渐变</strong>；层级仅通过<strong>底色 / 1px 分割线 / 间距 / 字重</strong>区分。<strong>唯一例外</strong>：<code>TabBar</code>、<code>Bottom Action Bar</code> 允许顶部分离投影（见下条）。</li>
+          <li><strong>品牌色体系</strong>
+            <ul>
+              <li>主色：<code>#F32F41</code></li>
+              <li>辅助色：<code>#FFD5D9</code>、<code>#FFF2F2</code></li>
+              <li>文字：重点标题 <code>#333333</code>；常规正文 / 模块标题 <code>#929292</code>；辅助说明 <code>#929292</code>；必要时最强强调可用 <code>#000000</code></li>
+              <li>分割线 / 边框：边框 <code>#D7D7D5</code>；内容分隔线 <code>#EDEDED</code> 0.5px</li>
+              <li>禁用浅灰块：<code>#EDEDED</code></li>
+              <li>卡片底色：<code>#FFFFFF</code></li>
+            </ul>
+            <div class="global-swatch-row">
+              <span class="global-swatch"><i style="background:#F32F41"></i>主色</span>
+              <span class="global-swatch"><i style="background:#FFD5D9"></i>辅助</span>
+              <span class="global-swatch"><i style="background:#FFF2F2"></i>浅底</span>
+              <span class="global-swatch"><i style="background:#333"></i>标题</span>
+              <span class="global-swatch"><i style="background:#929292"></i>次要</span>
+              <span class="global-swatch"><i style="background:#D7D7D5"></i>分割</span>
+              <span class="global-swatch"><i style="background:#EDEDED"></i>禁用</span>
+              <span class="global-swatch"><i style="background:#fff;border:1px solid #D7D7D5"></i>卡片</span>
+            </div>
+          </li>
+          <li id="font-platform"><strong>字体规范 ★</strong>
+            <ul>
+              <li>全站（含 UI 文案与金额数字）统一使用 <strong>思源黑体 Source Han Sans SC</strong>（备选 <code>Source Han Sans CN</code> / <code>Noto Sans SC</code>）。</li>
+              <li><strong>禁止</strong>使用 PingFang SC、TCloudNumber 及其他显示字体。</li>
+              <li>金额数字：默认字重 <strong>400（Regular）</strong>；字号 <strong>≥24px</strong> 时用 <strong>700（Bold）</strong>；商品卡/列表价 <strong>14px 固定 Regular</strong>。</li>
+              <li>混排：<code>¥</code> 与「应付 / 实付 / 小计」等与数字同用思源黑体；<code>¥</code> 与数字间距固定 <strong>4px</strong>。</li>
+            </ul>
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:8px">本规范站预览字体：<strong id="font-platform-label">思源黑体 Source Han Sans SC</strong>。</p>
+            <div class="price-row-demo">
+              <span class="label">实付</span><span class="yen">¥</span><span class="num">1,286.40</span>
+            </div>
+          </li>
+          <li><strong>图标规范</strong>
+            <ul>
+              <li>通用功能图标：24×24px 画布，可视安全区 20×20px</li>
+              <li>小箭头 / 辅助图标：16×16px</li>
+              <li>颜色：重要操作 <code>#F32F41</code> · 常规 <code>#333333</code> · 次要 <code>#929292</code></li>
+              <li>风格：线性简约、统一圆角倒角</li>
+              <li><strong>调用方式 ★</strong>：联网调用合适 SVG（优先 <a href="https://lucide.dev" target="_blank" rel="noopener">Lucide</a>）；须遵守尺寸与颜色规范，并在标注中说明图标名/来源。规范站<strong>不再维护</strong>本地图标库。</li>
+              <li><strong>确认 / 正确态勾号 ★</strong>：勾选、步骤完成、成功反馈等<strong>禁止</strong>使用字符 <code>√</code>、<code>✓</code> 或手写「勾」字；须用图标 <code>check</code>（16px 线性）或 <code>check-circle-filled</code>（面性成功），见第 7 章表单控件。</li>
+              <li><strong>顶栏返回 ★</strong>：<code>PageTitleBar</code> 返回须用 <code>chevron-left</code> 矢量图标，<strong>禁止</strong>文字 <code>&lt;</code> / <code>＜</code>。</li>
+            </ul>
+            <div class="demo-row" style="margin-top:10px">
+              <span class="s-icon s-icon--24 s-icon--brand" data-icon="add-circle"></span>
+              <span class="s-icon s-icon--24" data-icon="search"></span>
+              <span class="s-icon s-icon--16" data-icon="chevron-right"></span>
+            </div>
+          </li>
+          <li><strong>间距体系（4px 模数）</strong>
+            <ul>
+              <li>页面左右安全边距：16px</li>
+              <li>模块与模块外间距：16px</li>
+              <li>卡片内边距：上下 16px、左右 16px</li>
+              <li>图文 / 图标文字间距：8px</li>
+              <li>列表单行上下间距：12px</li>
+              <li>标签边距：上下 4px、左右 8px</li>
+              <li>分割线上下留白：12px</li>
+            </ul>
+          </li>
+          <li><strong>圆角规范</strong>
+            <ul>
+              <li>全局卡片：12px</li>
+              <li>文字按钮：在 <strong>4 / 8 / 12 / 16px</strong> 四档中按场景选用（见下条）</li>
+              <li>标签 / 角标：4px</li>
+              <li>输入框 / 小模块：8px</li>
+            </ul>
+          </li>
+          <li><strong>分割线 ★</strong>
+            <ul>
+              <li><strong>边框</strong>（输入框、描边按钮等）：1px <code>#D7D7D5</code>（<code>--border</code>）</li>
+              <li><strong>卡片内 / 列表 Cell 组内</strong>同级内容分隔：线粗 <strong>0.5px</strong> · 色 <code>#EDEDED</code>（<code>--gray-2</code> / <code>--divider-color</code>）；左右缩进 <strong>16px</strong>（<code>--divider-inset</code> = <code>--space-card</code>），两端与内容对齐，<strong>禁止</strong>左右贴卡片或列表容器外缘；AI 标注 <code>Divider/inset</code> · 类名 <code>u-divider u-divider--inset</code>。</li>
+              <li>上下留白默认 <strong>12px</strong>（<code>--space-divider-y</code>）</li>
+            </ul>
+          </li>
+          <li><strong>顶部导航 / 标题栏</strong>：内页统一使用组件库 <code>PageTitleBar</code>（页面标题栏）；固定高 <strong>44px</strong>、白底、<strong>主体无描边</strong>；返回区为 <code>chevron-left</code> 矢量图标（24px），<strong>禁止</strong>文字 <code>&lt;</code> / <code>＜</code>；返回图标区垂直居中，<strong>标题与右侧操作文案底部水平对齐</strong>（不含系统状态栏）。</li>
+          <li><strong>全局按钮</strong>：统一高 <strong>48px</strong>、文案 <strong>16px</strong> / 500、<strong>最大宽度 370px</strong>（含通栏主按钮与底栏按钮，不得超出）；无阴影无渐变；圆角仅在 <strong>4 / 8 / 12 / 16px</strong> 四档中选择，<strong>同一按钮类型</strong>在全站须使用<strong>同一圆角值</strong>。变体：<strong>填充按钮</strong> 品牌红底 <code>#F32F41</code> + <strong>白字</strong>；<strong>描边按钮</strong> 白底 + 红字 + 红描边 1px；<strong>禁用</strong> 灰底 <code>#EDEDED</code>。<strong>按钮内文案须在按钮区域内水平、垂直双向居中</strong>，禁止贴顶、贴底或偏左/偏右。</li>
+        </ol>
+
+        <h3 style="margin-top:28px">页面与组件硬性约束</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">以下规则与上文并列执行，适用于 AI 出图、Figma 稿与前端实现。</p>
+        <ol start="14">
+          <li><strong>品牌图标按钮（圆角方形 + 线性图标）</strong>
+            <ul>
+              <li>由<strong>圆角方形底</strong>与<strong>线性图标</strong>组成的功能入口（如顶栏快捷、宫格图标钮）。</li>
+              <li><strong>常规态</strong>：方形填充品牌色 <code>#F32F41</code>，圆角建议 <strong>8px</strong>（与输入框小模块一致）；内嵌线性图标为<strong>白色</strong>，描边粗细 <strong>stroke-width: 2</strong>。</li>
+              <li>禁用态可用 <code>#EDEDED</code> 底 + <code>#929292</code> 图标；不得用 emoji 代替图标。</li>
+            </ul>
+            <div class="global-demo-grid">
+              <div class="global-demo-item">
+                <button type="button" class="u-icon-btn-square" aria-label="示例">
+                  <span class="s-icon s-icon--24 s-icon--on-brand" data-icon="add"></span>
+                </button>
+                <div class="cap">常规 · 品牌底 + 白线 icon · 2px 描边</div>
+              </div>
+            </div>
+          </li>
+          <li><strong>禁止使用 Emoji</strong>：页面、弹层、空状态与按钮文案中<strong>不得出现 emoji 表情</strong>；情绪与状态须用规范图标、文字或插画素材表达。</li>
+          <li><strong>Tab 与卡片禁止层叠遮挡</strong>：Tabs / 分段器与下方内容卡片分属上下布局，<strong>禁止</strong>负边距、上浮、<code>z-index</code> 叠压导致 Tab 压住卡片或卡片盖住 Tab；模块之间以间距与分割线区分。</li>
+          <li>
+            <strong>图片占位规范</strong>：凡预留图片位置，统一为浅灰底 <code>#EDEDED</code>，居中放置<strong>白色线性</strong> <code>image</code> 图标（描边 2）；未给到素材时亦不得留空或使用 emoji / 外链占位图。
+            <div class="global-demo-grid">
+              <div class="global-demo-item">
+                <div class="u-image-placeholder" style="width:96px;height:96px;border-radius:8px">
+                  <span class="s-icon s-icon--24 s-icon--on-brand" data-icon="image"></span>
+                </div>
+                <div class="cap">96×96 占位示例</div>
+              </div>
+              <div class="global-demo-item">
+                <div class="u-image-placeholder" style="width:100%;max-width:175px;aspect-ratio:1;border-radius:12px">
+                  <span class="s-icon s-icon--24 s-icon--on-brand" data-icon="image"></span>
+                </div>
+                <div class="cap">商品主图位 · 1:1</div>
+              </div>
+            </div>
+          </li>
+          <li><strong>禁止横向溢出画布</strong>：内容区宽度不得超过 <strong>390px</strong>；禁止出现横向滚动条。长文案、表格与标签须换行、截断或改为纵向排布，图片与卡片宽度适配安全边距（左右各 16px）。</li>
+          <li><strong>顶部 Tab 条</strong>：页面级 Tab / 分段器容器宽度固定 <strong>390px</strong>，在画布内<strong>水平居中</strong>；<strong>Tab 主体无描边</strong>；单项等分，选中仅用底部指示条（见 <code>PageTabs</code>）。</li>
+          <li><strong>标题栏与 Tab 主体无描边</strong>：<code>PageTitleBar</code>、<code>PageTabs</code>、<code>TabBar</code>、页内 <code>Tabs</code> 的容器<strong>禁止</strong>四周边框或 1px 描边包裹；与内容区通过<strong>底色、间距、选中指示条</strong>区分（指示条不属于容器描边）。</li>
+          <li><strong>底部栏白底与顶部分离 ★</strong>：<code>TabBar</code>、<code>Bottom Action Bar</code> 内容区高 <strong>56px</strong>、填充 <code>#FFFFFF</code>（<code>--bg-container</code>）；与底安全区 <strong>34px</strong> 白块分两层（TabBar 场景）。顶缘分离投影 <code>box-shadow: 0 -0.5px 4px 0 rgba(0,0,0,0.08)</code>（<code>--bottom-surface-shadow</code>）；<strong>无描边</strong>。底安全区白块仍<strong>无投影、无描边</strong>。</li>
+          <li><strong>状态栏占位</strong>：设计稿与 HTML 原型中，系统状态栏区域用与状态栏<strong>同尺寸（390×53px）</strong>的<strong>纯白块</strong>占位，不绘制时间、电量、信号等系统 UI。</li>
+          <li><strong>底部占位区 ★</strong>：每页设计稿<strong>最底部</strong>预留 <strong>390×34px</strong> 纯白矩形（<code>#FFFFFF</code>）；对齐 <strong>iPhone 17 竖屏底部安全区</strong>（<code>--safe-bottom</code>）；<strong>无阴影、无描边、无圆角</strong>，不绘制 Home Indicator 等系统 UI；页面内容与底栏不得侵入此区域。</li>
+          <li><strong>卡片内容裁切</strong>：卡片容器须设置 <code>overflow: hidden</code>（或等价裁切）；内部图标、标题、标签、按钮<strong>不得溢出</strong>到卡片圆角外，长文案须截断或换行。</li>
+          <li><strong>白底内容卡片无描边 ★</strong>：填充色为纯白（<code>#FFFFFF</code> / <code>--bg-container</code>）的<strong>内容卡片</strong><strong>禁止</strong>四周边框或 1px 描边；与 <code>#F7F7F7</code> 页面底通过<strong>底色对比 + 圆角 + 间距</strong>区分。有色浅底卡（如 <code>#FFF2F2</code> 业绩卡）及输入框、描边按钮等<strong>不适用</strong>本条。</li>
+          <li><strong>卡片 / 列表内分隔线内容对齐 ★</strong>：分隔同级区块时使用 <code>Divider/inset</code>（0.5px · <code>#EDEDED</code> · 左右各 16px）；线两端须与正文/主内容左右缘对齐，禁止通栏贴边。</li>
+          <li><strong>提示信息栏图标对齐</strong>：Notice / Alert 等提示条中，前置图标与<strong>第一行文案的基线（底部对齐）</strong>对齐；多行时图标仍对齐首行，不垂直居中整段文字。</li>
+          <li><strong>空状态垂直居中</strong>：空状态页在<strong>可滚动内容区</strong>（扣除状态栏、标题栏、底栏后的区域）内，图标 + 主副文案作为一组<strong>垂直居中</strong>；禁止贴顶或仅留顶部留白。</li>
+          <li><strong>页面标题栏</strong>：所有<strong>设计页 / 原型 / AI 出图</strong>的内页顶栏须调用组件库 <code>PageTitleBar</code>（页面标题栏），禁止自定义 Navbar 样式；<a href="https://www.figma.com/design/44P9g5yKcQEyXdHCayIrMn/RTS-AI%E8%AF%BB%E5%8F%96?node-id=6-623" target="_blank" rel="noopener">RTS-AI 读稿 · Figma node 6-623</a> 为整页 Home 稿，<strong>本组件仅对齐其顶栏区域</strong>（见 <a href="#comp-page-title-bar">7 章 · PageTitleBar</a> 实测差异表）。</li>
+          <li><strong>标题栏文案底对齐</strong>：<code>PageTitleBar</code> 居中标题（18px）与右侧操作（16px）须<strong>文字底部在同一水平线</strong>对齐；返回区仍为 44×44 垂直居中。</li>
+          <li><strong>返回须用矢量图标 ★</strong>：<code>PageTitleBar</code> 左侧返回<strong>禁止</strong>使用文字符号 <code>&lt;</code>、<code>＜</code>、<code>‹</code> 等；须调用图标 <code>chevron-left</code>（24px · #333），见第 6 章。</li>
+          <li><strong>勾号用图标</strong>：组件内表示确认、已选、步骤完成时<strong>禁止</strong>文字 <code>√</code>/<code>✓</code>；使用 <code>check</code> 或 <code>check-circle-filled</code>（见第 6、7 章）。</li>
+          <li><strong>按钮文案居中</strong>：<code>Button</code>、对话框底栏、底栏操作条等一切带文字按钮，文案在按钮可点击区域内<strong>水平居中且垂直居中</strong>（单行、双行均适用；双行时整体居中）。</li>
+          <li><strong>图标与组件调用 ★</strong>：图标按第 6 章<strong>联网调用 SVG</strong>（优先 Lucide）；组件优先第 7 章组件库。外观须符合 ★ 全局强制 UI，并在标注中注明图标名/来源。</li>
+          <li><strong>弹窗边距 ★</strong>：<strong>居中弹窗</strong>（<code>ModalPopup/centered</code>）距画布<strong>左右各 32px</strong>（内容区宽 <code>326px</code> = 390 − 32×2）。<strong>底部弹窗</strong>（<code>ModalPopup/bottom</code>）<strong>左、右、下边距均为 0</strong>（通栏 390px 贴底）。规范<strong>不包含</strong>半透明遮罩层组件；Figma 源稿遮罩仅作交互说明，不入库。</li>
+        </ol>
+
+        <div class="spec-block">
+          <strong>Tab + 卡片布局示意（正确）</strong>：Tab 区域完整落在卡片上方，中间以间距分隔，无重叠。
+        </div>
+        <div class="global-layout-demo">
+          <div class="u-page-tabs-wrap" style="width:100%">
+            <div class="u-page-tabs" style="width:100%"><span class="on">全部</span><span>待处理</span><span>已完成</span></div>
+          </div>
+          <div class="demo-card">内容卡片 · 距 Tab 下缘 16px · 独立白底区块 · 卡片 overflow hidden</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 品牌 -->
+    <section id="brand">
+      <h2 class="section-title"><span class="num">◎</span>品牌标识 Brand</h2>
+      <div class="card">
+        <div class="card-title">剑琅联盟 · Logo 使用规范</div>
+        <p>Logo 为圆形徽章：红色底（#F32F41）+ 剑与盾金属质感图形，象征联盟、守护与专业力量。APP 内与对外物料须使用官方文件，禁止变形、改色或添加效果。</p>
+        <div class="brand-showcase">
+          <div class="brand-card brand-card--light">
+            <div class="brand-logo-stage brand-logo-stage--light">
+              <img src="LOGO2.png" alt="浅色背景 Logo">
+            </div>
+            <div class="brand-card-label">浅色背景</div>
+            <p>登录页 / 白底 Navbar / 关于我们</p>
+          </div>
+          <div class="brand-card brand-card--dark">
+            <div class="brand-logo-stage brand-logo-stage--dark">
+              <img src="LOGO2.png" alt="深色背景 Logo">
+            </div>
+            <div class="brand-card-label">深色背景</div>
+            <p>启动页 / 品牌头图区域</p>
+          </div>
+        </div>
+        <div class="brand-rules">
+          <div class="brand-rule"><strong>最小尺寸</strong>导航栏 24px · 列表 32px · 启动页 80px</div>
+          <div class="brand-rule"><strong>安全留白</strong>Logo 四周至少留 0.5× 直径空白</div>
+          <div class="brand-rule"><strong>文件路径</strong><code>LOGO2.png</code>（与规范同目录）</div>
+        </div>
+        <table style="margin-top:20px">
+          <tr><th>场景</th><th>展示方式</th><th>配套文案</th></tr>
+          <tr><td>启动页 / Splash</td><td>Logo 96px 居中 + 应用名</td><td>剑琅联盟 · 商务协作平台</td></tr>
+          <tr><td>登录页</td><td>Logo 72px + 标题 28px Medium</td><td>剑琅联盟</td></tr>
+          <tr><td>Navbar 首页</td><td>左 Logo 28px + 文字 16px（可选）</td><td>剑琅联盟</td></tr>
+          <tr><td>关于 / 设置</td><td>Logo 48px + 版本号</td><td>剑琅联盟 v{x.x.x}</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 0.1 HTML + Tailwind 落地 -->
+    <section id="tailwind-delivery">
+      <h2 class="section-title"><span class="num">0.1</span>HTML + Tailwind 落地指引</h2>
+      <p>阶段 1：本规范站使用 <strong>Tailwind CSS v3 CDN</strong> + <code>@layer components</code> + <code>@apply</code> 封装组件。<strong>阶段 2（当前）</strong>：WebView 产品工程位于 <code>app/</code>，已切换 <strong>Vite + Tailwind + Capacitor</strong>，Token 自 <code>assets/tailwind-spec-config.js</code> 迁入 <code>app/tailwind.config.js</code>。</p>
+      <table>
+        <tr><th>项</th><th>阶段 1 · 规范站</th><th>阶段 2 · WebView 产品（<code>app/</code>）</th></tr>
+        <tr><td>样式</td><td>Tailwind CDN · <code>preflight: false</code></td><td>Vite + PostCSS + Tailwind v3 · <code>npm run dev</code></td></tr>
+        <tr><td>组件</td><td><code>@apply</code> 类名（如 <code>.u-page-title-bar</code>）</td><td><code>src/styles/components/</code> 同 class · JS 模板渲染</td></tr>
+        <tr><td>Token</td><td><code>assets/tailwind-spec-config.js</code></td><td><code>app/tailwind.config.js</code> <code>theme.extend</code></td></tr>
+        <tr><td>图标</td><td>Lucide（新）+ 既有 SVG 库（过渡）</td><td>Lucide · <code>createIcons</code></td></tr>
+        <tr><td>交互</td><td>纯 HTML 预览</td><td>Hash 路由 · 卡详情演示 · Capacitor 原生壳</td></tr>
+      </table>
+      <pre style="margin-top:12px">// app/tailwind.config.js（节选）
+export default {
+  theme: {
+    extend: {
+      spacing: { 'status-bar-h': '53px', 'nav-h': '44px', 'bottom-placeholder': '34px', 'page-title-bar-side': '72px' },
+      height: { 'status-bar-h': '53px', 'bottom-placeholder': '34px' },
+      colors: { brand: { 6: '#F32F41' }, figma: { primary: '#333333' } },
+      maxWidth: { card: '358px', canvas: '390px', btn: '370px' },
+    },
+  },
+};</pre>
+      <p style="font-size:12px;color:var(--text-secondary);margin-top:8px">产品工程演示：<code>cd app && npm run dev</code> · 路由 <code>#/</code>（HomeNavbar）· 组件 <code>HomeNavbar</code> / <code>PageTitleBar</code> / <code>Button</code>。</p>
+    </section>
+
+    <!-- 0. 概述 -->
+    <section id="overview">
+      <h2 class="section-title"><span class="num">0</span>概述与 AI 使用指引</h2>
+      <div class="card">
+        <div class="card-title"><span class="tag tag-brand">剑琅联盟</span> <span class="tag tag-ai">AI Ready</span> v1.6 · 390×844 · Tailwind CDN + Vite App</div>
+        <p>本规范为<strong>剑琅联盟</strong>（含 RTP 商品零售模块）专属。请先阅读并遵守 <a href="#global-ui"><strong>★ 全局强制 UI</strong></a>，再使用下方组件库与 Token 章节。</p>
+      </div>
+      <h3>AI 批量出图必读规则</h3>
+      <div class="spec-block">
+        <strong>第一优先级：</strong>完整执行 <a href="#global-ui">★ 全局强制 UI</a>（直角画板、所有 Frame 自动布局、#F7F7F7 底、无阴影无渐变、顶/底白块占位、色板、字体、图标尺寸、间距、圆角、44px 导航、48px 按钮、返回 chevron-left 矢量图标）。组件使用第 7 章命名（如 PageTitleBar、TabBar），视觉不得违背全局章。
+      </div>
+      <ol>
+        <li><strong>组合组件</strong>：优先从第 7 章组件库按场景选用；库内无合适项时可从外部引入，视觉须符合本规范。</li>
+        <li><strong>图标与组件</strong>：优先第 6、7 章库内资源；无合适项时可调用外部图标 / 组件，仍须遵守 ★ 全局强制 UI，并注明来源。</li>
+        <li><strong>颜色 / 圆角 / 间距</strong>：仅使用全局章与第 2–5 章 Token；按钮圆角四档择一且同类型一致；禁止投影与渐变背景。</li>
+        <li><strong>字体 ★</strong>：全站思源黑体 Source Han Sans SC；金额数字默认 Regular（400）、≥24px Bold（700）；商品价 14px 固定 Regular；<code>¥</code> 与数字间距 4px。</li>
+        <li><strong>勾号</strong>：确认/正确态只用图标 <code>check</code>，禁止文字 √。</li>
+        <li><strong>品牌露出</strong>：启动/登录/首页 Navbar 使用 <code>LOGO2.png</code> 与「剑琅联盟」。</li>
+        <li><strong>硬性约束</strong>：画布无圆角/无阴影/无描边 · 所有 Frame 自动布局 · 居中弹窗左右边距 32px · 状态栏占位 390×53 白块 · 底栏占位 390×34 白块 · 返回用 chevron-left 矢量图标 · 白底内容卡片无描边 · 卡片/列表内分隔线 0.5px #EDEDED 左右缩进 16px · 无 emoji · 无文字勾号 √/✓ · 按钮文案水平垂直居中 · Tab/卡片不叠压 · 内页顶栏必用 <code>PageTitleBar</code>（44px，独立于状态栏） · 标题与右侧文案底对齐 · 标题栏/Tab 主体无描边 · 图片位灰底白 icon · 内容不横向溢出 · 按钮宽 ≤370px · 顶 Tab 390 居中 · 卡片不溢出 · 提示 icon 首行底对齐 · 空状态垂直居中。</li>
+      </ol>
+      <h3>技术栈对齐</h3>
+      <table>
+        <tr><th>层级</th><th>引用</th><th>说明</th></tr>
+        <tr><td>组件库</td><td>第 7 章 · 剑琅联盟</td><td>页面组件命名、预览与调用说明</td></tr>
+        <tr><td>开发落地</td><td>HTML + Tailwind CSS</td><td>CDN（规范站）→ Vite + Capacitor（WebView 产品）· Token 见 <a href="#tailwind-delivery">0.1</a></td></tr>
+        <tr><td>设计稿</td><td><a href="https://www.figma.com/design/cUaUaxtcNsREKlfnQKXe1L/RTP-%E9%9B%B6%E5%94%AE%E6%A8%A1%E5%9D%97">RTP 零售模块 Figma</a></td><td>节点 72-137 · 与 HTML 原型库同步</td></tr>
+        <tr><td>设计资源</td><td>Figma 实测 + Lucide（联网 SVG）</td><td>不再维护本地图标库</td></tr>
+        <tr><td>设计基准</td><td>宽 390（固定）× 高 844（默认）</td><td>高可向下延展；顶占位 53px · 底占位 34px</td></tr>
+        <tr><td>UI 字体</td><td>思源黑体 Source Han Sans SC</td><td>全站统一 · 见 <a href="#font-platform">字体规范</a></td></tr>
+        <tr><td>全局 UI</td><td><a href="#global-ui">★ 强制章节</a></td><td>高于本章与 Figma 历史稿</td></tr>
+        <tr><td>主按钮</td><td>高 48px · 字号 16px · 圆角 4/8/12/16 择档</td><td>见全局章 · 同类型一致</td></tr>
+      </table>
+    </section>
+
+    <!-- 1. 设计原则 -->
+    <section id="principles">
+      <h2 class="section-title"><span class="num">1</span>设计原则</h2>
+      <div class="grid-2">
+        <div class="card"><div class="card-title">高效 Efficient</div><p>减少操作步骤，常用功能 2 次点击可达。列表支持搜索、筛选、批量操作。表单支持自动填充与历史记录。</p></div>
+        <div class="card"><div class="card-title">清晰 Clear</div><p>信息层级分明，关键数据突出。状态用颜色+文字双重标识。空状态、加载态、错误态均有明确指引。</p></div>
+        <div class="card"><div class="card-title">一致 Consistent</div><p>全局统一导航、按钮、表单、反馈方式。同类业务使用相同页面结构与组件组合。</p></div>
+        <div class="card"><div class="card-title">专业 Professional</div><p>视觉克制：无阴影、无渐变、扁平分区。品牌色用于关键操作与状态强调，不作为大面积铺底（顶栏等见全局章例外）。</p></div>
+      </div>
+      <h3>视觉风格关键词</h3>
+      <p>商务 · 简洁 · 可信赖 · 数据驱动 · 操作明确 · 留白适度 · 白底灰底交替分区</p>
+    </section>
+
+    <!-- 2. 色彩 -->
+    <section id="colors">
+      <h2 class="section-title"><span class="num">2</span>色彩系统</h2>
+      <p><strong>色值以 <a href="#global-ui">★ 全局强制 UI</a> 为准。</strong>下表为 Token 映射；10 级品牌色阶供按下态/禁用推导，日常界面优先使用全局章固定色板。功能色用于状态标识，须配合图标与文字说明。</p>
+
+      <h3>2.1 品牌色 Brand Color</h3>
+      <div class="color-grid">
+        <div class="color-item"><div class="color-swatch" style="background:#FEF0F1"></div><div class="color-info"><strong>brand-1</strong>#FEF0F1 · 浅色背景</div></div>
+        <div class="color-item"><div class="color-swatch" style="background:#FDD9DC"></div><div class="color-info"><strong>brand-2</strong>#FDD9DC · 悬浮背景</div></div>
+        <div class="color-item"><div class="color-swatch" style="background:#FCBDC3"></div><div class="color-info"><strong>brand-3</strong>#FCBDC3 · 选中背景</div></div>
+        <div class="color-item"><div class="color-swatch" style="background:#FB9BA3"></div><div class="color-info"><strong>brand-4</strong>#FB9BA3 · 禁用/边框</div></div>
+        <div class="color-item"><div class="color-swatch" style="background:#F97883"></div><div class="color-info"><strong>brand-5</strong>#F97883 · 悬浮态</div></div>
+        <div class="color-item"><div class="color-swatch" style="background:#F32F41"></div><div class="color-info"><strong>brand-6 ★</strong>#F32F41 · 主色</div></div>
+        <div class="color-item"><div class="color-swatch" style="background:#D92939"></div><div class="color-info"><strong>brand-7</strong>#D92939 · 点击态</div></div>
+        <div class="color-item"><div class="color-swatch" style="background:#BF2432"></div><div class="color-info"><strong>brand-8</strong>#BF2432 · 强调</div></div>
+        <div class="color-item"><div class="color-swatch" style="background:#991D28"></div><div class="color-info"><strong>brand-9</strong>#991D28 · 深色文字</div></div>
+        <div class="color-item"><div class="color-swatch" style="background:#73161E"></div><div class="color-info"><strong>brand-10</strong>#73161E · 最深</div></div>
+      </div>
+
+      <h3>2.2 功能色 Functional Colors</h3>
+      <table>
+        <tr><th>语义</th><th>浅色背景</th><th>常规色</th><th>深色/点击</th><th>使用场景</th></tr>
+        <tr><td>成功 Success</td><td>#E8F8F2</td><td>#2BA471</td><td>#008858</td><td>完成、通过、已生效</td></tr>
+        <tr><td>警告 Warning</td><td>#FEF3E6</td><td>#E37318</td><td>#BE5A00</td><td>待处理、即将到期</td></tr>
+        <tr><td>错误 Error</td><td>#FDECEE</td><td>#D54941</td><td>#AD352F</td><td>失败、驳回、异常</td></tr>
+        <tr><td>信息 Info</td><td>#ECF2FE</td><td>#0052D9</td><td>#003CAB</td><td>提示、链接、信息说明</td></tr>
+      </table>
+
+      <h3>2.3 中性色 Neutral Colors</h3>
+      <table>
+        <tr><th>Token</th><th>色值</th><th>用途</th></tr>
+        <tr><td>gray-1 ★</td><td>#F7F7F7</td><td>页面背景 bg-page</td></tr>
+        <tr><td>gray-2 ★</td><td>#EDEDED</td><td>禁用底 / 卡片·列表内内容分隔线</td></tr>
+        <tr><td>gray-3 ★</td><td>#D7D7D5</td><td>边框 border（非内容分隔线）</td></tr>
+        <tr><td>gray-4 ~ gray-8</td><td>#DCDCDC ~ #777777</td><td>图标、占位、次要元素</td></tr>
+        <tr><td>gray-9 ~ gray-12</td><td>#5E5E5E ~ #2C2C2C</td><td>深色文字、深色模式基础</td></tr>
+      </table>
+
+      <h3>2.4 文字色 Text Colors（Figma 主页面实测 ★）</h3>
+      <table>
+        <tr><th>Token</th><th>色值</th><th>用途</th></tr>
+        <tr><td>text-primary ★</td><td>#333333</td><td>标题、正文、导航文字（优先于 rgba 黑）</td></tr>
+        <tr><td>text-secondary ★</td><td>#929292</td><td>描述、数据标签、次要信息</td></tr>
+        <tr><td>text-muted</td><td>#B8B8B8</td><td>日期 Tab 未选中、弱提示</td></tr>
+        <tr><td>text-inactive</td><td>#D7D7D5</td><td>分段器未选中（如实业绩）</td></tr>
+        <tr><td>text-placeholder</td><td>#929292</td><td>输入框占位符（与 text-secondary 同色 · 表单页）</td></tr>
+        <tr><td>text-disabled</td><td>#929292</td><td>禁用文字（与 :root 一致）</td></tr>
+        <tr><td>text-brand</td><td>#F32F41</td><td>品牌强调、可点击文字</td></tr>
+        <tr><td>text-link</td><td>#0052D9</td><td>超链接（区别于品牌色）</td></tr>
+        <tr><td>text-anti</td><td>#FFFFFF</td><td>深色/品牌色背景上的文字</td></tr>
+      </table>
+
+      <h3>2.5 场景色（业务扩展 · 禁止渐变）</h3>
+      <table>
+        <tr><th>Token</th><th>色值</th><th>用途</th></tr>
+        <tr><td>brand-aux-1</td><td>#FFD5D9</td><td>浅色强调底、标签底</td></tr>
+        <tr><td>brand-aux-2 ★</td><td>#FFF2F2</td><td>业绩卡、品牌浅区块（纯色）</td></tr>
+        <tr><td>accent-blue</td><td>#1A70FE</td><td>提醒条文字、可点击「查看」</td></tr>
+        <tr><td>accent-blue-bg</td><td>#E7F1FF</td><td>异常/重要提醒条背景</td></tr>
+        <tr><td>accent-orange</td><td>#F77357</td><td>营销副标题、活动强调</td></tr>
+      </table>
+      <h3>2.6 背景与边框</h3>
+      <table>
+        <tr><th>Token</th><th>色值</th><th>用途</th></tr>
+        <tr><td>bg-page ★</td><td>#F7F7F7</td><td>页面底色</td></tr>
+        <tr><td>bg-container ★</td><td>#FFFFFF</td><td>卡片、Cell、弹窗</td></tr>
+        <tr><td>bg-disabled ★</td><td>#EDEDED</td><td>禁用按钮、浅灰块</td></tr>
+        <tr><td>border ★</td><td>#D7D7D5</td><td>默认边框 1px（非内容分隔线）</td></tr>
+        <tr><td>border-focus</td><td>#F32F41</td><td>输入框聚焦边框</td></tr>
+      </table>
+
+      <h3>2.7 色彩使用比例（B端）</h3>
+      <ul>
+        <li>页面 70% 中性色（白/灰背景）+ 25% 文字色 + 5% 品牌/功能色点缀</li>
+        <li>主按钮、Tab 选中、关键链接：brand-6</li>
+        <li>大面积禁止使用 brand-6 作为背景（除 Navbar 品牌头图等特殊场景）</li>
+        <li>状态色仅用于 Tag、Badge、NoticeBar，不做按钮主色（除 Danger 操作）</li>
+      </ul>
+    </section>
+
+    <!-- 3. 字体 -->
+    <section id="typography">
+      <h2 class="section-title"><span class="num">3</span>字体排版</h2>
+      <h3>3.1 字体家族</h3>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">全站统一 <strong>思源黑体 Source Han Sans SC</strong>。完整说明见 <a href="#font-platform">★ 全局强制 UI · 字体规范</a>。</p>
+      <table>
+        <tr><th>用途</th><th>字体</th><th>说明</th></tr>
+        <tr><td>UI / 数据字体 ★</td><td><strong>Source Han Sans SC</strong>（思源黑体）</td><td>全站统一；备选 Source Han Sans CN / Noto Sans SC</td></tr>
+        <tr><td>字重 Regular</td><td>400</td><td>正文、描述</td></tr>
+        <tr><td>字重 Medium</td><td>500</td><td>标题、按钮、强调</td></tr>
+        <tr><td>字重 Semibold</td><td>600</td><td>强调标题</td></tr>
+        <tr><td>金额字重 ★</td><td>思源黑体</td><td>默认 <strong>Regular 400</strong> · ≥24px 用 <strong>Bold 700</strong> · 商品价 14px 固定 Regular</td></tr>
+        <tr><td>金额混排 ★</td><td><code>¥</code>、应付/实付/小计 → 思源黑体</td><td><code>¥</code> 与数字间距 4px</td></tr>
+      </table>
+
+      <h3>3.2 字号阶梯（390px 画布，单位 px）</h3>
+      <table>
+        <tr><th>Token</th><th>字号</th><th>行高</th><th>字重</th><th>场景</th></tr>
+        <tr><td>font-xs</td><td>10</td><td>16</td><td>400</td><td>极小标签</td></tr>
+        <tr><td>font-tabbar ★</td><td>11</td><td>15</td><td>400</td><td>标准底栏 Tab 文案</td></tr>
+        <tr><td>font-s</td><td>12</td><td>20</td><td>400</td><td>辅助说明、时间戳、Badge</td></tr>
+        <tr><td>font-base ★</td><td>14</td><td>22</td><td>400</td><td>正文、Cell 标题、表单标签</td></tr>
+        <tr><td>font-m</td><td>16</td><td>24</td><td>400/500</td><td>Navbar 标题、列表主标题</td></tr>
+        <tr><td>font-l</td><td>20</td><td>28</td><td>500</td><td>区块标题、关键数据</td></tr>
+        <tr><td>font-xl</td><td>24</td><td>32</td><td>500</td><td>页面大标题、统计数字</td></tr>
+        <tr><td>font-xxl</td><td>28</td><td>36</td><td>500</td><td>登录页标题、空状态标题</td></tr>
+        <tr><td>font-data ★</td><td>20</td><td>22</td><td>400（思源 Regular）</td><td>业绩卡、实付等常规金额</td></tr>
+        <tr><td>font-data-lg ★</td><td>32</td><td>40</td><td>700（思源 Bold）</td><td>仪表盘大指标（≥24px 规则）</td></tr>
+        <tr><td>font-nav-label</td><td>11</td><td>15</td><td>400</td><td>标准底栏 Tab 文案（同 font-tabbar）</td></tr>
+        <tr><td>font-grid-label</td><td>13</td><td>18</td><td>400</td><td>店务宫格入口（价目表等）</td></tr>
+      </table>
+
+      <h3>3.3 排版规则</h3>
+      <ul>
+        <li>单行文字超出使用省略号 <code>text-overflow: ellipsis</code></li>
+        <li>多行描述最多 2 行，超出截断</li>
+        <li>金额数字默认 <code>font-weight: 400</code>（思源 Regular）；字号 <strong>≥24px</strong> 时用 <code>700</code>（思源 Bold）</li>
+        <li>商品卡 / 列表价 <strong>14px</strong>：固定 Regular，不受 ≥24px 规则影响</li>
+        <li>数字金额右对齐，使用千分位；日期格式 YYYY-MM-DD HH:mm</li>
+        <li>中英文混排时英文与中文之间无需额外空格（中文产品惯例）</li>
+        <li>禁止低于 10px 的可读文字（标准底栏 Tab 文案为 11px）</li>
+        <li>确认、勾选、步骤完成等<strong>不得使用文字勾号</strong>（<code>√</code> / <code>✓</code>），须用 Lucide <code>check</code> / <code>check-circle</code> 等图标</li>
+      </ul>
+    </section>
+
+    <!-- 4. 间距与布局 -->
+    <section id="spacing">
+      <h2 class="section-title"><span class="num">4</span>间距与布局</h2>
+      <p>间距以 <a href="#global-ui">★ 全局强制 UI</a> 为准（16 / 8 / 12 / 4px 等），下表为扩展 Token。</p>
+      <h3>4.1 间距 Token（4px 基准网格）</h3>
+      <table>
+        <tr><th>Token</th><th>值</th><th>用途</th></tr>
+        <tr><td>size-1</td><td>4px</td><td>图标与文字间距、紧凑内边距</td></tr>
+        <tr><td>size-2</td><td>8px</td><td>Tag 内边距、小间距</td></tr>
+        <tr><td>size-3</td><td>12px</td><td>Cell 内部间距、表单字段间距</td></tr>
+        <tr><td>size-4 ★</td><td>16px</td><td>页面左右边距、卡片内边距</td></tr>
+        <tr><td>size-5</td><td>20px</td><td>区块间距</td></tr>
+        <tr><td>size-6</td><td>24px</td><td>大区块间距、Section 分隔</td></tr>
+        <tr><td>size-8</td><td>32px</td><td>页面顶部留白</td></tr>
+        <tr><td>size-10</td><td>40px</td><td>大按钮高度、输入框高度（large）</td></tr>
+        <tr><td>size-12</td><td>48px</td><td>主按钮高度、Bottom Bar 按钮区</td></tr>
+      </table>
+
+      <h3>4.2 页面布局常量</h3>
+      <div class="spec-block">
+        <strong>画布尺寸规则 ★</strong><br>
+        · <strong>宽度</strong>：固定 <code>390px</code>，所有页面设计、HTML 原型与 AI 出图不得改变宽度，禁止横向扩展画布。<br>
+        · <strong>高度</strong>：默认 <code>844px</code>（常见全面屏逻辑高度基准）；当显示内容超出默认画布可视区域时，<strong>画布高度可向下延长</strong>，以完整呈现可滚动内容，宽度仍为 390px。<br>
+        · <strong>画布外框 ★</strong>：交付设计稿画板为直角矩形，<strong>无圆角、无阴影、无描边</strong>（不含页面内组件样式）。
+      </div>
+      <table>
+        <tr><th>元素</th><th>尺寸</th><th>说明</th></tr>
+        <tr><td>画布宽度 ★</td><td>390 px（固定）</td><td>全站统一，禁止加宽</td></tr>
+        <tr><td>画布高度（默认）</td><td>844 px</td><td>首屏/短页基准；AI 出图默认从此高度起稿</td></tr>
+        <tr><td>画布高度（延展）</td><td>≥ 844 px，按内容向下增高</td><td>长列表、多段表单、长详情等；仅纵向扩展</td></tr>
+        <tr><td>WebView 2x 切图</td><td>宽 780 · 高 1688 起</td><td>逻辑宽 390 固定；高度 2x 随设计稿延展</td></tr>
+        <tr><td>画布外框 ★</td><td>直角矩形</td><td>画板禁止圆角 / 投影 / 外描边</td></tr>
+        <tr><td>Figma 自动布局 ★</td><td>全部 Frame</td><td>须启用 Auto Layout，禁止纯绝对定位摆版</td></tr>
+        <tr><td>页面水平边距</td><td>16px</td><td>内容区距屏幕边缘</td></tr>
+        <tr><td>PageTitleBar ★</td><td>44px</td><td>内页顶栏 · 组件库「页面标题栏」· 白底 · 主体无描边</td></tr>
+        <tr><td>TabBar 高度</td><td>56px</td><td>内容区高度；与底安全区 34px 分两层（合计 90px 白底）</td></tr>
+        <tr><td>TabBar 背景 ★</td><td><code>#FFFFFF</code></td><td><code>--bg-container</code></td></tr>
+        <tr><td>底部栏顶部分离 ★</td><td><code>0 -0.5px 4px 0 rgba(0,0,0,0.08)</code></td><td><code>--bottom-surface-shadow</code> · TabBar / Bottom Action Bar 共用</td></tr>
+        <tr><td>状态栏占位 ★</td><td>390×53px 纯白块</td><td>设计稿不画系统状态 UI；与 PageTitleBar（44px）分属上下区域</td></tr>
+        <tr><td>底部占位区 ★</td><td>390×34px 纯白块</td><td>对齐 iPhone 17 竖屏底部安全区；设计 / 开发均为 34px；无阴影、无描边、无圆角</td></tr>
+        <tr><td>居中弹窗边距 ★</td><td>左右各 32px</td><td>ModalPopup/centered · 内容宽 326px</td></tr>
+        <tr><td>底部弹窗边距 ★</td><td>左 / 右 / 下 0</td><td>ModalPopup/bottom · 390 通栏贴底</td></tr>
+        <tr><td>列表行高</td><td>56px</td><td>标准单行列表</td></tr>
+        <tr><td>列表行高（多行）</td><td>≥72px</td><td>含描述文字</td></tr>
+        <tr><td>Bottom Action Bar</td><td>56px + safe-bottom</td><td>固定底部操作栏</td></tr>
+      </table>
+
+      <h3>4.3 布局结构示意</h3>
+      <span class="canvas-badge">剑琅联盟 · 390 × 844</span>
+      <div class="layout-phones layout-structure-demo">
+        <div class="layout-phone-wrap">
+          <div class="phone-frame phone-frame--844">
+            <div class="phone-status-bar" aria-hidden="true"></div>
+            <div class="phone-splash phone-splash--pure">
+              <img src="LOGO2.png" alt="剑琅联盟">
+              <div class="app-name">剑琅联盟</div>
+              <div class="app-tagline">商务协作 · 高效共赢</div>
+            </div>
+            <div class="phone-bottom-safe" aria-hidden="true"></div>
+          </div>
+          <p class="cap">启动页 · 390×844 · 顶状态栏 53px · 底安全区 34px</p>
+        </div>
+        <div class="layout-phone-wrap">
+          <div class="phone-frame phone-frame--844">
+            <div class="phone-status-bar" aria-hidden="true"></div>
+            <div class="phone-layout-stack">
+              <header class="u-page-title-bar" style="flex-shrink:0">
+                <a href="#" class="back" aria-label="返回"><i data-lucide="chevron-left" class="back-icon" aria-hidden="true"></i></a>
+                <h1 class="title">订单详情</h1>
+                <button type="button" class="action">分享</button>
+              </header>
+              <div class="phone-body phone-body--fill">
+                <div class="u-content-card" style="margin-bottom:16px">
+                  <div style="font-size:16px;font-weight:500;margin-bottom:4px;color:#333">内容卡片</div>
+                  <div style="font-size:12px;color:var(--text-secondary)">左右 16px · 模块间距 16px · 圆角 12px · 无描边</div>
+                </div>
+                <div style="background:#fff;border-radius:9px;height:56px;display:flex;align-items:center;padding:0 16px;font-size:14px;border:none;box-shadow:none">列表行 · 高度 56px</div>
+              </div>
+              <div class="phone-tabbar" style="flex-shrink:0">
+                <span class="active">● 首页</span><span>● 工作台</span><span>● 消息</span><span>● 我的</span>
+              </div>
+            </div>
+            <div class="phone-bottom-safe" aria-hidden="true"></div>
+          </div>
+          <p class="cap">标准内页 · TabBar 56px + 底安全区 34px · 内容卡片无描边</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 圆角 -->
+    <section id="radius-shadow">
+      <h2 class="section-title"><span class="num">5</span>圆角</h2>
+      <p>圆角以 <a href="#global-ui">★ 全局强制 UI</a> 为准，下表为 Token 命名映射。</p>
+      <h3>5.1 圆角 Token</h3>
+      <table>
+        <tr><th>Token</th><th>值</th><th>用途</th></tr>
+        <tr><td>radius-tag ★</td><td>4px</td><td>标签、角标</td></tr>
+        <tr><td>radius-input ★</td><td>8px</td><td>输入框、小模块、搜索框</td></tr>
+        <tr><td>radius-card ★</td><td>12px</td><td>全局卡片、弹层顶角</td></tr>
+        <tr><td>radius-btn-4</td><td>4px</td><td>紧凑按钮、表格内操作</td></tr>
+        <tr><td>radius-btn-8</td><td>8px</td><td>卡片内次要按钮、并排双钮</td></tr>
+        <tr><td>radius-btn-12 ★</td><td>12px</td><td>表单提交、页内主操作（推荐默认档）</td></tr>
+        <tr><td>radius-btn-16</td><td>16px</td><td>底部栏主按钮、强强调 CTA</td></tr>
+        <tr><td>radius-circle</td><td>50%</td><td>Avatar、圆形图标底</td></tr>
+      </table>
+      <h3>5.2 按钮圆角选用（同类型须一致）</h3>
+      <table>
+        <tr><th>按钮类型</th><th>建议圆角</th><th>说明</th></tr>
+        <tr><td>底部栏主按钮 / 次按钮</td><td>16px 或 12px</td><td>同一 App 底栏两套按钮须同值；与卡片圆角可不同</td></tr>
+        <tr><td>表单页「提交」「保存」</td><td>12px 或 8px</td><td>与登录页主钮保持同档</td></tr>
+        <tr><td>列表 / 弹窗内描边、幽灵钮</td><td>8px 或 4px</td><td>与同级列表操作钮一致</td></tr>
+        <tr><td>品牌图标方形钮</td><td>8px</td><td>属图标按钮，非文字按钮；见全局第 14 条</td></tr>
+      </table>
+      <p style="font-size:13px;color:var(--text-secondary)">禁止在同一类型混用两种圆角（例如底栏左「取消」8px、右「确定」16px）。选定后写入设计 Token / 组件变体名（如 <code>Button/r16</code>）。</p>
+      <h4>圆角可视化</h4>
+      <div class="token-visual-grid">
+        <div class="token-visual-card"><div class="sample radius-sample" style="border-radius:4px"></div><div class="label">radius-tag</div><div class="val">4px</div></div>
+        <div class="token-visual-card"><div class="sample radius-sample" style="border-radius:8px"></div><div class="label">radius-input</div><div class="val">8px</div></div>
+        <div class="token-visual-card"><div class="sample radius-sample" style="border-radius:12px"></div><div class="label">radius-card</div><div class="val">12px</div></div>
+      </div>
+      <h4>按钮圆角四档（高 48px）</h4>
+      <div class="demo-row" style="margin:12px 0 20px">
+        <button type="button" class="btn btn-primary btn--r4">4px</button>
+        <button type="button" class="btn btn-primary btn--r8">8px</button>
+        <button type="button" class="btn btn-primary btn--r12">12px</button>
+        <button type="button" class="btn btn-primary btn--r16">16px</button>
+      </div>
+
+      <h3>5.3 阴影（全局禁用）</h3>
+      <p>剑琅联盟移动端<strong>默认不使用</strong>投影层级（<code>--shadow-1/2/3</code> 均为 <code>none</code>）。卡片、弹层、Fab 等通过<strong>白底/灰底、1px 边框（<code>--border</code>）、圆角与间距</strong>区分层次；<strong>例外</strong>：<code>TabBar</code>、<code>Bottom Action Bar</code> 顶部分离投影见 <a href="#global-ui">★ 全局强制 UI</a>。</p>
+    </section>
+
+    <!-- 6. 图标调用 -->
+    <section id="icons">
+      <h2 class="section-title"><span class="num">6</span>图标调用（联网 SVG）</h2>
+      <p><strong>本规范不再维护本地图标库</strong>（已移除 Stratis / Iconex / WeChat 资源包与预览网格）。设计稿、AI 出图与规范站预览统一<strong>联网调用合适的 SVG</strong>。</p>
+      <div class="card" style="margin:16px 0">
+        <div class="card-title">调用规则 ★</div>
+        <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--text-primary)">
+          <li><strong>优先来源</strong>：<a href="https://lucide.dev" target="_blank" rel="noopener">Lucide</a>（线性图标 · 与规范站 / <code>app/</code> 一致）</li>
+          <li><strong>落地写法</strong>：<code>&lt;i data-lucide="search"&gt;&lt;/i&gt;</code> + <code>lucide.createIcons()</code>（CDN）；或内联 SVG</li>
+          <li><strong>尺寸</strong>：通用 24×24（安全区 20×20）· 次要 16×16 · 见 ★ 全局强制 UI</li>
+          <li><strong>颜色</strong>：重要 <code>#F32F41</code> · 常规 <code>#333333</code> · 次要 <code>#929292</code> · 反色 <code>#FFFFFF</code></li>
+          <li><strong>风格</strong>：优先线性；选中/强调可用面性变体；禁止 emoji</li>
+          <li><strong>标注</strong>：AI / 设计稿注明 <code>icon:lucide/chevron-left</code> 或等价图标名</li>
+        </ul>
+      </div>
+      <div class="demo-row" style="gap:16px;align-items:center;color:var(--icon-color-default)">
+        <i data-lucide="chevron-left" class="s-icon s-icon--24" aria-hidden="true"></i>
+        <i data-lucide="search" class="s-icon s-icon--24" aria-hidden="true"></i>
+        <i data-lucide="plus" class="s-icon s-icon--24 s-icon--brand" aria-hidden="true"></i>
+        <i data-lucide="image" class="s-icon s-icon--24" aria-hidden="true"></i>
+        <i data-lucide="user" class="s-icon s-icon--16" aria-hidden="true"></i>
+        <span style="font-size:12px;color:var(--text-secondary)">示例 · Lucide 联网渲染</span>
+      </div>
+      <p style="margin-top:12px;font-size:12px;color:var(--text-secondary)">库外图标仅在 Lucide 无合适项时使用，须为矢量 SVG，并符合上述尺寸与色板。</p>
+    </section>
+
+    <!-- 7. 组件库（可调用） -->
+    <section id="components">
+      <h2 class="section-title"><span class="num">7</span>组件库（可调用）</h2>
+      <p>以下为剑琅联盟移动端可调用组件。<strong>优先</strong>选用本目录已有组件；库内无合适项时，可从外部 Figma 资源或业务组件引入，视觉须遵循 <a href="#global-ui">★ 全局强制 UI</a>，并标注来源。AI 出图须标注 <code>组件名 + 变体</code>。微信生态页面可参考 <a href="https://www.figma.com/design/UqA4U4cmf68pkXynOIhPHU/Le-Wagon-%E5%BE%AE%E4%BF%A1-UX-%E5%B7%A5%E5%85%B7%E5%BA%93-WeChat-UX-Kit--Community-?node-id=0-1" target="_blank" rel="noopener">WeChat UX Kit</a> 结构，但<strong>颜色、圆角、按钮、无阴影</strong>仍以本规范为准。</p>
+
+      <div class="comp-block" id="wechat-ux-components">
+        <div class="comp-block-hd"><strong>7.0 WeChat UX Kit 组件映射</strong><code>Le Wagon · 精选</code></div>
+        <div class="comp-block-bd">
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">左列为 Figma 源组件名，右列为剑琅规范内应标注的组件 ID。落地时视觉不得使用微信绿顶栏/投影，须套入全局 Token。</p>
+          <table>
+            <tr><th>WeChat UX Kit</th><th>规范组件 ID</th><th>名称</th><th>说明</th></tr>
+          </table>
+          <div class="demo-row" style="margin-top:16px;flex-wrap:wrap;gap:16px;align-items:flex-start">
+            <div style="width:280px">
+              <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">SearchBar 搜索栏</div>
+              <div class="u-search-bar"><span class="s-icon s-icon--16" data-icon="wx-search"></span>搜索订单、客户</div>
+            </div>
+            <div style="width:280px">
+              <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">ActionSheet 动作面板</div>
+              <div class="u-action-sheet" style="border:1px solid var(--border);border-radius:var(--radius-card)">
+                <button type="button" class="sheet-item">转发给同事</button>
+                <button type="button" class="sheet-item">保存图片</button>
+                <button type="button" class="sheet-item sheet-item--cancel">取消</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="comp-catalog">
+        <tr><th>分类</th><th>组件 ID</th><th>名称</th><th>场景</th></tr>
+        <tr><td>导航</td><td>PageTitleBar</td><td>页面标题栏</td><td>内页顶栏必用 · 左右等宽栅格 · Lucide 返回 · <a href="https://www.figma.com/design/44P9g5yKcQEyXdHCayIrMn/RTS-AI%E8%AF%BB%E5%8F%96?node-id=6-623">Figma 6-623</a>（仅顶栏）</td></tr>
+        <tr><td>导航</td><td>HomeNavbar</td><td>首页顶栏</td><td>左 Logo 28px + 品牌名 16px · 见 <a href="#comp-home-navbar">7 章</a></td></tr>
+        <tr><td>导航</td><td>PageTabs</td><td>顶部 Tab 条</td><td>宽 390 居中 · 页面级分段</td></tr>
+        <tr><td>导航</td><td>TabBar</td><td>标准底栏</td><td>子模块 3–4 Tab</td></tr>
+        <tr><td>反馈</td><td>AlertBanner</td><td>提示信息栏</td><td>图标与首行文案底对齐</td></tr>
+        <tr><td>反馈</td><td>ActionSheet</td><td>动作面板</td><td>WeChat UX · 底出菜单 · 见 <a href="#wechat-ux-components">7.0</a></td></tr>
+        <tr><td>反馈</td><td>ModalPopup</td><td>弹窗</td><td>全局通用 · 7 变体 · 见 <a href="#comp-modal-popup">7.1</a></td></tr>
+        <tr><td>反馈</td><td>Toast</td><td>轻提示</td><td>屏幕居中 · 无图标 · 见 <a href="#comp-toast">7.2</a></td></tr>
+        <tr><td>反馈</td><td>Dialog</td><td>简易对话框</td><td>轻量确认 · 与 ModalPopup 并存</td></tr>
+        <tr><td>表单</td><td>SearchBar</td><td>搜索栏</td><td>WeChat UX · 圆角 8px 灰底</td></tr>
+        <tr><td>通讯</td><td>ChatBubble</td><td>聊天气泡</td><td>WeChat UX · 客服/IM</td></tr>
+        <tr><td>营销</td><td>PromoCard</td><td>营销卡（纯色底）</td><td>获客/推客 · 无渐变</td></tr>
+        <tr><td>零售</td><td>ProductCard</td><td>商品双列卡</td><td>选品上架</td></tr>
+        <tr><td>零售</td><td>PriceRow</td><td>价格三档行</td><td>原价/零售/供货</td></tr>
+        <tr><td>零售</td><td>CartBar</td><td>商品底栏</td><td>店铺/客服/加购/购买</td></tr>
+        <tr><td>基础</td><td>Button / Input / Tag / …</td><td>通用基础组件</td><td>见下方预览</td></tr>
+      </table>
+
+      <div class="comp-block" id="comp-product-card">
+        <div class="comp-block-hd"><strong>ProductCard 商品卡</strong><code>RTP 选品 · 双列 grid</code></div>
+        <div class="comp-block-bd">
+          <div class="demo-row">
+            <div class="u-product-card">
+              <div class="thumb"><span class="s-icon" data-icon="image" aria-label="商品图"></span></div>
+              <div class="body">
+                <div class="brand">馥绿德雅</div>
+                <div class="title">复合精油按摩护理油 100ml</div>
+                <div class="price">¥128</div>
+                <div class="sub">建议售 ¥298 · 毛利 ¥170</div>
+                <button class="btn btn-primary btn-sm btn--r8" style="width:100%;margin-top:8px">上架到店</button>
+              </div>
+            </div>
+            <div class="u-product-card">
+              <div class="thumb"><span class="s-icon" data-icon="image" aria-label="商品图"></span></div>
+              <div class="body">
+                <div class="brand">馥绿德雅</div>
+                <div class="title">头皮深层洁净洗发露 200ml</div>
+                <div class="price">¥86</div>
+                <div class="sub">已上架 · 销 32 件</div>
+                <button class="btn btn-outline btn-sm btn--r8" style="width:100%;margin-top:8px">编辑</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-price-row">
+        <div class="comp-block-hd"><strong>PriceRow 价格三档</strong><code>PRD-214 · list/retail/supply</code></div>
+        <div class="comp-block-bd">
+          <div class="u-price-row">
+            <div class="col"><label>原价（划线）</label><div class="v">¥298</div></div>
+            <div class="col"><label>零售价</label><div class="v retail">¥168</div></div>
+            <div class="col"><label>供货价</label><div class="v">¥128</div></div>
+            <div class="col"><label>渠道价</label><div class="v">¥118</div></div>
+          </div>
+          <p style="margin-top:12px;font-size:12px;color:var(--text-secondary)">编辑页表格：规格 × 原价/零售价/供货价/库存 · 分销默认渠道价=供货价</p>
+        </div>
+      </div>
+
+      
+
+      <div class="comp-block" id="comp-login">
+        <div class="comp-block-hd"><strong>登录页品牌区</strong><code>剑琅联盟 · Splash / Login</code></div>
+        <div class="comp-block-bd">
+          <div class="comp-preview-phone" style="background:#fff;padding:48px 24px;text-align:center">
+            <img src="LOGO2.png" alt="剑琅联盟" style="width:72px;height:72px;object-fit:contain;margin-bottom:16px">
+            <div style="font-size:28px;font-weight:600;letter-spacing:.06em;margin-bottom:24px">剑琅联盟</div>
+            <input class="input-demo" placeholder="请输入手机号" style="width:100%;max-width:none;margin-bottom:12px">
+            <button class="btn btn-primary btn-lg btn--r12 btn-block" style="margin-top:8px">登录</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-button">
+        <div class="comp-block-hd"><strong>Button 按钮</strong><code>Button · primary · radius 4px</code></div>
+        <div class="comp-block-bd">
+          <div class="demo-row">
+            <button class="btn btn-primary btn--r12">主要按钮</button>
+            <button class="btn btn-primary btn-lg btn--r12">大号主要</button>
+            <button class="btn btn-primary btn-sm btn--r12">小号主要</button>
+            <button class="btn btn-outline btn--r12">描边按钮</button>
+            <button class="btn btn-primary btn-disabled btn--r12">禁用</button>
+          </div>
+          <table>
+            <tr><th>变体</th><th>规格</th></tr>
+            <tr><td>Primary ★</td><td>高 48px · 字号 16px / 500 · 圆角四档择一 · 红底 #F32F41 + <strong>白字</strong> · 无投影</td></tr>
+            <tr><td>字号变体</td><td>默认 16px · <code>btn-sm</code> 14px · <code>btn-lg</code> 16px（加宽 padding）</td></tr>
+            <tr><td>文案对齐 ★</td><td>按钮内文字<strong>水平 + 垂直居中</strong>（flex 居中或等价实现；禁止偏上/偏下/单侧留白不均）</td></tr>
+            <tr><td>Outline ★</td><td>白底 + 红字 + 红描边 1px · 与同级 Primary <strong>相同圆角</strong></td></tr>
+            <tr><td>Disabled</td><td>圆角与同页主按钮一致 · bg #EDEDED</td></tr>
+            <tr><td>BottomBar 示例</td><td>取消 Outline <code>btn--r16</code> + 确定 Primary <code>btn--r16</code></td></tr>
+            <tr><td>最大宽度 ★</td><td>370px（通栏亦同，左右各约 10px 留白）</td></tr>
+            <tr><td>Block</td><td>宽度 100%，且 max-width 370px</td></tr>
+            <tr><td>BottomBar</td><td>双按钮：左 Outline + 右 Primary，间距 12px</td></tr>
+            <tr><td>填充 / 描边 ★</td><td>填充：红底白字 · 描边：白底红字红边（对话框、底栏同规）</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-home-navbar">
+        <div class="comp-block-hd"><strong>HomeNavbar 首页顶栏</strong><code>Logo 28px + 品牌名 16px</code></div>
+        <div class="comp-block-bd">
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">首页 / 工作台等<strong>无返回</strong>场景使用；与内页 <code>PageTitleBar</code> 分轨。位于<strong>状态栏占位（53px）之下</strong>，栏高 <strong>44px</strong>，白底、<strong>主体无描边</strong>。产品工程：<code>renderHomeNavbar()</code> · <code>app/src/components/home-navbar.js</code>。</p>
+          <div class="comp-preview-phone" style="background:var(--bg-page)">
+            <div class="phone-status-bar" aria-hidden="true"></div>
+            <header class="u-home-navbar">
+              <img src="LOGO2.png" alt="" class="u-home-navbar__logo" width="28" height="28" />
+              <h1 class="u-home-navbar__title">剑琅联盟</h1>
+            </header>
+            <div style="height:80px;background:var(--bg-page)"></div>
+            <div class="phone-bottom-safe" aria-hidden="true"></div>
+          </div>
+          <table style="margin-top:16px">
+            <tr><th>属性</th><th>值</th><th>说明</th></tr>
+            <tr><td>栏高 ★</td><td>44px</td><td><code>--nav-h</code> · 白底 · 无描边</td></tr>
+            <tr><td>Logo ★</td><td>28×28px</td><td><code>LOGO2.png</code> · 与品牌章一致</td></tr>
+            <tr><td>品牌名</td><td>16px / 500 / #333</td><td><code>&lt;h1 class="u-home-navbar__title"&gt;</code></td></tr>
+            <tr><td>左内边距</td><td>16px</td><td>Logo 与文案间距 8px</td></tr>
+            <tr><td>与 PageTitleBar</td><td>分轨</td><td>首页用本组件；内页用 PageTitleBar（含返回）</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-page-title-bar">
+        <div class="comp-block-hd"><strong>PageTitleBar 页面标题栏</strong><code>RTS-AI · node 6-623（仅顶栏）</code></div>
+        <div class="comp-block-bd">
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px"><a href="https://www.figma.com/design/44P9g5yKcQEyXdHCayIrMn/RTS-AI%E8%AF%BB%E5%8F%96?node-id=6-623" target="_blank" rel="noopener">RTS-AI 读稿 · Figma 6-623</a> 为整页 <strong>Home</strong> 稿（含 Tab、内容区）；本组件<strong>仅对齐其顶栏区域</strong>。设计页 / 原型 / AI 出图内页顶栏<strong>必须</strong>调用 <code>PageTitleBar</code>；返回图标统一 <a href="https://lucide.dev/icons/chevron-left" target="_blank" rel="noopener">Lucide chevron-left</a>（与 <code>app/</code> 一致）。首页品牌头请用 <a href="#comp-home-navbar">HomeNavbar</a>。</p>
+          <div class="page-title-bar-variants">
+            <p class="variant-label">默认 · 返回 + 标题 + 操作</p>
+            <div class="comp-preview-phone" style="background:var(--bg-page)">
+              <div class="phone-status-bar" aria-hidden="true"></div>
+              <header class="u-page-title-bar">
+                <a href="#" class="back" aria-label="返回"><i data-lucide="chevron-left" class="back-icon" aria-hidden="true"></i></a>
+                <h1 class="title">订单详情</h1>
+                <button type="button" class="action">分享</button>
+              </header>
+              <div style="height:80px;background:var(--bg-page)"></div>
+              <div class="phone-bottom-safe" aria-hidden="true"></div>
+            </div>
+            <p class="variant-label">无返回</p>
+            <div class="comp-preview-phone" style="background:var(--bg-page)">
+              <header class="u-page-title-bar u-page-title-bar--no-back">
+                <a href="#" class="back" aria-hidden="true" tabindex="-1"><i data-lucide="chevron-left" class="back-icon" aria-hidden="true"></i></a>
+                <h1 class="title">工作台</h1>
+                <button type="button" class="action">设置</button>
+              </header>
+            </div>
+            <p class="variant-label">无右侧操作</p>
+            <div class="comp-preview-phone" style="background:var(--bg-page)">
+              <header class="u-page-title-bar">
+                <a href="#" class="back" aria-label="返回"><i data-lucide="chevron-left" class="back-icon" aria-hidden="true"></i></a>
+                <h1 class="title">订单列表</h1>
+                <span class="action" aria-hidden="true"></span>
+              </header>
+            </div>
+            <p class="variant-label">图标 + 文案操作（对齐 Figma「我的推广」）</p>
+            <div class="comp-preview-phone" style="background:var(--bg-page)">
+              <header class="u-page-title-bar">
+                <a href="#" class="back" aria-label="返回"><i data-lucide="chevron-left" class="back-icon" aria-hidden="true"></i></a>
+                <h1 class="title">首页</h1>
+                <button type="button" class="action action--icon"><i data-lucide="share-2" class="action__icon" aria-hidden="true"></i><span>我的推广</span></button>
+              </header>
+            </div>
+            <p class="variant-label">次要操作 muted</p>
+            <div class="comp-preview-phone" style="background:var(--bg-page)">
+              <header class="u-page-title-bar">
+                <a href="#" class="back" aria-label="返回"><i data-lucide="chevron-left" class="back-icon" aria-hidden="true"></i></a>
+                <h1 class="title">编辑资料</h1>
+                <button type="button" class="action action--muted">取消</button>
+              </header>
+            </div>
+            <p class="variant-label">长标题省略</p>
+            <div class="comp-preview-phone" style="background:var(--bg-page)">
+              <header class="u-page-title-bar">
+                <a href="#" class="back" aria-label="返回"><i data-lucide="chevron-left" class="back-icon" aria-hidden="true"></i></a>
+                <h1 class="title">剑琅联盟门店业绩统计与对账明细</h1>
+                <button type="button" class="action">导出</button>
+              </header>
+            </div>
+          </div>
+          <table style="margin-top:20px">
+            <tr><th colspan="3">与 Figma 6-623 实测差异（仅顶栏相关）</th></tr>
+            <tr><th>项</th><th>Figma 6-623 实测</th><th>本规范 PageTitleBar</th></tr>
+            <tr><td>引用范围</td><td>整页 Home（Tab + 内容区）</td><td>仅顶栏 44px 区域</td></tr>
+            <tr><td>顶区总高</td><td>Header 约 90px（含状态区）</td><td>状态栏占位 53px + 标题栏 44px</td></tr>
+            <tr><td>标题字号</td><td>17px Medium</td><td>18px / 500（规范统一）</td></tr>
+            <tr><td>右侧操作</td><td>图标 +「我的推广」</td><td>16px 文案；可选 <code>action--icon</code> 变体</td></tr>
+            <tr><td>返回图标</td><td>chevron-left 24px</td><td>Lucide chevron-left 24px · #333</td></tr>
+            <tr><td>标题栏描边</td><td>无</td><td>无（主体无描边）</td></tr>
+          </table>
+          <table style="margin-top:16px">
+            <tr><th>属性</th><th>值</th><th>说明</th></tr>
+            <tr><td>状态栏占位 ★</td><td>390×53px</td><td>纯白块，不画系统状态元素</td></tr>
+            <tr><td>标题栏高度 ★</td><td>44px</td><td>白底 · <strong>主体无描边</strong></td></tr>
+            <tr><td>栅格列宽 ★</td><td><code>--page-title-bar-side</code> 72px · 1fr · 72px</td><td>左右等宽，标题几何居中</td></tr>
+            <tr><td>标题</td><td>18px / 500 / #333</td><td><code>&lt;h1 class="title"&gt;</code> · 过长单行省略</td></tr>
+            <tr><td>文案对齐 ★</td><td>底对齐</td><td>标题与右侧操作文字<strong>底部在同一水平线</strong>；返回区垂直居中</td></tr>
+            <tr><td>返回 ★</td><td>Lucide chevron-left · 24px</td><td><code>&lt;a class="back"&gt;</code> 44×44 · <strong>禁止</strong>文字 <code>&lt;</code></td></tr>
+            <tr><td>右侧操作</td><td>16px · #333</td><td><code>&lt;button class="action"&gt;</code> · <code>action--muted</code> · <code>action--icon</code></td></tr>
+            <tr><td>变体</td><td>见上方预览</td><td><code>--no-back</code> · 无操作 · 图标文案 · muted · 长标题</td></tr>
+            <tr><td>调用 ★</td><td>设计页必用</td><td>内页 PageTitleBar · 首页 <a href="#comp-home-navbar">HomeNavbar</a></td></tr>
+            <tr><td>禁止</td><td>—</td><td>标题栏内不放 Logo（首页等特殊场景用 HomeNavbar）</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-page-tabs">
+        <div class="comp-block-hd"><strong>PageTabs 顶部 Tab</strong><code>宽 390 · 画布居中</code></div>
+        <div class="comp-block-bd">
+          <div class="comp-preview-phone" style="background:var(--bg-page);padding-bottom:16px">
+            <div class="u-page-tabs-wrap">
+              <div class="u-page-tabs"><span class="on">全部</span><span>待处理</span><span>已完成</span></div>
+            </div>
+            <div class="u-content-card" style="margin:16px;font-size:13px;color:var(--text-secondary)">内容区 · Tab 与卡片上下排列，间距 16px · 白底无描边</div>
+          </div>
+          <table>
+            <tr><th>属性</th><th>值</th></tr>
+            <tr><td>容器宽 ★</td><td>390px，相对画布水平居中</td></tr>
+            <tr><td>高度</td><td>48px · 白底 · 主体无描边</td></tr>
+            <tr><td>指示器</td><td><strong>32×3px</strong> · brand-6 · 贴底居中（非容器描边）</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-tabbar">
+        <div class="comp-block-hd"><strong>TabBar 标准底栏</strong><code>子模块页 · 非首页</code></div>
+        <div class="comp-block-bd">
+          <div class="comp-preview-phone" style="display:flex;flex-direction:column;background:var(--bg-page)">
+            <div style="flex:1;min-height:80px"></div>
+            <div class="u-tabbar" style="flex-shrink:0">
+              <div class="tab on"><span class="s-icon s-icon--filled" data-icon="home-tab-filled" data-filled="1"></span>首页</div>
+              <div class="tab"><span class="s-icon" data-icon="shopping-bag" data-filled="0"></span>商城</div>
+              <div class="tab"><span class="s-icon" data-icon="cart" data-filled="0"></span>购物车</div>
+              <div class="tab"><span class="s-icon" data-icon="user" data-filled="0"></span>我的</div>
+            </div>
+            <div class="phone-bottom-safe" aria-hidden="true"></div>
+          </div>
+          <table style="margin-top:12px">
+            <tr><th>属性</th><th>值</th></tr>
+            <tr><td>首页图标 ★</td><td><code>home-tab-filled</code>（选中）· 门洞为圆头粗短线 · 定制 SVG</td></tr>
+            <tr><td>商城图标 ★</td><td>Lucide <code>shopping-bag</code></td></tr>
+            <tr><td>图标 ★</td><td>24×24 · 未选中线性 · stroke-width 1.5</td></tr>
+            <tr><td>选中态 ★</td><td>切换为品牌色 <strong>面性</strong>图标（<code>-filled</code>）· 文案 #F32F41</td></tr>
+            <tr><td>文案</td><td>11px · 未选中 #929292</td></tr>
+            <tr><td>栏高</td><td>56px 内容区 + 34px 底安全区 · 白底 <code>--bg-container</code> · 主体无描边</td></tr>
+            <tr><td>顶部分离 ★</td><td><code>box-shadow: 0 -0.5px 4px 0 rgba(0,0,0,0.08)</code>（<code>--bottom-surface-shadow</code>）</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-tabs">
+        <div class="comp-block-hd"><strong>Tabs 选项卡</strong><code>Tabs</code></div>
+        <div class="comp-block-bd">
+          <div class="comp-preview-phone">
+            <div class="u-tabs"><span class="on">全部</span><span>待审批</span><span>已完成</span></div>
+          </div>
+          <p>高 48px · 主体无描边 · 选中指示器 <strong>32×3px</strong> brand-6（居中 · 长度为原 16px 的两倍）· ≤4 项等分</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-search">
+        <div class="comp-block-hd"><strong>Search 搜索框</strong><code>Search</code></div>
+        <div class="comp-block-bd">
+          <div class="comp-preview-phone">
+            <div class="u-search"><span class="s-icon" data-icon="search"></span>搜索订单、客户</div>
+          </div>
+          <p>高 36px · bg gray-1 · 圆角 capsule · 图标 search 20px</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-input">
+        <div class="comp-block-hd"><strong>Input / Textarea 输入</strong><code>Input · Textarea</code></div>
+        <div class="comp-block-bd">
+          <div class="demo-row">
+            <input class="input-demo" placeholder="请输入">
+            <input class="input-demo" value="已填写内容" style="border-color:var(--brand-6)">
+          </div>
+          <div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;min-height:80px;color:var(--text-placeholder);font-size:14px;width:100%;max-width:360px">多行文本输入…<div style="text-align:right;font-size:12px;margin-top:8px">0/200</div></div>
+          <p style="margin-top:8px">Input 高 40px · 圆角 6px · 聚焦 border brand-6 · 必填标签前红色 *</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-tag">
+        <div class="comp-block-hd"><strong>Tag / Badge 标签与徽标</strong><code>Tag · Badge</code></div>
+        <div class="comp-block-bd">
+          <div class="demo-row">
+            <span class="tag-demo tag-default">草稿</span>
+            <span class="tag-demo tag-brand-demo">待审批</span>
+            <span class="tag-demo tag-success">已通过</span>
+            <span class="tag-demo tag-warning">即将到期</span>
+            <span class="tag-demo tag-error">已驳回</span>
+            <span style="position:relative;display:inline-block;padding-right:8px">消息 <span class="u-badge">8</span></span>
+            <span style="width:8px;height:8px;background:var(--brand-6);border-radius:50%;display:inline-block" title="红点"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-form-controls">
+        <div class="comp-block-hd"><strong>Switch / CheckBox / Radio</strong><code>Switch · CheckBox · Radio</code></div>
+        <div class="comp-block-bd">
+          <div class="demo-row" style="gap:24px">
+            <div class="u-switch on"></div>
+            <div class="u-switch"></div>
+            <label style="display:flex;align-items:center;gap:8px;font-size:14px"><span class="u-checkbox-mark" aria-hidden="true"><span class="s-icon s-icon--on-brand" data-icon="check"></span></span>记住账号</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:14px"><span style="width:20px;height:20px;border:1px solid var(--brand-6);border-radius:50%;display:inline-flex;align-items:center;justify-content:center"><span style="width:10px;height:10px;background:var(--brand-6);border-radius:50%"></span></span>选项 A</label>
+          </div>
+          <table style="margin-top:16px">
+            <tr><th>勾号 ★</th><th>规格</th></tr>
+            <tr><td>禁止</td><td>字符 <code>√</code>、<code>✓</code>、Unicode 勾形文字</td></tr>
+            <tr><td>多选已选</td><td><code>check</code> · 16px · 白 icon 于品牌色 20×20 方底</td></tr>
+            <tr><td>步骤完成 / 成功</td><td><code>check</code> 于成功色圆底，或 <code>check-circle-filled</code> 16px</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-steps">
+        <div class="comp-block-hd"><strong>Steps 步骤条</strong><code>Steps</code></div>
+        <div class="comp-block-bd">
+          <div class="comp-preview-phone">
+            <div class="u-steps">
+              <div class="step done"><div class="dot"><span class="s-icon" data-icon="check" aria-hidden="true"></span></div>提交</div>
+              <div class="step cur"><div class="dot">2</div>审批</div>
+              <div class="step"><div class="dot">3</div>完成</div>
+            </div>
+          </div>
+          <p style="margin-top:8px;font-size:12px;color:var(--text-secondary)">圆点与步骤文案间距 <strong>8px</strong> · 完成态勾号 17px</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-notice">
+        <div class="comp-block-hd"><strong>NoticeBar / AlertBanner 提示信息栏</strong><code>图标 · 首行底对齐</code></div>
+        <div class="comp-block-bd">
+          <div class="comp-preview-phone" style="padding:12px 0;background:var(--bg-page)">
+            <div class="u-notice"><span class="s-icon s-icon--16" data-icon="info-circle"></span><span class="alert-text">您有 3 条待审批事项请及时处理</span></div>
+            <div class="u-alert-blue"><span class="s-icon s-icon--16" data-icon="info-circle"></span><span class="alert-text">这是一条可换行的提示信息，前置图标与第一行文字底部对齐，不得相对整段垂直居中。</span></div>
+          </div>
+          <table style="margin-top:12px">
+            <tr><th>属性</th><th>值</th></tr>
+            <tr><td>图标 ★</td><td>16px · 与第一行文案 baseline 底对齐</td></tr>
+            <tr><td>文案</td><td>13px · 行高 1.5 · 可换行</td></tr>
+            <tr><td>间距</td><td>图标与文字 8px</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-modal-popup">
+        <div class="comp-block-hd"><strong>7.1 ModalPopup 弹窗</strong><code>全局通用 · Figma xqMgMp7wLhmEvvgiv6rSdW</code></div>
+        <div class="comp-block-bd">
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">剑琅联盟<strong>全局通用</strong>弹窗组件（居中 / 底部共 7 变体）。视觉服从 ★ 全局强制 UI（<strong>无阴影</strong>、按钮高 <strong>48px</strong>、次钮 <strong>Outline</strong>、主钮 <strong>Primary</strong>）。<strong>不含遮罩层</strong>。设计稿参照 <a href="https://www.figma.com/design/xqMgMp7wLhmEvvgiv6rSdW/xiaobin" target="_blank" rel="noopener">Figma · xiaobin</a>。AI 标注：<code>ModalPopup + 变体</code>。</p>
+          <table id="xiaobin-modal-map">
+            <tr><th>组件 ID</th><th>名称</th><th>Figma</th><th>说明</th></tr>
+          </table>
+          <table style="margin-top:16px">
+            <tr><th>属性</th><th>居中弹窗</th><th>底部弹窗</th></tr>
+            <tr><td>边距 ★</td><td>左右各 <strong>32px</strong>（宽 326px）</td><td>左 / 右 / 下均为 <strong>0</strong>（宽 390 贴底）</td></tr>
+            <tr><td>圆角</td><td>16px 四角</td><td>顶左 / 顶右 16px · 底边 0</td></tr>
+            <tr><td>内边距</td><td>20px</td><td>上 20 · 左右 20 · 下 40</td></tr>
+            <tr><td>标题</td><td colspan="2">17px / 600 / #333 · 居中</td></tr>
+            <tr><td>副文案</td><td colspan="2">16px / 400 / #929292 · 居中</td></tr>
+            <tr><td>按钮区</td><td colspan="2">距文案 8px · 间距 12px · 高 48px · 圆角 12px</td></tr>
+            <tr><td>双按钮顺序</td><td colspan="2">左 Outline 取消 · 右 Primary 确定</td></tr>
+            <tr><td>Icon 媒体</td><td colspan="2">40×40 圆底 #EDEDED · 24px SVG · Lucide <code>bell</code></td></tr>
+            <tr><td>Image 媒体</td><td colspan="2">宽 100% · 高 135px · 圆角 8px · 占位 #EDEDED + 白 image icon</td></tr>
+          </table>
+          <h4 style="margin:24px 0 12px;font-size:14px">变体预览</h4>
+          <div class="modal-variant-grid">
+            <div class="modal-variant-card">
+              <div class="u-modal-demo-stage u-modal-demo-stage--centered">
+                <article class="u-modal-popup u-modal-popup--centered" aria-label="居中双按钮">
+                  <h3 class="u-modal-popup__title">主标题</h3>
+                  <p class="u-modal-popup__desc">副标题 / 相关信息说明文案，尽量简洁。</p>
+                  <div class="u-modal-popup__actions">
+                    <button type="button" class="btn btn-outline btn--r12">取消</button>
+                    <button type="button" class="btn btn-primary btn--r12">确定</button>
+                  </div>
+                </article>
+              </div>
+              <div class="cap"><code>ModalPopup/centered/dual/default</code> · Figma <a href="https://www.figma.com/design/xqMgMp7wLhmEvvgiv6rSdW/xiaobin?node-id=1-5485" target="_blank" rel="noopener">1:5485</a></div>
+            </div>
+            <div class="modal-variant-card">
+              <div class="u-modal-demo-stage u-modal-demo-stage--centered">
+                <article class="u-modal-popup u-modal-popup--centered" aria-label="居中单按钮">
+                  <h3 class="u-modal-popup__title">主标题</h3>
+                  <p class="u-modal-popup__desc">副标题 / 相关信息说明文案。</p>
+                  <div class="u-modal-popup__actions">
+                    <button type="button" class="btn btn-primary btn--r12">确定</button>
+                  </div>
+                </article>
+              </div>
+              <div class="cap"><code>ModalPopup/centered/single/default</code> · Figma <a href="https://www.figma.com/design/xqMgMp7wLhmEvvgiv6rSdW/xiaobin?node-id=1-5493" target="_blank" rel="noopener">1:5493</a></div>
+            </div>
+            <div class="modal-variant-card">
+              <div class="u-modal-demo-stage u-modal-demo-stage--centered">
+                <article class="u-modal-popup u-modal-popup--centered" aria-label="居中双按钮带图标">
+                  <div class="u-modal-popup__icon-wrap"><i data-lucide="bell" class="s-icon s-icon--24" aria-hidden="true"></i></div>
+                  <h3 class="u-modal-popup__title">主标题</h3>
+                  <p class="u-modal-popup__desc">副标题 / 相关信息说明文案。</p>
+                  <div class="u-modal-popup__actions">
+                    <button type="button" class="btn btn-outline btn--r12">取消</button>
+                    <button type="button" class="btn btn-primary btn--r12">确定</button>
+                  </div>
+                </article>
+              </div>
+              <div class="cap"><code>ModalPopup/centered/dual/icon</code> · Figma <a href="https://www.figma.com/design/xqMgMp7wLhmEvvgiv6rSdW/xiaobin?node-id=1-5499" target="_blank" rel="noopener">1:5499</a></div>
+            </div>
+            <div class="modal-variant-card">
+              <div class="u-modal-demo-stage u-modal-demo-stage--centered">
+                <article class="u-modal-popup u-modal-popup--centered" aria-label="居中单按钮带图标">
+                  <div class="u-modal-popup__icon-wrap"><i data-lucide="bell" class="s-icon s-icon--24" aria-hidden="true"></i></div>
+                  <h3 class="u-modal-popup__title">主标题</h3>
+                  <p class="u-modal-popup__desc">副标题 / 相关信息说明文案。</p>
+                  <div class="u-modal-popup__actions">
+                    <button type="button" class="btn btn-primary btn--r12">确定</button>
+                  </div>
+                </article>
+              </div>
+              <div class="cap"><code>ModalPopup/centered/single/icon</code> · Figma <a href="https://www.figma.com/design/xqMgMp7wLhmEvvgiv6rSdW/xiaobin?node-id=1-5509" target="_blank" rel="noopener">1:5509</a></div>
+            </div>
+            <div class="modal-variant-card">
+              <div class="u-modal-demo-stage u-modal-demo-stage--centered">
+                <article class="u-modal-popup u-modal-popup--centered" aria-label="居中双按钮带顶图">
+                  <div class="u-modal-popup__media u-image-placeholder"><span class="s-icon s-icon--24 s-icon--on-brand" data-icon="image" aria-hidden="true"></span></div>
+                  <h3 class="u-modal-popup__title">主标题</h3>
+                  <p class="u-modal-popup__desc">副标题 / 相关信息说明文案。</p>
+                  <div class="u-modal-popup__actions">
+                    <button type="button" class="btn btn-outline btn--r12">取消</button>
+                    <button type="button" class="btn btn-primary btn--r12">确定</button>
+                  </div>
+                </article>
+              </div>
+              <div class="cap"><code>ModalPopup/centered/dual/image</code> · Figma <a href="https://www.figma.com/design/xqMgMp7wLhmEvvgiv6rSdW/xiaobin?node-id=1-5517" target="_blank" rel="noopener">1:5517</a></div>
+            </div>
+            <div class="modal-variant-card">
+              <div class="u-modal-demo-stage u-modal-demo-stage--centered">
+                <article class="u-modal-popup u-modal-popup--centered" aria-label="居中单按钮带顶图">
+                  <div class="u-modal-popup__media u-image-placeholder"><span class="s-icon s-icon--24 s-icon--on-brand" data-icon="image" aria-hidden="true"></span></div>
+                  <h3 class="u-modal-popup__title">主标题</h3>
+                  <p class="u-modal-popup__desc">副标题 / 相关信息说明文案。</p>
+                  <div class="u-modal-popup__actions">
+                    <button type="button" class="btn btn-primary btn--r12">确定</button>
+                  </div>
+                </article>
+              </div>
+              <div class="cap"><code>ModalPopup/centered/single/image</code> · Figma <a href="https://www.figma.com/design/xqMgMp7wLhmEvvgiv6rSdW/xiaobin?node-id=1-5526" target="_blank" rel="noopener">1:5526</a></div>
+            </div>
+            <div class="modal-variant-card modal-variant-card--bottom">
+              <div class="u-modal-demo-stage u-modal-demo-stage--bottom">
+                <article class="u-modal-popup u-modal-popup--bottom" aria-label="底部弹窗">
+                  <h3 class="u-modal-popup__title">主标题</h3>
+                  <p class="u-modal-popup__desc">说明文案应尽量简洁，避免打断用户流程。</p>
+                  <div class="u-modal-popup__actions">
+                    <button type="button" class="btn btn-outline btn--r12">取消</button>
+                    <button type="button" class="btn btn-primary btn--r12">确定</button>
+                  </div>
+                </article>
+              </div>
+              <div class="cap"><code>ModalPopup/bottom</code> · Figma <a href="https://www.figma.com/design/xqMgMp7wLhmEvvgiv6rSdW/xiaobin?node-id=1-5480" target="_blank" rel="noopener">1:5480</a> · 390 通栏贴底</div>
+            </div>
+          </div>
+          <p style="margin-top:12px;font-size:12px;color:var(--text-secondary)">与 Figma 初稿差异：去除弹窗/按钮投影；次按钮由灰底改为 Outline；按钮高度 48px；居中弹窗边距按规范 32px。</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-dialog">
+        <div class="comp-block-hd"><strong>Dialog 对话框</strong><code>轻量确认</code></div>
+        <div class="comp-block-bd">
+          <div class="u-dialog">
+            <h5>确认驳回？</h5>
+            <p>驳回后需重新提交审批，是否继续？</p>
+            <div class="acts"><button class="btn btn-outline btn--r12" style="flex:1">取消</button><button class="btn btn-primary btn--r12" style="flex:1">确认驳回</button></div>
+          </div>
+          <table style="margin-top:16px">
+            <tr><th>按钮</th><th>规格</th></tr>
+            <tr><td>填充按钮 ★</td><td>红底 <code>#F32F41</code> + 白字</td></tr>
+            <tr><td>描边按钮 ★</td><td>白底 + 红字 + 红描边 1px</td></tr>
+          </table>
+          <p style="margin-top:12px;font-size:12px;color:var(--text-secondary)">轻提示请使用独立组件 <a href="#comp-toast">Toast</a>，勿与本 Dialog 混用样式。</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-toast">
+        <div class="comp-block-hd"><strong>Toast 轻提示</strong><code>业绩PK动画设置 · node 27-381</code></div>
+        <div class="comp-block-bd">
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">用于操作结果、权限不足等<strong>短时反馈</strong>。视觉以 <a href="https://www.figma.com/design/RpwcM1biwkmAghkRzcx4qS/%E4%B8%9A%E7%BB%A9PK%E5%8A%A8%E7%94%BB%E8%AE%BE%E7%BD%AE?node-id=27-381" target="_blank" rel="noopener">Figma · 业绩PK动画设置 · 27-381</a> 为准。AI 标注：<code>Toast/default</code>。</p>
+          <p class="variant-label">单行 · 未触达边距不换行</p>
+          <div class="u-toast-stage" aria-label="Toast 单行预览">
+            <div class="u-toast" role="status">保存成功</div>
+          </div>
+          <p class="variant-label" style="margin-top:20px">多行 · 触达左右 40px 边距后换行</p>
+          <div class="u-toast-stage" aria-label="Toast 多行预览">
+            <div class="u-toast" role="status">暂无查看权限，请联系店主开通相关权限后再试</div>
+          </div>
+          <table style="margin-top:16px">
+            <tr><th>属性</th><th>值</th></tr>
+            <tr><td>位置 ★</td><td>屏幕<strong>水平 + 垂直居中</strong>（相对 390 画布内容区）</td></tr>
+            <tr><td>填充色 ★</td><td><code>#333333</code> · 不透明度 <strong>90%</strong>（<code>rgba(51, 51, 51, 0.9)</code>）</td></tr>
+            <tr><td>圆角</td><td><strong>4px</strong></td></tr>
+            <tr><td>内边距 ★</td><td>左右 <strong>16px</strong> · 上下 <strong>10px</strong></td></tr>
+            <tr><td>字体 ★</td><td><strong>思源黑体</strong>（Source Han Sans SC / CN）</td></tr>
+            <tr><td>字色 ★</td><td><code>#FFFFFF</code></td></tr>
+            <tr><td>字重 ★</td><td><strong>Regular</strong>（400）</td></tr>
+            <tr><td>字号 ★</td><td><strong>14px</strong></td></tr>
+            <tr><td>行高 ★</td><td><strong>20px</strong></td></tr>
+            <tr><td>字距 ★</td><td><strong>0</strong></td></tr>
+            <tr><td>对齐</td><td>单行 / 多行文案均<strong>水平居中</strong></td></tr>
+            <tr><td>换行 ★</td><td>外缘距画布左右各 <strong>40px</strong>（<code>--toast-margin-h</code>）后自动换行 · 不限制行数</td></tr>
+            <tr><td>宽度</td><td>随文案自适应 · 最大宽 <code>310px</code>（<code>--toast-max-width</code> = 390 − 40×2）</td></tr>
+            <tr><td>图标</td><td><strong>无</strong>（纯文字 Toast）</td></tr>
+            <tr><td>遮罩</td><td><strong>无</strong> · 不阻断页面操作</td></tr>
+            <tr><td>阴影</td><td><strong>无</strong></td></tr>
+            <tr><td>展示时长</td><td>建议 2–3s 自动消失（实现层约定）</td></tr>
+          </table>
+          <p style="margin-top:12px;font-size:12px;color:var(--text-secondary)">与 NoticeBar / AlertBanner（页内条）区分：Toast 为<strong>浮层短时提示</strong>；与 Dialog / ModalPopup 区分：Toast <strong>无按钮、无标题、无遮罩</strong>。</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-empty">
+        <div class="comp-block-hd"><strong>Empty / Result 空状态与结果页</strong><code>RTP 零售 · node 666-1758</code></div>
+        <div class="comp-block-bd">
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">占位插画以 <a href="https://www.figma.com/design/cUaUaxtcNsREKlfnQKXe1L/RTP-%E9%9B%B6%E5%94%AE%E6%A8%A1%E5%9D%97?node-id=666-1758" target="_blank" rel="noopener">RTP 零售模块 · Figma 666-1758</a> 为准。AI 标注：<code>Empty/default</code> · 插画类 <code>u-empty__illustration</code>。</p>
+          <div class="comp-preview-phone phone-frame--844" style="height:420px;display:flex;flex-direction:column;background:var(--bg-page)">
+            <div class="phone-status-bar" aria-hidden="true"></div>
+            <header class="u-page-title-bar" style="flex-shrink:0">
+              <a href="#" class="back" aria-label="返回"><i data-lucide="chevron-left" class="back-icon" aria-hidden="true"></i></a>
+              <h1 class="title">订单列表</h1>
+              <span class="action" aria-hidden="true"></span>
+            </header>
+            <div class="u-empty u-empty--canvas">
+              <div class="u-empty__illustration" aria-hidden="true">
+                <span class="u-empty__bubble u-empty__bubble--tr"></span>
+                <span class="u-empty__bubble u-empty__bubble--bl"></span>
+                <span class="u-empty__circle">
+                  <img src="assets/empty-state/file-icon.svg" alt="" width="57" height="57" decoding="async">
+                </span>
+              </div>
+              <p style="margin-top:12px;font-size:14px;color:var(--text-primary)">暂无订单数据</p>
+              <p style="font-size:12px;color:var(--text-secondary)">点击下方按钮创建第一笔订单</p>
+              <button class="btn btn-primary btn--r12 btn-block" style="margin-top:16px;max-width:200px">新建订单</button>
+            </div>
+            <div class="phone-bottom-safe" aria-hidden="true" style="margin-top:auto"></div>
+          </div>
+          <table style="margin-top:16px">
+            <tr><th>属性</th><th>值</th></tr>
+            <tr><td>插画外框</td><td><strong>144 × 128px</strong>（含装饰圆；Figma 实测）</td></tr>
+            <tr><td>主圆底</td><td><strong>120 × 120px</strong> 正圆 · 填充 <code>#FFFFFF</code>（<code>--bg-container</code>）</td></tr>
+            <tr><td>主圆偏移</td><td>距外框左 <strong>16px</strong> · 上 <strong>8px</strong></td></tr>
+            <tr><td>文件图标</td><td><strong>57 × 57px</strong> · 描边 <code>#D1D5DC</code>（<code>--empty-state-icon</code>）· 资源 <code>assets/empty-state/file-icon.svg</code></td></tr>
+            <tr><td>装饰圆（右上）</td><td><strong>24 × 24px</strong> · <code>#e5e7eb</code> · 不透明度 <strong>50%</strong></td></tr>
+            <tr><td>装饰圆（左下）</td><td><strong>16 × 16px</strong> · 同色同透明度</td></tr>
+            <tr><td>布局</td><td>插画 + 文案组在<strong>内容区垂直居中</strong>；主按钮宽 ≤370px</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-avatar">
+        <div class="comp-block-hd"><strong>Avatar 头像</strong><code>Avatar</code></div>
+        <div class="comp-block-bd">
+          <div class="demo-row">
+            <div class="u-avatar" style="width:32px;height:32px"><span class="s-icon" data-icon="user"></span></div>
+            <div class="u-avatar"><span class="s-icon" data-icon="user"></span></div>
+            <div class="u-avatar" style="width:48px;height:48px"><span class="s-icon" data-icon="user" style="font-size:24px"></span></div>
+          </div>
+          <p>尺寸 32 / 40 / 48px · 圆形 · 默认 gray-3 底</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-progress">
+        <div class="comp-block-hd"><strong>Progress / Loading 进度与加载</strong><code>Progress · Loading</code></div>
+        <div class="comp-block-bd">
+          <div class="u-progress" style="max-width:280px;margin-bottom:12px"><i></i></div>
+          <div class="demo-row" style="color:var(--brand-6);font-size:14px"><span style="display:inline-block;width:20px;height:20px;border:2px solid var(--brand-6);border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite"></span>加载中…</div>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-fab">
+        <div class="comp-block-hd"><strong>Fab 悬浮按钮</strong><code>Fab</code></div>
+        <div class="comp-block-bd">
+          <div class="demo-row"><div class="u-fab"><span class="s-icon" data-icon="add" style="font-size:24px"></span></div></div>
+          <p>48×48 圆形 · brand-6 · 无投影 · 列表页「新建」</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-upload">
+        <div class="comp-block-hd"><strong>Upload 上传</strong><code>Upload</code></div>
+        <div class="comp-block-bd">
+          <div style="width:80px;height:80px;border:1px dashed var(--gray-4);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-secondary);font-size:12px;gap:4px">
+            <span class="s-icon" data-icon="add" style="font-size:24px"></span>上传
+          </div>
+          <p style="margin-top:8px">虚线框 80×80 · 支持图片/PDF · 表单附件区</p>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-skeleton">
+        <div class="comp-block-hd"><strong>Skeleton 骨架屏</strong><code>Skeleton</code></div>
+        <div class="comp-block-bd" style="max-width:320px">
+          <div class="u-skeleton" style="width:60%"></div>
+          <div class="u-skeleton"></div>
+          <div class="u-skeleton" style="width:80%"></div>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-bottombar">
+        <div class="comp-block-hd"><strong>Bottom Action Bar 底部操作栏</strong><code>固定底栏</code></div>
+        <div class="comp-block-bd">
+          <div class="comp-preview-phone">
+            <div class="u-bottom-bar">
+              <button class="btn btn-outline btn--r16" style="flex:1">保存草稿</button>
+              <button class="btn btn-primary btn--r16" style="flex:1">提交审批</button>
+            </div>
+          </div>
+          <table>
+            <tr><th>按钮</th><th>规格</th></tr>
+            <tr><td>主操作（填充）★</td><td>红底白字 · brand-6</td></tr>
+            <tr><td>次操作（描边）★</td><td>白底红字红描边</td></tr>
+            <tr><td>布局</td><td>高 56px + safe-bottom · 双按钮间距 12px · 圆角同档（建议 16px）· 白底 · 主体无描边</td></tr>
+            <tr><td>顶部分离 ★</td><td><code>box-shadow: 0 -0.5px 4px 0 rgba(0,0,0,0.08)</code>（<code>--bottom-surface-shadow</code> · 与 TabBar 共用）</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-divider">
+        <div class="comp-block-hd"><strong>Divider 分割线</strong><code>Divider / inset</code></div>
+        <div class="comp-block-bd">
+          <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">卡片内、列表 Cell 组内分隔<strong>同级内容</strong>时使用 <code>Divider/inset</code>：线粗 <strong>0.5px</strong> · 色 <code>#EDEDED</code> · 左右缩进 <strong>16px</strong>，两端与内容对齐，<strong>禁止</strong>左右贴容器外缘。类名：<code>u-divider u-divider--inset</code>。</p>
+          <div class="u-content-card" style="padding:0;max-width:360px;border:1px dashed var(--border)">
+            <div style="padding:16px">
+              <div style="font-size:16px;font-weight:500;color:var(--text-primary)">区块标题 A</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">同级内容 · 左右 16px</div>
+            </div>
+            <hr class="u-divider u-divider--inset" aria-hidden="true">
+            <div style="padding:16px">
+              <div style="font-size:16px;font-weight:500;color:var(--text-primary)">区块标题 B</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">分隔线两端与上文对齐，不贴卡片左右边</div>
+            </div>
+          </div>
+          <table style="margin-top:16px">
+            <tr><th>属性</th><th>值</th></tr>
+            <tr><td>变体 ★</td><td><code>Divider/inset</code> · 卡片内 / 列表 Cell 组内同级分隔</td></tr>
+            <tr><td>线粗 ★</td><td><strong>0.5px</strong>（<code>--divider-weight</code>）</td></tr>
+            <tr><td>颜色 ★</td><td><code>#EDEDED</code>（<code>--gray-2</code> / <code>--divider-color</code>）</td></tr>
+            <tr><td>左右缩进 ★</td><td>各 <strong>16px</strong>（<code>--divider-inset</code> = <code>--space-card</code>）· 与内容对齐</td></tr>
+            <tr><td>上下留白</td><td>默认 <strong>12px</strong>（<code>--space-divider-y</code>）</td></tr>
+            <tr><td>禁止</td><td>左右通栏贴边（贴卡片或列表容器外缘）</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="comp-block" id="comp-dropdown">
+        <div class="comp-block-hd"><strong>DropdownMenu 筛选菜单</strong><code>DropdownMenu</code></div>
+        <div class="comp-block-bd">
+          <div style="display:flex;height:48px;background:#fff;border:1px solid var(--border);border-radius:9px;overflow:hidden">
+            <span style="flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--brand-6);font-weight:500">全部状态 ▾</span>
+            <span style="flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-secondary);border-left:1px solid var(--border)">时间排序 ▾</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. B端 -->
+    <section id="b2b">
+      <h2 class="section-title"><span class="num">8</span>B端业务专项规范</h2>
+      <h3>8.1 状态色映射（通用）</h3>
+      <table>
+        <tr><th>业务状态</th><th>Tag 类型</th><th>颜色</th></tr>
+        <tr><td>草稿 / 未提交</td><td>default</td><td>gray-1 / text-secondary</td></tr>
+        <tr><td>待审批 / 进行中</td><td>brand</td><td>brand-1 / brand-6</td></tr>
+        <tr><td>已通过 / 已完成</td><td>success</td><td>success-1 / success-6</td></tr>
+        <tr><td>已驳回 / 已取消</td><td>error</td><td>error-1 / error-6</td></tr>
+        <tr><td>即将到期 / 待补充</td><td>warning</td><td>warning-1 / warning-6</td></tr>
+        <tr><td>已归档 / 只读</td><td>default</td><td>gray-2 / gray-8</td></tr>
+      </table>
+
+      <h3>8.2 数据展示</h3>
+      <ul>
+        <li>金额：¥ 前缀 + 千分位 + 2 位小数，font-m Medium，正数 text-primary，负数 error-6</li>
+        <li>百分比：保留 1 位小数 + % 后缀</li>
+        <li>日期：YYYY-MM-DD；时间：HH:mm；完整 YYYY-MM-DD HH:mm</li>
+        <li>ID/编号：font-s text-secondary，可复制，点击 Toast「已复制」</li>
+        <li>大数字概览：font-data-lg（≥24px Bold）+ 单位 font-s text-secondary</li>
+      </ul>
+
+      <h3>8.3 权限与空状态</h3>
+      <ul>
+        <li>无权限：Result 页 + lock 图标 + 「暂无访问权限」+ 联系管理员</li>
+        <li>无数据：Empty + 引导创建按钮</li>
+        <li>搜索无结果：Empty + 「未找到相关内容」</li>
+        <li>维护中：NoticeBar + 全页 Result</li>
+      </ul>
+
+      <h3>8.4 表单 B 端规则</h3>
+      <ul>
+        <li>字段分组：基础信息 / 业务信息 / 附件</li>
+        <li>长表单：分步 Steps 或锚点 Tabs</li>
+        <li>只读模式：列表行样式，值 text-secondary，无 Input 边框</li>
+        <li>审批意见：Textarea 必填，最少 5 字</li>
+      </ul>
+    </section>
+
+    <!-- 9. Tokens JSON -->
+    <section id="tokens">
+      <h2 class="section-title"><span class="num">9</span>Design Token JSON</h2>
+      <p>可复制到 <code>tailwind.config.js</code> 的 <code>theme.extend</code>、CSS 变量，或导入设计工具 Token 插件。</p>
+      <p><strong>坐标系说明：</strong><code>tokens1x</code> 为 HTML 画布 / CSS 逻辑像素（宽 390）；<code>tokens2x</code> 为 Figma / Flutter 设计稿（宽 780，数值一般为 1x 的 2 倍）。实现 CSS / Tailwind 时<strong>仅使用 tokens1x</strong>。</p>
+      <pre id="token-json">{
+  "specVersion": "1.6",
+  "appName": "剑琅联盟",
+  "appLogo": "LOGO2.png",
+  "figmaFile": "RTP-零售模块",
+  "figmaNode": "72-137",
+  "tokens1x": {
+    "color": {
+      "textPrimary": "#333333",
+      "textSecondary": "#929292",
+      "textPlaceholder": "#929292",
+      "textDisabled": "#929292",
+      "textStrong": "#000000",
+      "textBrand": "#F32F41",
+      "bgPage": "#F7F7F7",
+      "bgContainer": "#FFFFFF",
+      "bgDisabled": "#EDEDED",
+      "border": "#D7D7D5",
+      "brand6": "#F32F41"
+    },
+    "font": {
+      "fontXs": { "size": 10, "lineHeight": 16 },
+      "fontTabbar": { "size": 11, "lineHeight": 15 },
+      "fontS": { "size": 12, "lineHeight": 20 },
+      "fontBase": { "size": 14, "lineHeight": 22 },
+      "fontM": { "size": 16, "lineHeight": 24 },
+      "fontL": { "size": 20, "lineHeight": 28 },
+      "fontXl": { "size": 24, "lineHeight": 32 },
+      "button": { "size": 16, "weight": 500 }
+    },
+    "radius": {
+      "radiusTag": 4,
+      "radiusInput": 8,
+      "radiusCard": 12,
+      "radiusBtn4": 4,
+      "radiusBtn8": 8,
+      "radiusBtn12": 12,
+      "radiusBtn16": 16
+    },
+    "layout": {
+      "canvasWidth": 390,
+      "canvasHeightDefault": 844,
+      "statusBarHeight": 53,
+      "navBarHeight": 44,
+      "tabBarHeight": 56,
+      "buttonHeight": 48,
+      "buttonMaxWidth": 370,
+      "buttonFontSize": 16,
+      "bottomPlaceholderHeight": 34,
+      "pageTitleBarSideWidth": 72,
+      "pageTabWidth": 390,
+      "modalMarginHorizontal": 32
+    },
+    "components": {
+      "pageTitleBarBackIcon": "lucide:chevron-left",
+      "pageTitleBarTitle": { "size": 18, "weight": 500 },
+      "pageTitleBarAction": { "size": 16, "weight": 400 },
+      "homeNavbarLogo": 28,
+      "homeNavbarTitle": { "size": 16, "weight": 500 },
+      "toastMarginHorizontal": 40,
+      "toastMaxWidth": 310,
+      "toastWrap": "unlimited-lines-center"
+    }
+  },
+  "tokens2x": {
+    "note": "Figma / Flutter 设计稿坐标，使用前勿与 tokens1x 混用",
+    "designWidth": 780,
+    "designHeightDefault": 1688,
+    "font": {
+      "fontBase": { "size": 28, "lineHeight": 44 },
+      "fontM": { "size": 32, "lineHeight": 48 }
+    },
+    "radius": {
+      "radiusCard": 24,
+      "radiusBtn12": 24
+    },
+    "layout": {
+      "navBarHeight": 88,
+      "buttonHeight": 96,
+      "tabBarHeight": 112,
+      "pagePaddingH": 32
+    }
+  },
+  "references": {
+    "pageTitleBarFigma": "https://www.figma.com/design/44P9g5yKcQEyXdHCayIrMn/RTS-AI读稿?node-id=6-623",
+    "modalPopupSource": "https://www.figma.com/design/xqMgMp7wLhmEvvgiv6rSdW/xiaobin",
+    "globalUIMandate": "#global-ui"
+  }
+}</pre>
+      <p style="font-size:12px;color:var(--text-secondary)">注：画布 390×844 直角无外框；顶状态栏占位 390×53、底安全区 390×34 白块；PageTitleBar 44px 独立于状态栏；按钮高 48px、字号 16px、圆角四档 4/8/12/16；返回 chevron-left 矢量图标。</p>
+
+      <div class="ai-prompt-head">
+        <h3>AI Prompt 模板</h3>
+        <button type="button" class="ai-prompt-copy-btn" id="ai-prompt-copy-btn" aria-label="复制 AI Prompt 模板">复制</button>
+      </div>
+      <pre id="ai-prompt-template">请按照《剑琅联盟 移动端设计规范 v1.6》设计 [页面名称]：
+- 最高优先级：★ 全局强制 UI — 390×844 直角画板（无圆角/无阴影/无描边）、所有 Frame 自动布局、#F7F7F7 底、无阴影无渐变；按钮高 48px、字号 16px、圆角仅 4/8/12/16 且同类型一致
+- 产品：剑琅联盟 · Logo: LOGO2.png
+- 字体：全站思源黑体 Source Han Sans SC（禁止 PingFang / TCloudNumber）；金额默认 Regular、≥24px Bold；商品价 14px 固定 Regular；¥ 与数字间距 4px
+- 勾号：仅用图标 check / check-circle-filled，禁止文字 √ 或 ✓
+- 文字：#333 / #929292 · 边框 #D7D7D5 · 主色 #F32F41
+- 图标：联网 SVG 优先 Lucide（lucide.dev）· 24px（安全 20）/ 16px · 颜色 #F32F41 / #333 / #929 · 禁止 emoji
+- 组件：优先第 7 章库；无合适项可外部引入，须符合全局 UI 并注明来源
+- 占位：状态栏 390×53 白块；页面最底 390×34 白块（无阴影/描边/圆角）
+- 硬性：无 emoji；Figma 所有 Frame 须 Auto Layout；返回用 Lucide chevron-left 矢量图标（禁止文字 &lt;）；白底内容卡片无描边；卡片/列表内分隔线 0.5px #EDEDED、左右缩进 16px（禁止贴边）；按钮高 48px 字号 16px；按钮文案在按钮内水平垂直居中；Tab/卡片不遮挡；内页顶栏必用 PageTitleBar（44px）；首页顶栏用 HomeNavbar；状态栏占位 53px、底栏 34px；标题与右侧文案底对齐；栅格 --page-title-bar-side 72px 左右等宽；Figma 6-623 仅参考顶栏区域；PageTitleBar/PageTabs/TabBar 主体无描边；图片位 #EDEDED+白 image icon；不横向溢出；按钮 max 370px；顶 Tab 390 居中；卡片内容不溢出；提示 icon 与首行底对齐；空状态内容区垂直居中
+- 组件：优先第 7 章库；弹窗用 ModalPopup（7.1 · 7 变体）；无合适项可外部引入
+- 弹窗：居中左右边距 32px · 底部弹窗左/右/下 0 · 无遮罩入库 · 无阴影 · 按钮 48px
+- 内容：[具体业务字段]</pre>
+    </section>
+
+    <footer class="site-footer">
+      <div class="foot-brand">
+        <img src="LOGO2.png" alt="剑琅联盟">
+        <span>剑琅联盟 · 设计规范</span>
+      </div>
+      <div class="foot-copy">v1.6 · ★ 全局强制 UI · 390×844 · © 剑琅联盟</div>
+    </footer>
+
+    </div><!-- .main-inner -->
+  </main>
+</div>
+
+<script>
+
+  /* —— 图标：联网 Lucide（本地图标库已移除） —— */
+  const LUCIDE_ALIAS = {
+    'add': 'plus', 'add-circle': 'plus-circle', 'chevron-left': 'chevron-left', 'chevron-right': 'chevron-right',
+    'chevron-down': 'chevron-down', 'chevron-up': 'chevron-up', 'search': 'search', 'close': 'x',
+    'check': 'check', 'check-circle': 'check-circle', 'check-circle-filled': 'check-circle-2',
+    'close-circle': 'x-circle', 'close-circle-filled': 'x-circle', 'user': 'user', 'home': 'home',
+    'home-tab': 'home', 'home-tab-filled': 'home', 'shopping-bag': 'shopping-bag', 'cart': 'shopping-cart',
+    'image': 'image', 'wallet': 'wallet', 'share': 'share-2', 'edit': 'pencil', 'delete': 'trash-2',
+    'more': 'ellipsis', 'filter': 'filter', 'calendar': 'calendar', 'time': 'clock', 'location': 'map-pin',
+    'notification': 'bell', 'lock': 'lock', 'file': 'file', 'upload': 'upload', 'download': 'download',
+    'refresh': 'refresh-cw', 'setting': 'settings', 'menu': 'menu', 'app': 'layout-grid',
+    'wx-search': 'search', 'info': 'info', 'warning': 'triangle-alert', 'error': 'circle-alert',
+    'success': 'circle-check', 'arrow-left': 'arrow-left', 'jump': 'external-link', 'copy': 'copy',
+    'scan': 'scan', 'qrcode': 'qr-code', 'phone': 'phone', 'mail': 'mail', 'link': 'link',
+    'star': 'star', 'heart': 'heart', 'eye': 'eye', 'eye-off': 'eye-off', 'camera': 'camera',
+    'gift': 'gift', 'tag': 'tag', 'creditcard': 'credit-card', 'money': 'banknote', 'shop': 'store',
+    'message': 'message-square', 'send': 'send', 'print': 'printer', 'help': 'circle-help',
+  };
+  function toLucideName(catalogName) {
+    if (!catalogName) return 'circle';
+    const raw = String(catalogName).replace(/-filled$/, '');
+    return LUCIDE_ALIAS[catalogName] || LUCIDE_ALIAS[raw] || raw;
+  }
+  function iconMarkup(catalogName, cat, extraAttrs) {
+    const attrs = extraAttrs || '';
+    const name = toLucideName(catalogName);
+    const filled = cat === 'filled' || String(catalogName).endsWith('-filled');
+    const cls = 's-icon' + (filled ? ' s-icon--filled' : '');
+    return `<span class="${cls}" data-catalog="${catalogName || ''}" ${attrs}><i data-lucide="${name}" aria-hidden="true"></i></span>`;
+  }
+  function hydrateStratisIcons(root) {
+    const scope = root || document;
+    scope.querySelectorAll('.s-icon[data-icon]:not([data-hydrated])').forEach(el => {
+      const catalogName = el.dataset.catalog || el.dataset.icon;
+      const name = toLucideName(catalogName);
+      el.innerHTML = `<i data-lucide="${name}" aria-hidden="true"></i>`;
+      el.dataset.hydrated = '1';
+      el.classList.remove('is-missing');
+    });
+    if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 1.75 } });
+  }
+
+
+  void hydrateStratisIcons(document);
+
+  (function updateFontPlatformLabel() {
+    const el = document.getElementById('font-platform-label');
+    if (!el) return;
+    el.textContent = '思源黑体 Source Han Sans SC';
+  })();
+
+  (function initAiPromptCopy() {
+    const btn = document.getElementById('ai-prompt-copy-btn');
+    const pre = document.getElementById('ai-prompt-template');
+    if (!btn || !pre) return;
+    let resetTimer = null;
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      return ok;
+    }
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+      return fallbackCopy(text);
+    }
+    btn.addEventListener('click', async () => {
+      const text = (pre.innerText || pre.textContent || '').replace(/\n$/, '');
+      try {
+        const ok = await copyText(text);
+        if (!ok) throw new Error('copy failed');
+        btn.textContent = '已复制';
+        btn.classList.add('is-copied');
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => {
+          btn.textContent = '复制';
+          btn.classList.remove('is-copied');
+        }, 1500);
+      } catch (err) {
+        btn.textContent = '复制失败';
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => { btn.textContent = '复制'; }, 1500);
+      }
+    });
+  })();
+
+  document.querySelectorAll('.nav-list a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.querySelectorAll('.nav-list a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+    });
+  });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        document.querySelectorAll('.nav-list a').forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+
+  function spawnRipple(el, e) {
+    const rect = el.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 1.2;
+    const x = (e.clientX || rect.left + rect.width / 2) - rect.left - size / 2;
+    const y = (e.clientY || rect.top + rect.height / 2) - rect.top - size / 2;
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-fx';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    ripple.style.background = 'radial-gradient(circle, rgba(243,47,65,0.38) 0%, transparent 70%)';
+    el.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove());
+  }
+
+  function initTapFeedback(scope) {
+    const root = scope || document;
+    const sel = '.btn, .nav-list a, .card, .figma-link-card, .color-item, .comp-block, .tag, .hero-pill';
+    root.querySelectorAll(sel).forEach(el => {
+      if (el.classList.contains('btn-disabled') || el.dataset.tapBound) return;
+      el.dataset.tapBound = '1';
+      el.classList.add('tap-feedback');
+      el.addEventListener('click', function (e) {
+        spawnRipple(this, e);
+        this.classList.add('tap-flash');
+        setTimeout(() => this.classList.remove('tap-flash'), 280);
+      }, { passive: true });
+    });
+  }
+  initTapFeedback(document.querySelector('.main'));
+
+  if (typeof specAssetUrl === 'function') {
+    /* reserved for future asset rewrites */
+  }
+</script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>if (window.lucide) { lucide.createIcons({ attrs: { "stroke-width": 1.75 } }); }</script>
+</body>
+</html>

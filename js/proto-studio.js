@@ -126,6 +126,47 @@
         { group: "明细", label: "8 订单详情", msg: { kind: "flow", flow: "detail" } },
       ],
     },
+    {
+      id: "menu",
+      num: "05",
+      title: "价目表",
+      subtitle: "高保真原型",
+      blurb: "项目 / 产品价目、分组管理与新增编辑全链路；外侧场景栏覆盖列表与完整浮层态。",
+      guide: "首屏可点「添加」、项目/产品 Tab、分组齿轮；长按可排序，左滑可操作。",
+      tags: ["B端", "价目", "SaaS"],
+      path: "/H5原型/menu/index.html",
+      prd: "/H5原型/menu/PRD-项目创建与管理.html",
+      embedQuery: "mobile=1&studio=1",
+      phoneQuery: "",
+      figma: `${FIGMA_FILE}?node-id=62-492`,
+      figmaLabel: "Figma · 价目表",
+      scenes: [
+        { group: "价目表", label: "2 价目表 · 项目", msg: { kind: "flow", flow: "price-list-filled" } },
+        { group: "价目表", label: "1 价目表 · 空态", msg: { kind: "flow", flow: "price-list-empty" } },
+        { group: "价目表", label: "3 价目表 · 产品", msg: { kind: "flow", flow: "price-list-product" } },
+        { group: "价目表", label: "4 分组管理", msg: { kind: "flow", flow: "price-groups" } },
+        { group: "价目表", label: "5 分组 · 包含项目", msg: { kind: "flow", flow: "price-group-members" } },
+        { group: "价目表", label: "6 新增项目", msg: { kind: "flow", flow: "price-add" } },
+        { group: "价目表", label: "7 新增产品", msg: { kind: "flow", flow: "price-add-product" } },
+        { group: "价目表", label: "8 项目详情 · 普通", msg: { kind: "flow", flow: "price-edit-normal" } },
+        { group: "价目表", label: "9 项目详情 · 绑卡", msg: { kind: "flow", flow: "price-edit-bound" } },
+        { group: "价目表", label: "10 项目详情 · 下架", msg: { kind: "flow", flow: "price-edit-off-sale" } },
+        { group: "价目表", label: "11 产品详情", msg: { kind: "flow", flow: "price-edit-product" } },
+        { group: "价目表", label: "12 产品详情 · 下架", msg: { kind: "flow", flow: "price-edit-product-off-sale" } },
+        { group: "浮层 / 叠加态", label: "行操作 Sheet", msg: { kind: "flow", flow: "price-list-action" } },
+        { group: "浮层 / 叠加态", label: "左滑可删除", msg: { kind: "flow", flow: "price-list-swipe" } },
+        { group: "浮层 / 叠加态", label: "左滑不可删除", msg: { kind: "flow", flow: "price-list-swipe-locked" } },
+        { group: "浮层 / 叠加态", label: "已隐藏展开", msg: { kind: "flow", flow: "price-list-hidden-open" } },
+        { group: "浮层 / 叠加态", label: "设置分组 Sheet", msg: { kind: "flow", flow: "price-item-group" } },
+        { group: "浮层 / 叠加态", label: "设置分组 · 无组", msg: { kind: "flow", flow: "price-item-group-empty" } },
+        { group: "浮层 / 叠加态", label: "分组行展开", msg: { kind: "flow", flow: "price-group-menu" } },
+        { group: "浮层 / 叠加态", label: "分组行展开 · 产品", msg: { kind: "flow", flow: "price-group-menu-product" } },
+        { group: "浮层 / 叠加态", label: "新建分组 Dialog", msg: { kind: "flow", flow: "price-group-create" } },
+        { group: "浮层 / 叠加态", label: "重命名 Dialog", msg: { kind: "flow", flow: "price-group-rename" } },
+        { group: "浮层 / 叠加态", label: "删除分组 Dialog", msg: { kind: "flow", flow: "price-group-delete" } },
+        { group: "浮层 / 叠加态", label: "删除价目 Dialog", msg: { kind: "flow", flow: "price-item-delete" } },
+      ],
+    },
   ];
 
   window.PROTO_STUDIO_PROJECTS = PROJECTS;
@@ -138,11 +179,8 @@
     { name: "RTP 店主端", node: "0-1" },
     { name: "RTP 供应商端", node: "1-6387" },
     { name: "AI 助手", node: "1-11825" },
-    { name: "答题 · 业绩排行", node: "1-12568" },
-    { name: "RTS 裂店", node: "1-14410" },
     { name: "RTA 首页", node: "2-6981" },
     { name: "APP 动画", node: "2-4845" },
-    { name: "RTP 商城", node: "2-4114" },
   ].map((p) => ({
     ...p,
     href: `${FIGMA_FILE}?node-id=${p.node}`,
@@ -163,6 +201,49 @@
   function postToFrame(frame, msg) {
     if (!frame || !frame.contentWindow) return;
     frame.contentWindow.postMessage({ source: "proto-studio", ...msg }, "*");
+  }
+
+  const LOADER_MIN_MS = 280;
+
+  function ensureStageLoader(bezel) {
+    if (!bezel) return null;
+    let loader = bezel.querySelector("[data-brand-loader]");
+    if (loader) return loader;
+    loader = el("div", "brand-loader");
+    loader.setAttribute("data-brand-loader", "");
+    loader.setAttribute("aria-hidden", "true");
+    loader.innerHTML =
+      `<div class="brand-loader-mark" aria-hidden="true">` +
+      `<svg class="brand-loader-ring" viewBox="0 0 48 48" fill="none">` +
+      `<circle class="brand-loader-track" cx="24" cy="24" r="18" />` +
+      `<circle class="brand-loader-arc" cx="24" cy="24" r="18" />` +
+      `</svg>` +
+      `<span class="brand-loader-core">XD</span>` +
+      `</div>` +
+      `<div class="brand-loader-label">加载中</div>`;
+    bezel.appendChild(loader);
+    return loader;
+  }
+
+  function showStageLoader(bezel) {
+    const loader = ensureStageLoader(bezel);
+    if (!loader) return;
+    loader.dataset.shownAt = String(Date.now());
+    loader.classList.add("is-on");
+    loader.setAttribute("aria-busy", "true");
+    loader.setAttribute("aria-hidden", "false");
+  }
+
+  function hideStageLoader(bezel) {
+    const loader = bezel && bezel.querySelector("[data-brand-loader]");
+    if (!loader || !loader.classList.contains("is-on")) return;
+    const shownAt = Number(loader.dataset.shownAt || 0);
+    const wait = Math.max(0, LOADER_MIN_MS - (Date.now() - shownAt));
+    window.setTimeout(() => {
+      loader.classList.remove("is-on");
+      loader.setAttribute("aria-busy", "false");
+      loader.setAttribute("aria-hidden", "true");
+    }, wait);
   }
 
   function renderScenes(host, project, frame, opts) {
@@ -262,6 +343,12 @@
         if (opts && typeof opts.onPrd === "function") opts.onPrd();
       });
       actions.append(openBtn, prdBtn);
+      const prdTab = el("a", "btn btn-ghost pressable proto-prd-newtab", "新窗口打开");
+      prdTab.href = absUrl(project.prd);
+      prdTab.target = "_blank";
+      prdTab.rel = "noopener";
+      prdTab.title = "在新窗口独占打开 PRD，便于长文档阅读";
+      actions.appendChild(prdTab);
     } else {
       actions.appendChild(openBtn);
     }
@@ -317,6 +404,7 @@
     function loadProto(project, sceneMsg) {
       mode = "proto";
       root.dataset.mode = "proto";
+      const bezel = frame.closest(".proto-stage-bezel");
       const embedUrl = absUrl(project.path, project.embedQuery);
       const needReload = frame.getAttribute("src") !== embedUrl;
       frame.setAttribute("title", project.title);
@@ -325,10 +413,12 @@
       const onLoad = () => {
         if (pendingScene) postToFrame(frame, pendingScene);
         pendingScene = null;
+        hideStageLoader(bezel);
         frame.removeEventListener("load", onLoad);
       };
 
       if (needReload) {
+        showStageLoader(bezel);
         frame.addEventListener("load", onLoad);
         frame.setAttribute("src", embedUrl);
       } else if (pendingScene) {
@@ -342,9 +432,16 @@
       if (!project.prd) return;
       mode = "prd";
       root.dataset.mode = "prd";
+      const bezel = frame.closest(".proto-stage-bezel");
       const prdUrl = absUrl(project.prd);
       frame.setAttribute("title", project.title + " · PRD");
       if (frame.getAttribute("src") !== prdUrl) {
+        showStageLoader(bezel);
+        const onLoad = () => {
+          hideStageLoader(bezel);
+          frame.removeEventListener("load", onLoad);
+        };
+        frame.addEventListener("load", onLoad);
         frame.setAttribute("src", prdUrl);
       }
       setCaption(project);
@@ -400,6 +497,16 @@
     activate(start < 0 ? 0 : start);
   }
 
+  /* Figma 官方五色标志（内联 SVG，不额外请求） */
+  const FIGMA_MARK =
+    `<svg class="figma-wall-logo" viewBox="0 0 38 57" fill="none" aria-hidden="true">` +
+    `<path d="M9.5 57a9.5 9.5 0 0 0 9.5-9.5V38H9.5a9.5 9.5 0 0 0 0 19Z" fill="#0ACF83"/>` +
+    `<path d="M0 28.5A9.5 9.5 0 0 1 9.5 19H19v19H9.5A9.5 9.5 0 0 1 0 28.5Z" fill="#A259FF"/>` +
+    `<path d="M0 9.5A9.5 9.5 0 0 1 9.5 0H19v19H9.5A9.5 9.5 0 0 1 0 9.5Z" fill="#F24E1E"/>` +
+    `<path d="M19 0h9.5a9.5 9.5 0 0 1 0 19H19V0Z" fill="#FF7262"/>` +
+    `<path d="M38 28.5A9.5 9.5 0 1 1 19 28.5a9.5 9.5 0 0 1 19 0Z" fill="#1ABCFE"/>` +
+    `</svg>`;
+
   function initFigmaWall(root) {
     const grid = root.querySelector("[data-figma-wall]");
     if (!grid) return;
@@ -410,7 +517,10 @@
       a.target = "_blank";
       a.rel = "noopener";
       a.innerHTML =
+        `<span class="figma-wall-top">` +
         `<span class="figma-wall-num">${String(i + 1).padStart(2, "0")}</span>` +
+        FIGMA_MARK +
+        `</span>` +
         `<strong>${page.name}</strong>` +
         `<span class="entry-go">打开设计稿 →</span>`;
       grid.appendChild(a);

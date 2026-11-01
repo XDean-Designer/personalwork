@@ -16,7 +16,7 @@
       <div class="container nav-inner">
         <a class="brand" href="index.html">
           <img class="brand-avatar" src="assets/avatar-robot.png" alt="" />
-          <span>Xue Ding</span>
+          <span>Dean 薛鼎</span>
         </a>
         <button class="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -33,7 +33,35 @@
     <div class="nav-backdrop" id="navBackdrop"></div>
 
     <header id="hero" class="container hero-block">
+      <div class="hero-aurora" aria-hidden="true">
+        <canvas class="hero-aurora-canvas" id="heroAurora"></canvas>
+      </div>
       <div class="hero-intro reveal">
+        <div class="hero-ai-slot" aria-hidden="true">
+          <div class="ai-mark" id="aiCore">
+            <svg class="ai-mark-svg" width="72" height="72" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="aiCoreGrad" x1="16.6656" y1="14.1668" x2="81.5415" y2="83.2012" gradientUnits="userSpaceOnUse">
+                  <stop class="ai-grad-stop" offset="0" stop-color="#9AF5FF"/>
+                  <stop class="ai-grad-stop" offset="0.23" stop-color="#26D9F5"/>
+                  <stop class="ai-grad-stop" offset="0.5" stop-color="#4485FF"/>
+                  <stop class="ai-grad-stop" offset="0.76" stop-color="#8055F5"/>
+                  <stop class="ai-grad-stop" offset="1" stop-color="#CB9AFF"/>
+                </linearGradient>
+              </defs>
+              <g class="ai-glyph-a">
+                <path d="M29.7869 28.0328C30.2944 26.2387 31.9319 25.0001 33.7963 25.0001H41.2037C43.0682 25.0001 44.7057 26.2387 45.2131 28.0328L58.1757 73.8662C58.8019 76.0805 57.5145 78.3833 55.3002 79.0095C53.0859 79.6358 50.7831 78.3484 50.1569 76.134L38.052 33.3334H36.948L24.8428 76.1341C24.2165 78.3484 21.9137 79.6358 19.6994 79.0095C17.4851 78.3832 16.1977 76.0805 16.824 73.8661L29.7869 28.0328Z" fill-rule="evenodd" clip-rule="evenodd" fill="url(#aiCoreGrad)"/>
+                <path d="M20.8334 62.5001C20.8334 60.1989 22.6989 58.3334 25 58.3334H50C52.3012 58.3334 54.1667 60.1989 54.1667 62.5001C54.1667 64.8013 52.3012 66.6668 50 66.6668H25C22.6989 66.6668 20.8334 64.8013 20.8334 62.5001Z" fill-rule="evenodd" clip-rule="evenodd" fill="url(#aiCoreGrad)"/>
+              </g>
+              <g class="ai-glyph-i">
+                <path d="M70.8334 50.0001C73.1346 50.0001 75 51.8656 75 54.1668V75.0001C75 77.3013 73.1346 79.1668 70.8334 79.1668C68.5322 79.1668 66.6667 77.3013 66.6667 75.0001V54.1668C66.6667 51.8656 68.5322 50.0001 70.8334 50.0001Z" fill-rule="evenodd" clip-rule="evenodd" fill="url(#aiCoreGrad)"/>
+              </g>
+              <g class="ai-glyph-star">
+                <path d="M70.8334 14.1668C71.9095 14.1668 72.8648 14.8553 73.2051 15.8762L75.9348 24.0653L84.1239 26.7951C85.1448 27.1353 85.8334 28.0907 85.8334 29.1668C85.8334 30.2428 85.1448 31.1982 84.1239 31.5385L75.9348 34.2682L73.2051 42.4573C72.8648 43.4782 71.9095 44.1668 70.8334 44.1668C69.7573 44.1668 68.802 43.4782 68.4617 42.4573L65.732 34.2682L57.5428 31.5385C56.522 31.1982 55.8334 30.2428 55.8334 29.1668C55.8334 28.0907 56.522 27.1353 57.5428 26.7951L65.732 24.0653L68.4617 15.8762C68.802 14.8553 69.7573 14.1668 70.8334 14.1668Z" fill-rule="evenodd" clip-rule="evenodd" fill="url(#aiCoreGrad)"/>
+              </g>
+            </svg>
+          </div>
+        </div>
         <div class="hero-kicker">Product · Visual · AI Delivery</div>
         <h1>用原型驱动产品，用视觉讲清体验</h1>
         <p>游戏原画出身的产品经理 × 视觉设计师。</p>
@@ -144,9 +172,9 @@
         <div class="section-head reveal">
           <span class="section-label">Selected Work</span>
           <h2 class="section-title">精选成果</h2>
-          <p class="section-desc">原画精选与产品 AI 工作流案例入口。</p>
+          <p class="section-desc">原画精选、产品 AI 工作流案例与设计规范入口。</p>
         </div>
-        <div class="entry-grid entry-grid-2 stagger">
+        <div class="entry-grid entry-grid-3 stagger">
           <a class="entry-card pressable lift" id="work-game" href="game-art.html">
             <strong>游戏原画</strong>
             <span>游戏原画时期作品集，包含2022-2025的娱乐内容 设计</span>
@@ -156,6 +184,11 @@
             <strong>产品 AI 工作流案例</strong>
             <span>交付级 UI/动效原型 · PRD 与设计稿</span>
             <span class="entry-go">进入 →</span>
+          </a>
+          <a class="entry-card pressable lift" id="work-spec" href="workflow/design-spec.html">
+            <strong>剑琅联盟设计规范</strong>
+            <span>写给 AI 读的规范，批量修正常规页 UI 到交付品质</span>
+            <span class="entry-go">浏览规范 →</span>
           </a>
         </div>
       </div>
@@ -168,9 +201,9 @@
           <h2 class="section-title">关于我</h2>
         </div>
         <div class="about-strip reveal">
-          <p>薛鼎，男，2008年毕业于南京艺术学院动画系。2009年初进入游戏行业从事原画设计，在多个游戏项目担任原画的管理岗与资深岗，并同时参与UI、策划、测试等环节，这也为后来转型产品经理积累了基础。</p>
-          <p>「转行不转岗」——2022年进入互联网行业，加入微芒科技（boss是淘米网创始人汪海兵）的C端产品《天天跳绳》新成立的体感游戏部，对原有的体感运动APP进行游戏化改造，打造轻度娱乐的体感游戏平台。最终成功完成目标，体感游戏内容成为公司最主要的利润点和流量抓手，累计注册用户数超1亿，最高日活达500万，最高月流水达2000万，公司规模也从2022年的30人左右扩大到接近100人。</p>
-          <p>「转岗不转行」——2026年初进入上海尊雅实业（高端SPA品牌「丽妍雅集」为行业标杆品牌）旗下的互联网研发公司集勇信息科技，所在项目是针对美业开发的、具有营销获客特性的SaaS系统《剑琅联盟》（前身为《剑琅管家》）。最初任务是为该项目打造IP角色形象和游戏感的美术物料。随后迅速转变为UI视觉设计师，并使用AI工具为设计环节建立提效流程，被安排统筹设计师的工作。5月再次争取到负责重构SaaS管理功能模块的机会，转岗为产品经理，同时建立了AI产品工作流程，实现明显的提速增效，并在CTO的建议下，将该流程在整个项目组推行。</p>
+          <p>薛鼎，男，2008 年毕业于南京艺术学院动画系。2009 年初进入游戏行业做原画设计，先后在多个游戏项目中担任原画管理岗与资深岗，也参与过 UI、策划、测试等环节——这些跨环节的经验，为后来转型产品经理打下了基础。</p>
+          <p>「转行不转岗」——2022 年进入互联网行业，加入微芒科技（创始人汪海兵，同时也是淘米网创始人）旗下 C 端产品《天天跳绳》新组建的体感游戏部，负责把原有的体感运动 APP 做游戏化改造，打造轻度娱乐的体感游戏平台。目标最终达成：体感游戏内容成为公司最主要的利润点与流量抓手，累计注册用户超 1 亿，最高日活 500 万，最高月流水 2000 万；公司规模也从 2022 年的约 30 人扩大到接近 100 人。</p>
+          <p>「转岗不转行」——2026 年初加入上海尊雅实业旗下的互联网研发公司集勇信息科技（尊雅旗下的「丽妍雅集」是高端 SPA 行业的标杆品牌），所在项目是面向美业、带营销获客特性的 SaaS 系统《剑琅联盟》（前身《剑琅管家》）。起初的任务是为项目打造 IP 角色形象与带游戏感的美术物料；随后转向 UI 视觉设计，并用 AI 工具为设计环节建立提效流程，被安排统筹设计师的工作。5 月，又争取到负责重构 SaaS 管理功能模块的机会，转岗为产品经理，同时搭建起 AI 产品工作流程，提速增效明显，并在 CTO 的建议下将该流程向整个项目组推行。</p>
           <div class="chips">
             <span class="chip">C端</span>
             <span class="chip">B端</span>
@@ -184,7 +217,7 @@
             <span class="chip">Cursor</span>
           </div>
           <div class="about-actions">
-            <a class="btn btn-primary pressable" href="#" aria-disabled="true" title="简历文件待补充">下载个人简历</a>
+            <a class="btn btn-primary pressable" href="resume.html">下载个人简历</a>
           </div>
         </div>
       </div>
@@ -222,5 +255,7 @@
 
   <script src="js/site.js"></script>
   <script src="js/hero-stage.js"></script>
+  <script src="js/ai-core.js"></script>
+  <script src="js/aurora.js"></script>
 </body>
 </html>

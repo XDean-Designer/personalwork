@@ -1,6 +1,18 @@
 /* ══════════════════════════════════════════════
    Apple Dark · Design Tokens
 ══════════════════════════════════════════════ */
+
+/* 自托管 Noto Sans SC（子集化可变字体，wght 100–900）
+   由 tools/build_font_subset.py 生成；站点改字后需重新生成 */
+@font-face {
+  font-family: "Noto Sans SC";
+  src: url("../assets/fonts/NotoSansSC-VF-subset.woff2") format("woff2-variations"),
+       url("../assets/fonts/NotoSansSC-VF-subset.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #000000;
   --bg-elevated: #1c1c1e;
@@ -26,10 +38,10 @@
   --radius-lg: 20px;
   --radius-xl: 28px;
 
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
-    "PingFang SC", "Noto Sans SC", "Helvetica Neue", sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
-    "PingFang SC", "Noto Sans SC", sans-serif;
+  --font: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "PingFang SC", "Helvetica Neue", sans-serif;
+  --font-display: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "PingFang SC", sans-serif;
 
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
   --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.45);
@@ -50,4 +62,12 @@
 
   --nav-h: 52px;
   --container: min(1080px, 92vw);
+}
+
+/* 宽屏分级：1366/1440 笔记本 → 1200，1920（1080P）桌面 → 1320 */
+@media (min-width: 1440px) {
+  :root { --container: min(1200px, 92vw); }
+}
+@media (min-width: 1760px) {
+  :root { --container: min(1320px, 90vw); }
 }
