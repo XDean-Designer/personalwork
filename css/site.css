@@ -643,10 +643,13 @@ a:hover { opacity: 0.85; }
 .career-card h2 {
   margin: 0 0 18px;
   font-family: var(--font-display);
-  font-size: clamp(1.35rem, 1.15rem + 0.55vw, 1.62rem);
+  /* 上限收到 1.48rem：保证右侧长标题在 1024–1400 卡片宽度内单行不折字 */
+  font-size: clamp(1.35rem, 1.15rem + 0.55vw, 1.48rem);
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.22;
+  /* 极窄容器下退化为两行时均分，避免末行孤字 */
+  text-wrap: balance;
   color: #ffffff;
 }
 .career-points {
