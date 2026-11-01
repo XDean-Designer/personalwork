@@ -877,6 +877,37 @@ a:hover { opacity: 0.85; }
   justify-content: flex-end;
   margin-top: 22px;
 }
+
+/* 1080P / 宽屏：关于我正文双栏填满卡片，消除右侧大空白 */
+@media (min-width: 1760px) {
+  .about-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 48px;
+    align-items: start;
+  }
+  .about-strip p {
+    max-width: none;
+  }
+  .about-strip > p:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .about-strip > p:nth-of-type(2) {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 14px;
+  }
+  .about-strip > p:nth-of-type(3) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+  }
+  .about-strip .chips,
+  .about-strip .about-actions {
+    grid-column: 1 / -1;
+  }
+}
 .about-actions .btn[aria-disabled="true"] {
   pointer-events: none;
   opacity: 0.85;
