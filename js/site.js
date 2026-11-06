@@ -337,6 +337,51 @@ function initWorksJump() {
   }
 }
 
+/* 微信复制：点一下就能拿走微信号，避免手抄出错。
+   用 document 级事件委托，元素被重建或懒加载也不会失效。 */
+function initWechatCopy() {
+  let toastEl = null;
+  let toastTimer = 0;
+
+  const showToast = (text) => {
+    if (!toastEl) {
+      toastEl = document.createElement("div");
+      toastEl.className = "copy-toast";
+      toastEl.setAttribute("role", "status");
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = text;
+    toastEl.classList.add("is-visible");
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => {
+      toastEl.classList.remove("is-visible");
+    }, 1800);
+  };
+
+  document.addEventListener("click", async (e) => {
+    const link = e.target.closest(".js-copy-wechat");
+    if (!link) return;
+    e.preventDefault();
+
+    const id = link.getAttribute("data-wechat") || link.textContent.trim();
+    try {
+      await navigator.clipboard.writeText(id);
+      showToast(`微信号已复制：${id}`);
+    } catch (err) {
+      // 非 https 或浏览器限制时，退回选中文本
+      const range = document.createRange();
+      range.selectNodeContents(link);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      showToast(`微信号：${id}（已选中，可复制）`);
+    }
+    if (typeof window.trackEvent === "function") {
+      window.trackEvent("contact_wechat_copy", { page: location.pathname });
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initModal();
   initScrollState();
@@ -344,4 +389,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initReveal();
   initNavToggle();
   initWorksJump();
+  initWechatCopy();
 });
