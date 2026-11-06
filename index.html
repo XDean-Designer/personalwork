@@ -70,6 +70,7 @@
           <span class="tool-chip" role="listitem" aria-label="Cursor"><img src="assets/logos/cursor.svg" alt="" loading="lazy" /></span>
           <span class="tool-chip" role="listitem" aria-label="DeepSeek"><img src="assets/logos/deepseek.svg" alt="" loading="lazy" /></span>
           <span class="tool-chip" role="listitem" aria-label="即梦"><img src="assets/logos/jimeng.svg" alt="" loading="lazy" /></span>
+          <span class="tool-chip" role="listitem" aria-label="剪映"><img src="assets/logos/capcut.svg" alt="" loading="lazy" /></span>
           <span class="tool-chip" role="listitem" aria-label="Premiere Pro"><img src="assets/logos/premiere.svg" alt="" loading="lazy" /></span>
           <span class="tool-chip" role="listitem" aria-label="Photoshop"><img src="assets/logos/photoshop.svg" alt="" loading="lazy" /></span>
           <span class="tool-chip" role="listitem" aria-label="Blender"><img src="assets/logos/blender.svg" alt="" loading="lazy" /></span>
@@ -93,7 +94,7 @@
             <span class="career-card-shine" aria-hidden="true"></span>
             <div class="career-card-body">
               <div class="career-card-year">2009 — 2022</div>
-              <h2>游戏原画 · 原画组长</h2>
+              <h2>游戏美术设计师</h2>
               <ul class="career-points">
                 <li>主导项目美术风格和从事原画设计的丰富经验</li>
                 <li>AI赋能的高效原画设计工作流</li>
@@ -137,7 +138,7 @@
         <div class="section-head reveal">
           <span class="section-label">AI Workflow</span>
           <h2 class="section-title">原型驱动的产品工作流</h2>
-          <p class="section-desc">AI 工具贯穿全程：Cursor 把想法做成能点的原型，Figma 出交付级界面，AI 反向补齐 PRD。营销物料另走一条分支——AI 生成图片与视频，再用 Photoshop、Premiere 精修成稿。</p>
+          <p class="section-desc">AI 工具贯穿全程：Cursor 把想法做成能点的原型，Figma 出交付级界面，AI 反向补齐 PRD。营销物料另走一条分支——AI 先出量，再按图片 / 视频两条线并行精修成稿。</p>
         </div>
 
         <div class="flow stagger" aria-label="工作流步骤">
@@ -177,25 +178,29 @@
         <div class="flow-branch reveal">
           <div class="flow-branch-head">
             <span class="flow-branch-tag">分支流程</span>
-            <span class="flow-branch-note">营销物料、宣传素材这类非原型需求走这条线：先出量，再精修成稿。</span>
+            <span class="flow-branch-note">营销物料、宣传素材这类非原型需求走这条线：AI 先出量，再按图片 / 视频两条线并行精修成稿。</span>
           </div>
-          <div class="flow-branch-steps stagger">
-            <div class="flow-step">
+          <div class="flow-fork stagger">
+            <div class="flow-step flow-fork-root">
               <div class="flow-num">B1</div>
               <h3>AI 生成素材</h3>
-              <p>用即梦、DeepSeek 生成分镜、封面、宣传图与短视频，先出量再择优。</p>
+              <p>用即梦、DeepSeek 生成封面、宣传图、分镜与短视频初稿，先出量再择优。</p>
             </div>
-            <div class="flow-connector" aria-hidden="true">›</div>
-            <div class="flow-step">
-              <div class="flow-num">B2</div>
-              <h3>Photoshop 精修</h3>
-              <p>修图、合成、排版与多尺寸适配，把 AI 初稿修成可直接投放的成品。</p>
+            <div class="flow-fork-join" aria-hidden="true">
+              <span class="flow-fork-stem"></span>
+              <span class="flow-fork-bar"></span>
             </div>
-            <div class="flow-connector" aria-hidden="true">›</div>
-            <div class="flow-step">
-              <div class="flow-num">B3</div>
-              <h3>Premiere 成片</h3>
-              <p>剪辑、配乐、调色与字幕，输出 KV、Banner、社媒图与短视频等各类物料。</p>
+            <div class="flow-fork-leaves">
+              <div class="flow-step">
+                <div class="flow-num">B2</div>
+                <h3>Photoshop · 图片</h3>
+                <p>修图、合成、排版与多尺寸适配，输出 KV、Banner、社媒图等静帧物料。</p>
+              </div>
+              <div class="flow-step">
+                <div class="flow-num">B3</div>
+                <h3>Premiere · 视频</h3>
+                <p>剪辑、配乐、调色与字幕，把短视频初稿做成可投放的成片。</p>
+              </div>
             </div>
           </div>
         </div>

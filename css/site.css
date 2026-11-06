@@ -859,20 +859,61 @@ a:hover { opacity: 0.85; }
   color: var(--text-tertiary);
   line-height: 1.45;
 }
-.flow-branch-steps {
+.flow-fork {
   display: flex;
+  flex-direction: column;
   align-items: stretch;
   gap: 0;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  -webkit-overflow-scrolling: touch;
 }
-.flow-branch-steps .flow-step {
+.flow-fork .flow-step {
   background: rgba(255, 255, 255, 0.04);
+  flex: 1 1 auto;
+  min-width: 0;
 }
-.flow-branch-steps .flow-step h3 {
+.flow-fork .flow-step h3 {
   font-size: 0.94rem;
+}
+.flow-fork-root {
+  max-width: 420px;
+}
+.flow-fork-join {
+  position: relative;
+  height: 28px;
+  margin: 2px 0 0;
+  pointer-events: none;
+}
+.flow-fork-stem {
+  position: absolute;
+  left: 28px;
+  top: 0;
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.flow-fork-bar {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  top: 14px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.flow-fork-bar::before,
+.flow-fork-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.flow-fork-bar::before { left: 0; }
+.flow-fork-bar::after { right: 0; }
+.flow-fork-leaves {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: stretch;
 }
 
 /* ── Works entries ── */
@@ -1443,13 +1484,25 @@ footer {
     flex-direction: column;
     gap: 10px;
   }
-  .flow-branch-steps {
-    flex-direction: column;
-    gap: 10px;
-    overflow-x: visible;
-  }
   .flow-branch {
     padding: 18px 16px;
+  }
+  .flow-fork-root {
+    max-width: none;
+  }
+  .flow-fork-join {
+    height: 18px;
+  }
+  .flow-fork-stem {
+    left: 22px;
+    height: 100%;
+  }
+  .flow-fork-bar {
+    display: none;
+  }
+  .flow-fork-leaves {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
   .flow-connector {
     display: none;
