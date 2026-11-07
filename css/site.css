@@ -307,9 +307,11 @@ a:hover { opacity: 0.85; }
 }
 .hero-intro p {
   margin: 0 auto;
-  max-width: 520px;
+  max-width: 660px;
   color: var(--text-secondary);
-  font-size: 1.1rem;
+  font-size: 1.04rem;
+  line-height: 1.62;
+  text-wrap: balance;
 }
 
 /* ── Hero 工具条（纯 logo，无文字） ── */
@@ -604,7 +606,7 @@ a:hover { opacity: 0.85; }
   flex-direction: column;
   flex: 1;
   min-height: 340px;
-  padding: 30px 26px 26px;
+  padding: 30px 26px 28px;
   /* 文字层与玻璃 blur 隔离，保持锐利 */
   transform: translateZ(0);
   -webkit-font-smoothing: antialiased;
@@ -701,7 +703,8 @@ a:hover { opacity: 0.85; }
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 11px;
+  align-content: space-between;
+  gap: 15px;
   flex: 1;
 }
 .career-points li {
@@ -709,7 +712,7 @@ a:hover { opacity: 0.85; }
   padding-left: 14px;
   color: var(--text-secondary);
   font-size: 0.92rem;
-  line-height: 1.45;
+  line-height: 1.55;
   letter-spacing: -0.01em;
 }
 .career-points li::before {
@@ -2486,7 +2489,7 @@ footer {
 @media (min-width: 1760px) {
   .hero-intro { max-width: 800px; margin-bottom: 32px; }
   .hero-intro h1 { font-size: clamp(2rem, 1.4rem + 2.6vw, 3.75rem); }
-  .hero-intro p { max-width: 580px; font-size: 1.15rem; }
+  .hero-intro p { max-width: 700px; font-size: 1.08rem; }
   .hero-stage {
     width: 100%;
     max-width: 1120px;
