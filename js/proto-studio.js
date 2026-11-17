@@ -7,8 +7,31 @@
 
   const PROJECTS = [
     {
-      id: "billing",
+      id: "agent",
       num: "01",
+      title: "AI Agent",
+      subtitle: "高保真原型",
+      blurb: "AI 对话窗三态（首页提醒 / 半屏 / 全屏），含价目与开单结果卡演示。",
+      guide: "首页点 Tab 中央 AI 进入对话；外侧场景栏可切半屏/全屏与演示链路。",
+      tags: ["B端", "AI", "对话"],
+      path: "/H5原型/agent/agent-chat.html",
+      prd: "/H5原型/agent/PRD-AI-Agent.html",
+      embedQuery: "mobile=1&studio=1&v=20261117i",
+      phoneQuery: "",
+      figma: `${FIGMA_FILE}`,
+      figmaLabel: "Figma · Dean work",
+      scenes: [
+        { group: "窗体", label: "1 首页 · 提醒", msg: { kind: "fn", path: "setMode", args: ["home"] } },
+        { group: "窗体", label: "2 半屏对话", msg: { kind: "fn", path: "setMode", args: ["sheet"] } },
+        { group: "窗体", label: "3 全屏对话", msg: { kind: "fn", path: "setMode", args: ["fullscreen"] } },
+        { group: "演示", label: "价目表演示", msg: { kind: "click", selector: "#navDemoPrice" } },
+        { group: "演示", label: "开单演示", msg: { kind: "click", selector: "#navDemoOrder" } },
+        { group: "演示", label: "思考 → 出结果", msg: { kind: "click", selector: "#navThink" } },
+      ],
+    },
+    {
+      id: "billing",
+      num: "02",
       title: "开单结账",
       subtitle: "高保真原型",
       blurb: "散客/会员开单、结算与员工指定等主链路，手机框内仅展示机内页面。",
@@ -16,7 +39,7 @@
       tags: ["B端", "SaaS", "开单"],
       path: "/H5原型/开单结账/index.html",
       prd: "/H5原型/开单结账/PRD-开单结账.html",
-      embedQuery: "mobile=1&studio=1",
+      embedQuery: "mobile=1&studio=1&v=20261117i",
       /* 全屏/扫码：不强制 query，走原型 UA / 视口识别 */
       phoneQuery: "",
       figma: `${FIGMA_FILE}?node-id=62-493`,
@@ -40,7 +63,7 @@
     },
     {
       id: "selfpay",
-      num: "02",
+      num: "03",
       title: "归档自助订单",
       subtitle: "高保真原型",
       blurb: "自助订单归档与补全流程；分配模式等演示开关在外侧场景栏切换。",
@@ -49,7 +72,7 @@
       tags: ["B端", "自助", "归档"],
       path: "/H5原型/kaidan2/index.html",
       prd: "/H5原型/kaidan2/PRD-自助订单归档.html",
-      embedQuery: "mobile=1&studio=1",
+      embedQuery: "mobile=1&studio=1&v=20261117i",
       phoneQuery: "",
       figma: `${FIGMA_FILE}?node-id=62-493`,
       figmaLabel: "Figma · 开单流程",
@@ -67,7 +90,7 @@
     },
     {
       id: "commission",
-      num: "03",
+      num: "04",
       title: "提成设置与员工管理",
       subtitle: "高保真原型",
       blurb: "提成方案、员工管理与薪资相关页面，外侧场景栏对应原左侧导航。",
@@ -75,7 +98,7 @@
       tags: ["B端", "提成", "员工"],
       path: "/H5原型/ticheng/index.html",
       prd: "/H5原型/ticheng/PRD-提成设置.html",
-      embedQuery: "view=mobile&studio=1",
+      embedQuery: "view=mobile&studio=1&v=20261117i",
       phoneQuery: "",
       figma: `${FIGMA_FILE}?node-id=62-494`,
       figmaLabel: "Figma · 业绩设置",
@@ -98,7 +121,7 @@
     },
     {
       id: "groupbuy",
-      num: "04",
+      num: "05",
       title: "团购核销",
       subtitle: "高保真原型",
       blurb: "抖音 / 美团团购核销双端流程，外侧场景栏切换店员与店长关键页。",
@@ -106,7 +129,7 @@
       tags: ["B端", "团购", "核销"],
       path: "/H5原型/tiktok/index.html",
       prd: "/H5原型/tiktok/PRD-团购核销.html",
-      embedQuery: "view=mobile&studio=1",
+      embedQuery: "view=mobile&studio=1&v=20261117i",
       phoneQuery: "",
       figma: `${FIGMA_FILE}?node-id=64-63065`,
       figmaLabel: "Figma · 团购核销",
@@ -128,7 +151,7 @@
     },
     {
       id: "menu",
-      num: "05",
+      num: "06",
       title: "价目表",
       subtitle: "高保真原型",
       blurb: "项目 / 产品价目、分组管理与新增编辑全链路；外侧场景栏覆盖列表与完整浮层态。",
@@ -136,7 +159,7 @@
       tags: ["B端", "价目", "SaaS"],
       path: "/H5原型/menu/index.html",
       prd: "/H5原型/menu/PRD-项目创建与管理.html",
-      embedQuery: "mobile=1&studio=1",
+      embedQuery: "mobile=1&studio=1&v=20261117i",
       phoneQuery: "",
       figma: `${FIGMA_FILE}?node-id=62-492`,
       figmaLabel: "Figma · 价目表",
@@ -389,16 +412,8 @@
       rail.appendChild(btn);
     });
 
-    function setCaption(project) {
-      const caption = root.querySelector(".proto-stage-caption");
-      if (!caption) return;
-      if (mode === "prd") {
-        caption.textContent = "PRD · 手机框内滚动阅读；点场景栏或「返回原型」切回";
-        return;
-      }
-      caption.textContent = project.guide
-        ? `引导 · ${project.guide}`
-        : "PHONE STAGE · LIVE H5";
+    function setCaption() {
+      /* 手机框下方 caption 已移除；操作引导改由右侧 proto-meta 展示 */
     }
 
     function loadProto(project, sceneMsg) {
