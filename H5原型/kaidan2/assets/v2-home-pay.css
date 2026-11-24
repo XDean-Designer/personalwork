@@ -275,6 +275,17 @@
   text-align: right; font-variant-numeric: tabular-nums;
 }
 
+/* Tab 衬托渐变：隔开滚动内容与浮动 Tab，避免视觉混淆 */
+.vh-tab-fade {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 77px; z-index: 9;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(245, 246, 250, 0) 16.883%,
+    #f5f6fa 100%
+  );
+}
 .vh-tabbar {
   position: absolute; left: 0; right: 0; bottom: 0;
   height: 123px; z-index: 10;

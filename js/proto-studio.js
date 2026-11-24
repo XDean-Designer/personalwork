@@ -41,7 +41,7 @@
       tags: ["B端", "SaaS", "开单"],
       path: "/H5原型/开单结账/index.html",
       prd: "/H5原型/开单结账/PRD-开单结账.html",
-      embedQuery: "mobile=1&studio=1&v=20261117i",
+      embedQuery: "mobile=1&studio=1&v=20261124f",
       /* 全屏/扫码：不强制 query，走原型 UA / 视口识别 */
       phoneQuery: "",
       figma: `${FIGMA_FILE}?node-id=62-493`,
@@ -74,7 +74,7 @@
       tags: ["B端", "自助", "归档"],
       path: "/H5原型/kaidan2/index.html",
       prd: "/H5原型/kaidan2/PRD-自助订单归档.html",
-      embedQuery: "mobile=1&studio=1&v=20261117i",
+      embedQuery: "mobile=1&studio=1&v=20261124f",
       phoneQuery: "",
       figma: `${FIGMA_FILE}?node-id=62-493`,
       figmaLabel: "Figma · 开单流程",
@@ -218,9 +218,111 @@
     return node;
   }
 
-  function absUrl(path, query) {
-    const base = `${location.origin}${path}`;
-    return query ? `${base}?${query}` : base;
+  const PUBLIC_ORIGIN = "https://www.deanxhome.cn";
+  let phoneOriginCache = null;
+  let phoneOriginPromise = null;
+
+  function isLoopbackHost(host) {
+    const h = String(host || "").replace(/:\d+$/, "").toLowerCase();
+    return h === "localhost" || h === "127.0.0.1" || h === "[::1]" || h === "::1";
+  }
+
+  function absUrl(path, query, origin) {
+    const baseOrigin = origin || location.origin;
+    let href;
+    try {
+      const u = new URL(path, baseOrigin.endsWith("/") ? baseOrigin : baseOrigin + "/");
+      if (query) {
+        const q = new URLSearchParams(query);
+        q.forEach((v, k) => u.searchParams.set(k, v));
+      }
+      href = u.href;
+    } catch (err) {
+      href = `${baseOrigin}${path}${query ? `?${query}` : ""}`;
+    }
+    return href;
+  }
+
+  /* 在候选私网 IP 里优先 Wi-Fi 常见段，避开 Hyper-V/Docker 等虚拟网卡 */
+  function pickLanIpv4(ips) {
+    const uniq = Array.from(
+      new Set(
+        (ips || []).filter((ip) => ip && !ip.startsWith("127.") && !ip.startsWith("169.254."))
+      )
+    );
+    const score = (ip) => {
+      if (ip.startsWith("192.168.")) return 100;
+      if (ip.startsWith("10.")) return 60;
+      /* 172.16–31 合法私网，但本机常混有虚拟交换机，分最低 */
+      if (/^172\.(1[6-9]|2\d|3[0-1])\./.test(ip)) return 15;
+      return 0;
+    };
+    uniq.sort((a, b) => score(b) - score(a));
+    const best = uniq[0] || "";
+    /* 只有虚拟段、没有 192.168/10 时宁可回落线上，避免手机扫到不可达地址 */
+    if (best && score(best) < 60) return "";
+    return best;
+  }
+
+  /* 手机扫码不能打回环地址：优先当前可公网/局域网 origin；本机则探测局域网 IP，失败回落线上域名 */
+  function detectLanIpv4() {
+    return new Promise((resolve) => {
+      const RTC = window.RTCPeerConnection || window.webkitRTCPeerConnection;
+      if (!RTC) {
+        resolve("");
+        return;
+      }
+      const found = [];
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        try {
+          pc.close();
+        } catch (e) {
+          /* ignore */
+        }
+        resolve(pickLanIpv4(found));
+      };
+      const pc = new RTC({ iceServers: [] });
+      try {
+        pc.createDataChannel("lan");
+      } catch (e) {
+        /* ignore */
+      }
+      pc.onicecandidate = (ev) => {
+        if (!ev || !ev.candidate) {
+          if (ev && ev.candidate === null) finish();
+          return;
+        }
+        const line = ev.candidate.candidate || "";
+        const m = /([0-9]{1,3}(?:\.[0-9]{1,3}){3})/.exec(line);
+        if (m && m[1] && !m[1].startsWith("127.")) found.push(m[1]);
+      };
+      pc.createOffer()
+        .then((offer) => pc.setLocalDescription(offer))
+        .catch(() => finish());
+      setTimeout(finish, 1600);
+    });
+  }
+
+  function resolvePhoneOrigin() {
+    if (phoneOriginCache) return Promise.resolve(phoneOriginCache);
+    if (phoneOriginPromise) return phoneOriginPromise;
+    phoneOriginPromise = (async () => {
+      if (!isLoopbackHost(location.hostname)) {
+        phoneOriginCache = location.origin;
+        return phoneOriginCache;
+      }
+      const ip = await detectLanIpv4();
+      if (ip) {
+        phoneOriginCache = `${location.protocol}//${ip}${location.port ? `:${location.port}` : ""}`;
+        return phoneOriginCache;
+      }
+      phoneOriginCache = PUBLIC_ORIGIN;
+      return phoneOriginCache;
+    })();
+    return phoneOriginPromise;
   }
 
   function postToFrame(frame, msg) {
@@ -297,22 +399,34 @@
     });
   }
 
-  function renderQr(host, url) {
+  function renderQr(host, url, tipText) {
     host.innerHTML = "";
     const title = el("div", "proto-qr-title", "手机扫码预览");
     const box = el("div", "proto-qr-box");
-    const tip = el("p", "proto-qr-tip", "扫码后在手机浏览器进入预览模式");
-    const link = el("a", "proto-qr-url", url);
+    const tip = el(
+      "p",
+      "proto-qr-tip",
+      tipText || "扫码后在手机浏览器进入预览模式"
+    );
+    let display = url;
+    try {
+      display = decodeURI(url);
+    } catch (e) {
+      /* keep encoded */
+    }
+    const link = el("a", "proto-qr-url", display);
     link.href = url;
     link.target = "_blank";
     link.rel = "noopener";
     host.append(title, box, tip, link);
 
+    /* 二维码内容必须用百分号编码后的 URL，中文路径否则部分扫码器打不开 */
+    const qrText = url;
     if (typeof QRCode === "function") {
       try {
         // eslint-disable-next-line no-new
         new QRCode(box, {
-          text: url,
+          text: qrText,
           width: 132,
           height: 132,
           colorDark: "#0a0a0a",
@@ -328,9 +442,10 @@
     img.alt = "二维码";
     img.width = 132;
     img.height = 132;
+    img.referrerPolicy = "no-referrer";
     img.src =
       "https://api.qrserver.com/v1/create-qr-code/?size=132x132&margin=6&data=" +
-      encodeURIComponent(url);
+      encodeURIComponent(qrText);
     box.appendChild(img);
   }
 
@@ -387,7 +502,10 @@
 
     const qr = el("div", "proto-qr");
     host.appendChild(qr);
-    renderQr(qr, demoUrl);
+    const tipSeed = isLoopbackHost(location.hostname)
+      ? "正在生成可被手机访问的地址…"
+      : "扫码后在手机浏览器进入预览模式";
+    renderQr(qr, demoUrl, tipSeed);
   }
 
   function initStudio(root) {
@@ -466,8 +584,7 @@
     }
 
     function refreshMeta(project) {
-      const demoUrl = absUrl(project.path, project.phoneQuery || "");
-      renderMeta(meta, project, demoUrl, {
+      const opts = {
         prdActive: mode === "prd",
         onPrd: () => {
           if (mode === "prd") {
@@ -480,6 +597,23 @@
           loadPrd(project);
           refreshMeta(project);
         },
+      };
+      /* 先用当前 origin 渲染；若是本机回环，异步换成局域网 / 线上可扫地址 */
+      const provisional = absUrl(project.path, project.phoneQuery || "");
+      renderMeta(meta, project, provisional, opts);
+      resolvePhoneOrigin().then((origin) => {
+        if (!meta.isConnected) return;
+        const demoUrl = absUrl(project.path, project.phoneQuery || "", origin);
+        renderMeta(meta, project, demoUrl, opts);
+        const qr = meta.querySelector(".proto-qr");
+        if (!qr) return;
+        let tip = "扫码后在手机浏览器进入预览模式";
+        if (isLoopbackHost(location.hostname)) {
+          tip = origin.indexOf(PUBLIC_ORIGIN) === 0
+            ? "本机未检测到局域网，二维码指向线上站点（需已部署）"
+            : "已用电脑局域网地址生成；手机需与电脑同一 Wi-Fi";
+        }
+        renderQr(qr, demoUrl, tip);
       });
     }
 
