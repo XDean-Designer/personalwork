@@ -346,7 +346,8 @@ button{font:inherit;color:inherit}
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);
   transition:opacity .16s var(--ease-out);
 }
-#frame.is-b2-open .home-ai-cover{opacity:1}
+/* 须等 WebM 已叠在图标尺度上再盖，避免先闪白盖（对齐 tab-intro-b2：先叠再藏） */
+#frame.is-b2-open.is-b2-icon-covered .home-ai-cover{opacity:1}
 /* 缩回末段揭开像素图中央图标，与大机器人交叉 */
 #frame.is-b2-open.is-b2-revealing .home-ai-cover{opacity:0}
 
@@ -3255,7 +3256,6 @@ html.is-mobile.is-nav-open .site-nav-scrim { opacity: 1; pointer-events: auto; }
   var B2_ICON_SCALE = 0.47; /* ≈45/96 */
   var B2_IN_MS = 380;
   var B2_SETTLE_MS = 120;
-  var B2_SHOW_MS = 1600; /* 多播 0.5s 再定格缩回 */
   var B2_OUT_MS = 320;
   var B2_LIFT_PX = 0;
   var B2_ANCHOR_X_NUDGE = 2;  /* 整体右移 */
@@ -3264,10 +3264,11 @@ html.is-mobile.is-nav-open .site-nav-scrim { opacity: 1; pointer-events: auto; }
   var B2_FADE_END = 1.0; /* 与 CSS --fade-end 一致：羽化全透明 */
   var B2_ICON_BELOW_RATIO = 0.15; /* 全透明点 = 图标底 + 15% 图标高 */
   var B2_BOT_H = 152;
+  /* 片源约 4s；0–0.5 几乎空，0.5–3.6 完整机器人（勿再 1.6s 掐断） */
   var B2_MEDIA_START = 0.5;
+  var B2_MEDIA_END = 3.6;
   var B2_HANDOFF_MS = 150;
-  var B2_REVEAL_RATIO = 0.68;
-  var B2_REVEAL_EXTRA_MS = 300; /* 图标再晚出现 0.3s */
+  var B2_REVEAL_MS = 120; /* 机器人淡出后再揭 TAB，避免二者叠在一起 */
 
   var b2Busy = false;
   var introTimer = 0;
@@ -3298,13 +3299,17 @@ html.is-mobile.is-nav-open .site-nav-scrim { opacity: 1; pointer-events: auto; }
     if (!introMascot || !homeAi) return;
     var fr = frame.getBoundingClientRect();
     var a = homeAi.getBoundingClientRect();
+    /* studio / mobile 会对 #frame 做 CSS scale；rect 是视觉像素，left/top 要写回布局坐标 */
+    var scale = fr.width / (frame.offsetWidth || 390);
+    if (!isFinite(scale) || scale <= 0) scale = 1;
     var h = B2_BOT_H;
     try {
       h = parseFloat(getComputedStyle(introMascot).getPropertyValue("--bot-h")) || B2_BOT_H;
     } catch (e) { /* ignore */ }
-    var cx = a.left + a.width / 2 - fr.left;
-    var iconBottom = a.bottom - fr.top;
-    var fadeEndY = iconBottom + a.height * B2_ICON_BELOW_RATIO;
+    var cx = (a.left + a.width / 2 - fr.left) / scale;
+    var iconBottom = (a.bottom - fr.top) / scale;
+    var iconH = a.height / scale;
+    var fadeEndY = iconBottom + iconH * B2_ICON_BELOW_RATIO;
     introMascot.style.left = (cx + B2_ANCHOR_X_NUDGE) + "px";
     introMascot.style.top = (fadeEndY - h * B2_FADE_END + B2_ANCHOR_Y_NUDGE) + "px";
   }
@@ -3324,7 +3329,7 @@ html.is-mobile.is-nav-open .site-nav-scrim { opacity: 1; pointer-events: auto; }
     introMascot.classList.remove("is-open");
     introMascot.setAttribute("aria-hidden", "true");
     introMascot.style.transition = "";
-    frame.classList.remove("is-b2-open", "is-b2-revealing");
+    frame.classList.remove("is-b2-open", "is-b2-icon-covered", "is-b2-revealing");
   }
 
   function stopB2() {
@@ -3378,12 +3383,44 @@ html.is-mobile.is-nav-open .site-nav-scrim { opacity: 1; pointer-events: auto; }
     });
   }
 
+  function b2MediaEnd() {
+    var dur = introClip && isFinite(introClip.duration) ? introClip.duration : B2_MEDIA_END;
+    var end = Math.min(B2_MEDIA_END, Math.max(B2_MEDIA_START + 0.4, dur - 0.08));
+    return end;
+  }
+
   function b2StartMedia() {
     return b2SeekStart().then(function () {
       try {
         var p = introClip.play();
         if (p && typeof p.then === "function") return p;
       } catch (e) { /* ignore */ }
+    });
+  }
+
+  /* 播到完整机器人段末尾，避免 1.6s 提前掐断 */
+  function b2WaitMediaEnd() {
+    if (!introClip) return Promise.resolve();
+    var endT = b2MediaEnd();
+    var fallback = Math.round((endT - B2_MEDIA_START) * 1000) + 400;
+    return new Promise(function (resolve) {
+      var done = false;
+      var finish = function () {
+        if (done) return;
+        done = true;
+        introClip.removeEventListener("timeupdate", onTime);
+        introClip.removeEventListener("ended", finish);
+        clearTimeout(introTimer);
+        try { introClip.pause(); } catch (e) { /* ignore */ }
+        resolve();
+      };
+      var onTime = function () {
+        if (introClip.currentTime >= endT - 0.04) finish();
+      };
+      introClip.addEventListener("timeupdate", onTime);
+      introClip.addEventListener("ended", finish);
+      introTimer = setTimeout(finish, Math.max(800, fallback));
+      onTime();
     });
   }
 
@@ -3394,11 +3431,13 @@ html.is-mobile.is-nav-open .site-nav-scrim { opacity: 1; pointer-events: auto; }
     clearTimeout(introTimer);
 
     return b2SeekStart().then(function () {
+      /* 先以图标尺度叠在 TAB AI 上，再盖像素图，再放大 */
       frame.classList.add("is-b2-open");
       introMascot.classList.add("is-open");
       introMascot.setAttribute("aria-hidden", "false");
       b2Park();
       introMascot.style.opacity = "1";
+      frame.classList.add("is-b2-icon-covered");
       return introWait(40);
     }).then(function () {
       if (!MOTION_REDUCED) {
@@ -3410,34 +3449,26 @@ html.is-mobile.is-nav-open .site-nav-scrim { opacity: 1; pointer-events: auto; }
     }).then(function () {
       return introWait(B2_SETTLE_MS);
     }).then(function () {
-      var t0 = performance.now();
       return b2StartMedia().then(function () {
-        return introWait(Math.max(0, B2_SHOW_MS - (performance.now() - t0)));
+        return b2WaitMediaEnd();
       });
     }).then(function () {
-      return b2SeekStart();
-    }).then(function () {
-      /* 缩回到位即淡出；图标仍按原节奏晚出现 */
+      /* 定格尾帧 → 缩回 → 淡出机器人 → 再揭 TAB 图标（全程盖住像素 AI，避免叠影） */
+      try { introClip.pause(); } catch (e) { /* ignore */ }
       if (!MOTION_REDUCED) {
         introMascot.style.transition =
           "transform " + B2_OUT_MS + "ms cubic-bezier(.2,.8,.2,1)";
       }
-      var outDone = b2WaitTransition("transform", MOTION_REDUCED ? 0 : B2_OUT_MS + 40);
       introMascot.style.transform = b2Xform(B2_ICON_SCALE, 0);
-      var revealAt = MOTION_REDUCED
-        ? 0
-        : Math.round(B2_OUT_MS * B2_REVEAL_RATIO) + B2_REVEAL_EXTRA_MS;
-      var revealP = introWait(revealAt).then(function () {
-        frame.classList.add("is-b2-revealing");
-      });
-      return outDone.then(function () {
+      return b2WaitTransition("transform", MOTION_REDUCED ? 0 : B2_OUT_MS + 40).then(function () {
         if (!MOTION_REDUCED) {
           introMascot.style.transition = "opacity " + B2_HANDOFF_MS + "ms ease";
         }
         introMascot.style.opacity = "0";
         return introWait(MOTION_REDUCED ? 0 : B2_HANDOFF_MS);
       }).then(function () {
-        return revealP;
+        frame.classList.add("is-b2-revealing");
+        return introWait(MOTION_REDUCED ? 0 : B2_REVEAL_MS);
       });
     }).then(function () {
       b2Reset();
@@ -3456,6 +3487,9 @@ html.is-mobile.is-nav-open .site-nav-scrim { opacity: 1; pointer-events: auto; }
     setMode("home");
     if (replay) setTimeout(function () { playIntro(); }, 260);
   }
+  /* Proto Studio 场景「首页 · 提醒」重播 B2 */
+  window.enterHome = enterHome;
+  window.playIntro = playIntro;
 
   function openAgent() {
     stopIntro();
@@ -7479,6 +7513,6 @@ html.is-mobile.is-nav-open .site-nav-scrim { opacity: 1; pointer-events: auto; }
   }
 })();
 </script>
-<script src="../studio-bridge.js?v=20261124a"></script>
+<script src="../studio-bridge.js?v=20261124e"></script>
 </body>
 </html>
