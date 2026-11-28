@@ -11,12 +11,12 @@
       num: "01",
       title: "AI Agent",
       subtitle: "高保真原型",
-      blurb: "AI 对话窗（首页提醒 / 全屏），含价目、开单追问、卡管理与归档等演示。",
+      blurb: "AI 对话窗（首页提醒 / 全屏），含价目、开单追问、卡管理、归档与宽表横滑等演示。",
       guide: "首页点 Tab 中央 AI 进入全屏对话；外侧场景栏可切演示链路。",
       tags: ["B端", "AI", "对话"],
       path: "/H5原型/agent/agent-chat.html",
       prd: "/H5原型/agent/PRD-AI-Agent.html",
-      embedQuery: "mobile=1&studio=1&v=20261124e",
+      embedQuery: "mobile=1&studio=1&v=20261128b",
       phoneQuery: "",
       figma: `${FIGMA_FILE}`,
       figmaLabel: "Figma · Dean work",
@@ -28,6 +28,7 @@
         { group: "演示", label: "开单 · 三项", msg: { kind: "click", selector: "#navDemoOrderMulti" } },
         { group: "演示", label: "归档", msg: { kind: "click", selector: "#navDemoArchive" } },
         { group: "演示", label: "卡管理", msg: { kind: "click", selector: "#navDemoCards" } },
+        { group: "演示", label: "宽表 · 图表", msg: { kind: "click", selector: "#navDemoWide" } },
         { group: "演示", label: "思考 → 出结果", msg: { kind: "click", selector: "#navThink" } },
       ],
     },
@@ -466,7 +467,7 @@
     host.appendChild(tags);
 
     const actions = el("div", "proto-meta-actions");
-    const openBtn = el("a", "btn btn-primary pressable", "全屏演示");
+    const openBtn = el("a", "btn btn-primary pressable btn-breathe", "全屏演示");
     openBtn.href = demoUrl;
     openBtn.target = "_blank";
     openBtn.rel = "noopener";

@@ -106,4 +106,7 @@ html.js .stagger.in-view > *:nth-child(6) { transition-delay: 0.29s; }
   .flow-step:hover {
     transform: none !important;
   }
+  .btn-breathe {
+    animation: none !important;
+  }
 }

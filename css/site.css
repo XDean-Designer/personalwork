@@ -192,6 +192,40 @@ a:hover { opacity: 0.85; }
 .btn-primary:hover {
   box-shadow: 0 4px 16px rgba(10, 132, 255, 0.35);
 }
+
+/* 展台「全屏演示」：克制呼吸，连呼 2 次后歇约 4–5s */
+.btn-breathe {
+  transform-origin: center;
+  will-change: transform, box-shadow;
+  animation: btn-breathe-cycle 8.2s ease-in-out infinite;
+}
+.btn-breathe:hover,
+.btn-breathe:focus-visible,
+.btn-breathe:active {
+  animation-play-state: paused;
+}
+@keyframes btn-breathe-cycle {
+  0%,
+  32%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(10, 132, 255, 0);
+  }
+  8%,
+  24% {
+    transform: scale(1.04);
+    box-shadow: 0 6px 18px rgba(10, 132, 255, 0.32);
+  }
+  16% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(10, 132, 255, 0.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-breathe {
+    animation: none !important;
+  }
+}
 .btn-ghost {
   background: transparent;
   border: 1px solid var(--separator);
