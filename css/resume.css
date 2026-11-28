@@ -503,18 +503,17 @@ body.rv-body {
 /* ══════ 02 AI 产品工作流（轻拟物流水线） ══════ */
 .rv-ai {
   border-radius: 9px;
-  padding: 12px 13px 11px;
+  padding: 10px 11px 9px;
   background: linear-gradient(180deg, #fdfefe 0%, #f6f9fd 100%);
   border: 1px solid #e2e9f3;
   box-shadow:
     inset 0 1px 0 #ffffff,
     0 1px 2px rgba(16, 24, 40, 0.035),
     0 10px 22px -16px rgba(16, 24, 40, 0.28);
-  break-inside: avoid;
 }
 
 .rv-ai-lead {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-size: var(--fs-meta);
   color: var(--rv-ink-2);
   letter-spacing: 0.01em;
@@ -522,9 +521,9 @@ body.rv-body {
 
 .rv-pipe {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: stretch;
-  gap: 8px 0;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -536,16 +535,44 @@ body.rv-body {
   align-items: stretch;
   gap: 0;
   min-width: 0;
+  flex: 1 1 0;
 }
 
-/* 3 + 2：前 3 个一行，后 2 个一行 */
-.rv-pipe-step:nth-child(-n + 3) { flex: 1 1 calc(33.333% - 1px); }
-.rv-pipe-step:nth-child(n + 4) { flex: 1 1 calc(50% - 1px); }
-
-/* 行末箭头只占位不显示，保证同一行卡片宽度一致 */
-.rv-pipe-step:nth-child(3) .rv-pipe-arrow,
-.rv-pipe-step:nth-child(5) .rv-pipe-arrow {
+.rv-pipe-main .rv-pipe-step:last-child .rv-pipe-arrow,
+.rv-pipe-spec .rv-pipe-step:last-child .rv-pipe-arrow {
   visibility: hidden;
+}
+
+.rv-ai-branch {
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px dashed #dde5f0;
+}
+
+.rv-ai-branch-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin-bottom: 7px;
+}
+
+.rv-ai-branch-tag {
+  font-size: var(--fs-micro);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--rv-accent-ink);
+  background: #f2f7fe;
+  border: 1px solid #d9e6f8;
+  border-radius: 4px;
+  padding: 1px 7px;
+  line-height: 1.55;
+}
+
+.rv-ai-branch-note {
+  font-size: var(--fs-micro);
+  color: var(--rv-ink-3);
+  line-height: 1.4;
 }
 
 .rv-pipe-card {
@@ -553,9 +580,9 @@ body.rv-body {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 9px 10px 10px;
-  border-radius: 7px;
+  gap: 2px;
+  padding: 7px 8px 8px;
+  border-radius: 6px;
   background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
   border: 1px solid #e4eaf3;
   box-shadow:
@@ -612,31 +639,31 @@ body.rv-body {
 }
 
 .rv-pipe-arrow {
-  flex: 0 0 20px;
+  flex: 0 0 14px;
   display: grid;
   place-items: center;
   color: #bfd1e7;
 }
 .rv-pipe-arrow svg {
-  width: 18px;
-  height: 10px;
+  width: 14px;
+  height: 8px;
 }
 .rv-pipe-step:last-child .rv-pipe-arrow {
   visibility: hidden;
 }
-/* 末段补等宽占位，保证三张卡片等宽 */
+/* 末段补等宽占位，保证同行卡片等宽 */
 .rv-pipe-step:last-child::after {
   content: "";
-  flex: 0 0 20px;
+  flex: 0 0 14px;
 }
 
 .rv-ai-out {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 5px 6px;
-  margin: 11px 0 0;
-  padding-top: 9px;
+  gap: 4px 5px;
+  margin: 8px 0 0;
+  padding-top: 7px;
   border-top: 1px dashed #dde5f0;
 }
 
@@ -914,28 +941,17 @@ body.rv-body {
     padding-left: 12px;
   }
   .rv-pipe {
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 6px;
   }
   .rv-pipe-step {
-    flex-direction: column;
-    align-items: stretch;
+    flex: 1 1 calc(50% - 4px);
   }
-  /* 单列时恢复等分与箭头（改指向下） */
-  .rv-pipe-step:nth-child(-n + 3),
-  .rv-pipe-step:nth-child(n + 4) {
-    flex: 0 0 auto;
-  }
-  .rv-pipe-step .rv-pipe-arrow { visibility: visible; }
-  .rv-pipe-step:last-child::after {
+  .rv-pipe-step .rv-pipe-arrow {
     display: none;
   }
-  .rv-pipe-arrow {
-    flex: 0 0 auto;
-    height: 12px;
-  }
-  .rv-pipe-arrow svg {
-    transform: rotate(90deg);
+  .rv-pipe-step:last-child::after {
+    display: none;
   }
   .rv-skill-row {
     grid-template-columns: 46px 1fr;
@@ -952,7 +968,7 @@ body.rv-body {
 /* ══════════════ 打印 / 导出 PDF ══════════════ */
 @page {
   size: A4;
-  margin: 13mm 14mm;
+  margin: 7mm 9mm;
 }
 
 @media print {
@@ -970,44 +986,178 @@ body.rv-body {
     padding: 0;
     border-radius: 0;
     box-shadow: none !important;
-    font-size: 8.8pt;
-    line-height: 1.52;
+    font-size: 8pt;
+    line-height: 1.36;
   }
   .rv-head {
-    padding-bottom: 9px;
+    padding-bottom: 5px;
   }
-  .rv-sec {
-    margin-top: 14px;
+  .rv-name {
+    font-size: 20pt;
   }
-  .rv-sec:first-of-type {
-    margin-top: 11px;
+  .rv-role {
+    font-size: 9.5pt;
   }
-  .rv-sec-head {
-    margin-bottom: 7px;
-    padding-bottom: 3px;
+  .rv-target {
+    margin-top: 7px;
   }
-  .rv-job {
-    padding-bottom: 10px;
-    margin-bottom: 12px;
-  }
-  .rv-list {
-    gap: 2px;
-  }
-  .rv-strengths {
-    gap: 8px 16px;
-  }
-  .rv-ai {
-    padding: 10px 11px;
-  }
-  .rv-pipe-card {
-    padding: 8px 9px 9px;
+  .rv-meta {
+    margin-top: 5px;
   }
   .rv-cta {
-    margin-top: 10px;
-    padding: 9px 11px;
+    margin-top: 5px;
+    padding: 5px 8px;
+  }
+  .rv-cta-go {
+    display: none !important;
+  }
+  .rv-sec {
+    margin-top: 5px;
+  }
+  .rv-sec:first-of-type {
+    margin-top: 4px;
+  }
+  .rv-sec-head {
+    margin-bottom: 3px;
+    padding-bottom: 1px;
+  }
+  .rv-job {
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+    padding-left: 92px;
+  }
+  .rv-job-time {
+    width: 88px;
+  }
+  .rv-list {
+    gap: 0;
+  }
+  .rv-list li {
+    line-height: 1.34;
+  }
+  .rv-job-sub {
+    margin-bottom: 2px;
+  }
+  .rv-strengths {
+    gap: 3px 10px;
+  }
+  .rv-strengths b {
+    margin-bottom: 0;
+  }
+  .rv-strengths span {
+    line-height: 1.32;
+  }
+  .rv-strengths li::before {
+    width: 13px;
+    height: 13px;
+    font-size: 6.5pt;
+  }
+  .rv-ai {
+    padding: 5px 6px 5px;
+    border-radius: 6px;
+    break-inside: auto;
+  }
+  .rv-ai-lead {
+    margin-bottom: 4px;
+    font-size: 7.2pt;
+  }
+  .rv-ai-branch {
+    margin-top: 4px;
+    padding-top: 4px;
+  }
+  .rv-ai-branch-head {
+    margin-bottom: 3px;
+    gap: 4px 6px;
+  }
+  .rv-pipe-icon {
+    display: none !important;
+  }
+  .rv-pipe-top {
+    margin-bottom: 0;
+  }
+  .rv-pipe-card {
+    padding: 3px 4px 4px;
+    gap: 0;
+    border-radius: 4px;
+  }
+  .rv-pipe-card strong {
+    font-size: 7.2pt;
+  }
+  .rv-pipe-card p {
+    font-size: 6.6pt;
+    line-height: 1.28;
+  }
+  .rv-pipe-badge {
+    font-size: 6.5pt;
+    padding: 0 3px;
+    line-height: 1.4;
+  }
+  .rv-pipe-arrow {
+    flex-basis: 8px;
+  }
+  .rv-pipe-step:last-child::after {
+    flex-basis: 8px;
+  }
+  .rv-ai-out {
+    display: none !important;
   }
   .rv-skills {
+    gap: 1px;
+  }
+  .rv-skill-row {
+    gap: 5px;
+    grid-template-columns: 36px 1fr;
+  }
+  .rv-skill-key {
+    font-size: 7pt;
+  }
+  .rv-skill-val {
+    font-size: 7pt;
+    line-height: 1.28;
+  }
+  .rv-compact {
+    gap: 0;
+  }
+  .rv-edu {
+    margin-top: 0;
+    font-size: 7.2pt;
+  }
+  .rv-sec:last-of-type {
+    margin-top: 3px;
+  }
+  .rv-sec:last-of-type .rv-sec-head {
+    margin-bottom: 1px;
+    padding-bottom: 0;
+  }
+  .rv-sec[data-track-section="技能矩阵"] {
+    margin-top: 4px;
+  }
+  .rv-sec-en,
+  .rv-sec-tail {
+    display: none !important;
+  }
+  .rv-job-sub {
+    font-size: 6.8pt;
+    line-height: 1.28;
+    margin-bottom: 1px;
+  }
+  .rv-compact li {
+    font-size: 6.8pt;
+    line-height: 1.24;
+    grid-template-columns: 86px 1fr;
     gap: 6px;
+  }
+  .rv-compact .ct {
+    font-size: 6.5pt;
+  }
+  .rv-list li {
+    font-size: 7.6pt;
+    line-height: 1.3;
+  }
+  .rv-pipe-card p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* 打印时收敛阴影，避免灰度扫描发灰 */
@@ -1018,13 +1168,14 @@ body.rv-body {
     box-shadow: none !important;
   }
 
-  .rv-job,
-  .rv-ai,
   .rv-strengths li,
   .rv-skill-row,
   .rv-compact li,
   .rv-pipe-card {
     break-inside: avoid;
+  }
+  .rv-job {
+    break-inside: auto;
   }
   .rv-sec-head,
   .rv-job-head {

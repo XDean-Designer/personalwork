@@ -918,6 +918,25 @@ a:hover { opacity: 0.85; }
   gap: 14px;
   align-items: stretch;
 }
+.flow-branch + .flow-branch {
+  margin-top: 16px;
+}
+.flow-compact {
+  gap: 8px;
+}
+.flow-compact .flow-step {
+  min-width: 118px;
+  padding: 16px 12px;
+}
+.flow-compact .flow-step h3 {
+  font-size: 0.9rem;
+}
+.flow-compact .flow-step p {
+  font-size: 0.78rem;
+}
+.flow-compact .flow-connector {
+  flex-basis: 18px;
+}
 
 /* ── Works entries ── */
 .entry-grid {
